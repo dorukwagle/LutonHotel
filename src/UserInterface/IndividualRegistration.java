@@ -1,5 +1,7 @@
 package UserInterface;
 
-public class IndividualRegistration {
+import javax.swing.*;
+
+public class IndividualRegistration extends JPanel {
 
 }

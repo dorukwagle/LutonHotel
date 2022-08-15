@@ -1,10 +1,9 @@
 package UserInterface;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import BusinessLayer.BLUser;
 import DataModel.User;
-import Utility.DatabaseConnector;
+import Utility.Values;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,7 +15,6 @@ import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.sql.Connection;
 
 public class Dashboard extends JFrame {
 
@@ -33,6 +31,10 @@ public class Dashboard extends JFrame {
      * Create the frame.
      */
     public Dashboard() {
+        //String path = Main.RES_PATH; //new Main().getClass().getResource("/src").toString();
+        System.out.println(Values.resPath());
+        System.out.println(Values.screenHeight());
+        System.out.println(Values.screenWidth());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 893, 515);
         contentPane = new JPanel();
