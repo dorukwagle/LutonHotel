@@ -31,29 +31,57 @@ public class Login extends JPanel {
         JPanel center = new JPanel();
         center.setLayout(new FlowLayout());
         add(center);
-        JPanel inputPanel = new JPanel();
-        GridLayout lay = new GridLayout(0, 2);
-        lay.setVgap(20);
-        inputPanel.setLayout(lay);
-        center.add(inputPanel);
+
+        JPanel inputHolder = new JPanel();
+        inputHolder.setLayout(new BorderLayout(3, 20));
+        inputHolder.setPreferredSize(new Dimension(Values.widthPct(window, 50), Values.heightPct(window, 25)));
+        center.add(inputHolder);
+
+        JPanel inputPanel1 = new JPanel();
+        inputPanel1.setLayout(new FlowLayout());
+        inputHolder.add(inputPanel1, BorderLayout.NORTH);
 
         JLabel emailLable = new JLabel("Email/Username: ");
         emailLable.setFont(new Font("Serif", Font.BOLD, 20));
-        inputPanel.add(emailLable);
+        emailLable.setPreferredSize(new Dimension(Values.widthPct(window, 15), Values.heightPct(window, 7)));
+        inputPanel1.add(emailLable);
 
         JTextField userName = new JTextField();
         userName.setFont(new Font("Serif", Font.BOLD, 20));
-        inputPanel.add(userName);
+        userName.setPreferredSize(new Dimension(Values.widthPct(window, 30), Values.heightPct(window, 7)));
+        inputPanel1.add(userName);
+
+        JPanel inputPanel2 = new JPanel();
+        inputPanel1.setLayout(new FlowLayout());
+        inputHolder.add(inputPanel2, BorderLayout.CENTER);
 
         JLabel pwLabel = new JLabel("Password: ");
         pwLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        inputPanel.add(pwLabel);
+        pwLabel.setPreferredSize(new Dimension(Values.widthPct(window, 15), Values.heightPct(window, 7)));
+        inputPanel2.add(pwLabel);
 
         JTextField password = new JTextField();
         password.setFont(new Font("Serif", Font.BOLD, 20));
-        inputPanel.add(password);
+        password.setPreferredSize(new Dimension(Values.widthPct(window, 30), Values.heightPct(window, 7)));
+        inputPanel2.add(password);
 
+        JLabel errorMsg = new JLabel("error msg");
+        errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
+        errorMsg.setForeground(Color.RED);
+        errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
+        inputHolder.add(errorMsg, BorderLayout.SOUTH);
 
+        JPanel layHolder = new JPanel();
+        layHolder.setLayout(new FlowLayout());
+        add(layHolder);
+        JPanel btnHolder = new JPanel();
+        btnHolder.setLayout(new BorderLayout(5, 20));
+        btnHolder.setPreferredSize(new Dimension(Values.widthPct(window, 30), Values.heightPct(window, 25)));
+        layHolder.add(btnHolder);
+
+        JButton loginBtn = new JButton("Log In");
+        loginBtn.setFont(new Font("Serif", Font.BOLD, 40));
+        btnHolder.add(loginBtn, BorderLayout.NORTH);
 
     }
 }
