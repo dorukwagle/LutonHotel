@@ -6,10 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Login extends JPanel {
-    private Container window;
+    private Window window;
+    private Container container;
     public Login(){
         window = Window.getWindow();
-        setPreferredSize(new Dimension(Values.fillParent(window)));
+        container = window.getContainer();
+        setPreferredSize(new Dimension(Values.fillParent(container)));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel topBar = new JPanel();
@@ -34,7 +36,7 @@ public class Login extends JPanel {
 
         JPanel inputHolder = new JPanel();
         inputHolder.setLayout(new BorderLayout(3, 20));
-        inputHolder.setPreferredSize(new Dimension(Values.widthPct(window, 50), Values.heightPct(window, 25)));
+        inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 50), Values.heightPct(container, 25)));
         center.add(inputHolder);
 
         JPanel inputPanel1 = new JPanel();
@@ -43,12 +45,12 @@ public class Login extends JPanel {
 
         JLabel emailLable = new JLabel("Email/Username: ");
         emailLable.setFont(new Font("Serif", Font.BOLD, 20));
-        emailLable.setPreferredSize(new Dimension(Values.widthPct(window, 15), Values.heightPct(window, 7)));
+        emailLable.setPreferredSize(new Dimension(Values.widthPct(container, 15), Values.heightPct(container, 7)));
         inputPanel1.add(emailLable);
 
         JTextField userName = new JTextField();
         userName.setFont(new Font("Serif", Font.BOLD, 20));
-        userName.setPreferredSize(new Dimension(Values.widthPct(window, 30), Values.heightPct(window, 7)));
+        userName.setPreferredSize(new Dimension(Values.widthPct(container, 30), Values.heightPct(container, 7)));
         inputPanel1.add(userName);
 
         JPanel inputPanel2 = new JPanel();
@@ -57,12 +59,12 @@ public class Login extends JPanel {
 
         JLabel pwLabel = new JLabel("Password: ");
         pwLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        pwLabel.setPreferredSize(new Dimension(Values.widthPct(window, 15), Values.heightPct(window, 7)));
+        pwLabel.setPreferredSize(new Dimension(Values.widthPct(container, 15), Values.heightPct(container, 7)));
         inputPanel2.add(pwLabel);
 
         JTextField password = new JTextField();
         password.setFont(new Font("Serif", Font.BOLD, 20));
-        password.setPreferredSize(new Dimension(Values.widthPct(window, 30), Values.heightPct(window, 7)));
+        password.setPreferredSize(new Dimension(Values.widthPct(container, 30), Values.heightPct(container, 7)));
         inputPanel2.add(password);
 
         JLabel errorMsg = new JLabel("error msg");
@@ -76,7 +78,7 @@ public class Login extends JPanel {
         add(layHolder);
         JPanel btnHolder = new JPanel();
         btnHolder.setLayout(new BorderLayout(5, 20));
-        btnHolder.setPreferredSize(new Dimension(Values.widthPct(window, 30), Values.heightPct(window, 25)));
+        btnHolder.setPreferredSize(new Dimension(Values.widthPct(container, 30), Values.heightPct(container, 25)));
         layHolder.add(btnHolder);
 
         JButton loginBtn = new JButton("Log In");

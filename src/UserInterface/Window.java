@@ -17,16 +17,22 @@ public class Window extends JFrame {
         setVisible(true);
     }
 
-    public static Container getWindow() {
+    public static Window getWindow() {
         if( windowInstance == null ){
             windowInstance = new Window();
         }
+        return windowInstance;
+    }
+
+    public Container getContainer(){
         return container;
     }
 
-    public void addContent(Component content){
+    @Override
+    public Component add(Component content){
         this.container.add(content);
         this.paint();
+        return content;
     }
 
     public void removeAllChild(){

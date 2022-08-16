@@ -6,25 +6,27 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HomePage extends JPanel {
-    private Container window;
+    private Window window;
+    private Container container;
     private int btnHeightPct = 10;
     private int btnWidthPct = 100;
     public HomePage(){
         window = Window.getWindow();
-        setPreferredSize(new Dimension(Values.fillParent(window)));
+        container = window.getContainer();
+        setPreferredSize(new Dimension(Values.fillParent(container)));
         setLayout(new BorderLayout());
 
         //create a welcome label
         JLabel welcome = new JLabel("Welcome To Luton Hotel");
         welcome.setFont(new Font("Serif", Font.BOLD, 50 ));
-        welcome.setPreferredSize(new Dimension(Values.widthPct(window,100), Values.heightPct(window,15)));
+        welcome.setPreferredSize(new Dimension(Values.widthPct(container,100), Values.heightPct(container,15)));
         welcome.setHorizontalAlignment(SwingConstants.CENTER);
         add(welcome, BorderLayout.NORTH);
 
         //create panel to hold everything in center
         JPanel center = new JPanel();
         center.setLayout(new FlowLayout());
-        center.setPreferredSize(new Dimension(Values.widthPct(window, 100), Values.heightPct(window, 85)));
+        center.setPreferredSize(new Dimension(Values.widthPct(container, 100), Values.heightPct(container, 85)));
         add(center);
 
         //panel to hold the buttons

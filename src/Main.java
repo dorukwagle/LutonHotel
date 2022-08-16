@@ -1,6 +1,4 @@
-import UserInterface.Dashboard;
-import UserInterface.HomePage;
-import UserInterface.Login;
+import UserInterface.*;
 import UserInterface.Window;
 import Utility.Values;
 
@@ -12,6 +10,6 @@ public class Main {
 		Values.initializeValues();
 //		new Dashboard().setVisible(true);
 		//add the home page for the first time
-		Window.getWindow().add(new Login());
+		Window.getWindow().add(new CorporateRegistration());
 	}
 }
