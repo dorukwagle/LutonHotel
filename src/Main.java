@@ -10,6 +10,10 @@ public class Main {
 		Values.initializeValues();
 //		new Dashboard().setVisible(true);
 		//add the home page for the first time
-		Window.getWindow().add(new CorporateRegistration());
+//		Window.getWindow().add(new HomePage());
+//		Window.getWindow().add(new Login());
+//		Window.getWindow().add(new IndividualRegistration());
+//		Window.getWindow().add(new CorporateRegistration());
+		Window.getWindow().add(new IndividualDashboard());
 	}
 }

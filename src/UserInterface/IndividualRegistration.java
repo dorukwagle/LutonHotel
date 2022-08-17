@@ -8,7 +8,6 @@ import java.awt.*;
 public class IndividualRegistration extends JPanel {
     private Window window;
     private Container container;
-
     public IndividualRegistration(){
         window = Window.getWindow();
         container = window.getContainer();
