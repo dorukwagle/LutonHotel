@@ -3,6 +3,7 @@ package UserInterface;
 import Utility.Values;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class IndividualDashboard extends JPanel {
@@ -66,7 +67,7 @@ public class IndividualDashboard extends JPanel {
         contentHolder.setLayout(new BoxLayout(contentHolder, BoxLayout.Y_AXIS));
         add(contentHolder);
 
-        contentHolder.add(bookNow());
+        contentHolder.add(bookingHistory());
     }
 
     private JPanel aboutPage(){
@@ -171,4 +172,108 @@ public class IndividualDashboard extends JPanel {
         return bookNow;
     }
 
+    private JPanel activeBooking(){
+        JPanel activeBooking = new JPanel();
+        activeBooking.setLayout(new BoxLayout(activeBooking, BoxLayout.Y_AXIS));
+
+        JPanel head = new JPanel();
+        head.setLayout(new BorderLayout());
+        activeBooking.add(head);
+
+        JLabel heading = new JLabel("Currently Active Bookings:");
+        heading.setFont(new Font("Serif", Font.BOLD, 30));
+        head.add(heading, BorderLayout.NORTH);
+
+        JTable activeBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(activeBookings);
+        head.add(scroll, BorderLayout.CENTER);
+
+        JPanel btnHolder = new JPanel();
+        btnHolder.setLayout(new FlowLayout());
+        head.add(btnHolder, BorderLayout.SOUTH);
+
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
+        btnCancel.setFocusable(false);
+        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnCancel);
+
+        JButton btnEdit = new JButton("Edit");
+        btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
+        btnEdit.setFocusable(false);
+        btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnEdit);
+
+        return activeBooking;
+    }
+
+    private JPanel pendingBooking(){
+        JPanel pendingBooking = new JPanel();
+        pendingBooking.setLayout(new BoxLayout(pendingBooking, BoxLayout.Y_AXIS));
+
+        JPanel head = new JPanel();
+        head.setLayout(new BorderLayout());
+        pendingBooking.add(head);
+
+        JLabel heading = new JLabel("Your Pending Bookings:");
+        heading.setFont(new Font("Serif", Font.BOLD, 30));
+        head.add(heading, BorderLayout.NORTH);
+
+        JTable activeBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(activeBookings);
+        head.add(scroll, BorderLayout.CENTER);
+
+        JPanel btnHolder = new JPanel();
+        btnHolder.setLayout(new FlowLayout());
+        head.add(btnHolder, BorderLayout.SOUTH);
+
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
+        btnCancel.setFocusable(false);
+        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnCancel);
+
+        JButton btnEdit = new JButton("Edit");
+        btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
+        btnEdit.setFocusable(false);
+        btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnEdit);
+
+        return pendingBooking;
+    }
+
+    private JPanel bookingHistory(){
+        JPanel bookingHistory = new JPanel();
+        bookingHistory.setLayout(new BoxLayout(bookingHistory, BoxLayout.Y_AXIS));
+
+        JPanel head = new JPanel();
+        head.setLayout(new BorderLayout());
+        bookingHistory.add(head);
+
+        JLabel heading = new JLabel("Booking History:");
+        heading.setFont(new Font("Serif", Font.BOLD, 30));
+        head.add(heading, BorderLayout.NORTH);
+
+        JTable activeBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(activeBookings);
+        head.add(scroll, BorderLayout.CENTER);
+
+        JPanel btnHolder = new JPanel();
+        btnHolder.setLayout(new FlowLayout());
+        head.add(btnHolder, BorderLayout.SOUTH);
+
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
+        btnCancel.setFocusable(false);
+        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnCancel);
+
+        JButton btnEdit = new JButton("Edit");
+        btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
+        btnEdit.setFocusable(false);
+        btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnEdit);
+
+        return bookingHistory;
+    }
 }
