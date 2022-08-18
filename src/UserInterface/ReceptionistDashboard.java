@@ -4,6 +4,7 @@ import Utility.Values;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.FieldPosition;
 
 public class ReceptionistDashboard extends JPanel {
     private Window window;
@@ -63,7 +64,7 @@ public class ReceptionistDashboard extends JPanel {
         contentHolder.setLayout(new BoxLayout(contentHolder, BoxLayout.Y_AXIS));
         add(contentHolder);
 
-        contentHolder.add(roomsPage());
+        contentHolder.add(billingPage());
     }
 
     private JPanel homePage(){
@@ -119,7 +120,7 @@ public class ReceptionistDashboard extends JPanel {
 
         JPanel subControl = new JPanel();
         subControl.setLayout(new BorderLayout());
-        subControl.setPreferredSize(new Dimension(Values.widthPct(container, 100), Values.heightPct(container, 10)));
+        subControl.setPreferredSize(new Dimension(Values.widthPct(container, 100), Values.heightPct(container, 8)));
         controls.add(subControl);
 
         JPanel btns = new JPanel();
@@ -155,6 +156,118 @@ public class ReceptionistDashboard extends JPanel {
         roomsPage.add(scroll);
 
         return roomsPage;
+    }
+
+    private JPanel bookingPage(){
+        JPanel bookingPage = new JPanel();
+        bookingPage.setLayout(new BoxLayout(bookingPage, BoxLayout.Y_AXIS));
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BorderLayout());
+        bookingPage.add(btnPanel);
+
+        JPanel controls = new JPanel();
+        controls.setLayout(new FlowLayout());
+        btnPanel.add(controls, BorderLayout.SOUTH);
+
+        JPanel subControl = new JPanel();
+        subControl.setLayout(new BorderLayout());
+        subControl.setPreferredSize(new Dimension(Values.widthPct(container, 100), Values.heightPct(container, 8)));
+        controls.add(subControl);
+
+        JPanel filters = new JPanel();
+        filters.setLayout(new FlowLayout());
+        subControl.add(filters, BorderLayout.EAST);
+
+        String[] bookingFilter = {"History", "Cancelled", "Completed", "Upcoming"};
+        JComboBox bookFilter = new JComboBox(bookingFilter);
+        bookFilter.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(bookFilter);
+
+        String[] roomTypes = {"Single Rooms", "Double Rooms", "Twin Rooms"};
+        JComboBox roomtType = new JComboBox(roomTypes);
+        roomtType.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(roomtType);
+
+        JTable activeBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(activeBookings);
+        bookingPage.add(scroll);
+
+        JPanel btnHolder = new JPanel();
+        btnHolder.setLayout(new FlowLayout());
+        bookingPage.add(btnHolder, BorderLayout.SOUTH);
+
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
+        btnCancel.setFocusable(false);
+        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnCancel);
+
+        JButton btnActive = new JButton("Set As Active");
+        btnActive.setFont(new Font("Serif", Font.BOLD, 40));
+        btnActive.setFocusable(false);
+        btnActive.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnActive);
+
+        return bookingPage;
+    }
+
+    private JPanel billingPage(){
+        JPanel bookingPage = new JPanel();
+        bookingPage.setLayout(new BoxLayout(bookingPage, BoxLayout.Y_AXIS));
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BorderLayout());
+        bookingPage.add(btnPanel);
+
+        JPanel controls = new JPanel();
+        controls.setLayout(new FlowLayout());
+        btnPanel.add(controls, BorderLayout.SOUTH);
+
+        JPanel subControl = new JPanel();
+        subControl.setLayout(new BorderLayout());
+        subControl.setPreferredSize(new Dimension(Values.widthPct(container, 100), Values.heightPct(container, 8)));
+        controls.add(subControl);
+
+        JPanel btns = new JPanel();
+        btns.setLayout(new FlowLayout());
+        subControl.add(btns, BorderLayout.EAST);
+
+        JLabel emailLable = new JLabel("Email or Username:");
+        emailLable.setFont(new Font("Serif", Font.BOLD, 20));
+        btns.add(emailLable);
+
+        JTextField email = new JTextField();
+        email.setFont(new Font("Serif", Font.BOLD, 20));
+        btns.add(email);
+
+        String[] availableOptions = {"Individual", "Corporate"};
+        JComboBox availability = new JComboBox(availableOptions);
+        availability.setFont(new Font("Serif", Font.BOLD, 20));
+        btns.add(availability);
+
+        JButton search = new JButton("Search");
+        search.setFont(new Font("Serif", Font.BOLD, 20));
+        search.setFocusable(false);
+        btns.add(search);
+
+        JPanel btnLay = new JPanel();
+        btnLay.setLayout(new BorderLayout());
+        bookingPage.add(btnLay);
+        JPanel btnhold = new JPanel();
+        btnhold.setLayout(new FlowLayout());
+        btnLay.add(btnhold, BorderLayout.WEST);
+
+        JButton generate = new JButton("Generate Bill");
+        generate.setFocusable(false);
+        generate.setFont(new Font("Serif", Font.BOLD, 30));
+        btnhold.add(generate);
+
+        JTable activeBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(activeBookings);
+        bookingPage.add(scroll);
+
+        return bookingPage;
     }
 
 }
