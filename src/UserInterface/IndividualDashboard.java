@@ -6,71 +6,12 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
-public class IndividualDashboard extends JPanel {
-    private Window window;
-    private Container container;
-
-    private JPanel contentHolder;
+public class IndividualDashboard extends CustomerDashboard {
     public IndividualDashboard(){
-        window = Window.getWindow();
-        container = window.getContainer();
-        setPreferredSize(new Dimension(Values.fillParent(container)));
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        JPanel topBar = new JPanel();
-        topBar.setLayout(new BorderLayout());
-        topBar.setMaximumSize(new Dimension(Values.widthPct(this, 100), Values.heightPct(this, 5)));
-        add(topBar);
-
-        JPanel btnBar = new JPanel();
-        btnBar.setLayout(new GridLayout(1, 0));
-        topBar.add(btnBar, BorderLayout.WEST);
-
-        JButton about = new JButton("About");
-        about.setFont(new Font("Serif", Font.BOLD, 20));
-        about.setFocusable(false);
-        btnBar.add(about);
-
-        JButton bookNow = new JButton("Book Now");
-        bookNow.setFont(new Font("Serif", Font.BOLD, 20));
-        bookNow.setFocusable(false);
-        btnBar.add(bookNow);
-
-        JButton activeBookings = new JButton("Active Bookings");
-        activeBookings.setFont(new Font("Serif", Font.BOLD, 20));
-        activeBookings.setFocusable(false);
-        btnBar.add(activeBookings);
-
-        JButton pendingBookings = new JButton("Pending Bookings");
-        pendingBookings.setFont(new Font("Serif", Font.BOLD, 20));
-        pendingBookings.setFocusable(false);
-        btnBar.add(pendingBookings);
-
-        JButton history = new JButton("History");
-        history.setFont(new Font("Serif", Font.BOLD, 20));
-        history.setFocusable(false);
-        btnBar.add(history);
-
-        JButton backBtn = new JButton("< Log Out");
-        backBtn.setFocusable(false);
-        backBtn.setFont(new Font("Serif", Font.BOLD, 20));
-        topBar.add(backBtn, BorderLayout.EAST);
-
-        JPanel heading = new JPanel();
-        heading.setLayout(new FlowLayout());
-        add(heading);
-        JLabel headingText = new JLabel("Welcome Back, <mr/ms>. <Name>!");
-        headingText.setFont(new Font("Serif", Font.BOLD, 25));
-        heading.add(headingText);
-
-        contentHolder = new JPanel();
-        contentHolder.setLayout(new BoxLayout(contentHolder, BoxLayout.Y_AXIS));
-        add(contentHolder);
-
-        contentHolder.add(bookingHistory());
+        this.contentHolder.add(aboutPage());
     }
 
-    private JPanel aboutPage(){
+    public JPanel aboutPage(){
         JPanel aboutPage = new JPanel();
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
 
@@ -110,10 +51,26 @@ public class IndividualDashboard extends JPanel {
         JScrollPane scroll = new JScrollPane(upcomingBookings);
         aboutPage.add(scroll);
 
+        JPanel btnHolder = new JPanel();
+        btnHolder.setLayout(new FlowLayout());
+        aboutPage.add(btnHolder, BorderLayout.SOUTH);
+
+        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
+        btnCancel.setFocusable(false);
+        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnCancel);
+
+        JButton btnEdit = new JButton("Edit");
+        btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
+        btnEdit.setFocusable(false);
+        btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
+        btnHolder.add(btnEdit);
+
         return aboutPage;
     }
 
-    private JPanel bookNow(){
+    public JPanel bookNow(){
         JPanel bookNow = new JPanel();
         bookNow.setLayout(new BoxLayout(bookNow, BoxLayout.Y_AXIS));
 
@@ -128,7 +85,7 @@ public class IndividualDashboard extends JPanel {
         inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
         center.add(inputHolder);
 
-        JLabel checkinLabel = new JLabel("Check In Date: ");
+        JLabel checkinLabel = new JLabel("Check In Date(dd/mm/yyyy): ");
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
@@ -136,7 +93,7 @@ public class IndividualDashboard extends JPanel {
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
-        JLabel websiteLabel = new JLabel("Check Out Date: ");
+        JLabel websiteLabel = new JLabel("Check Out Date(dd/mm/yyyy): ");
         websiteLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(websiteLabel);
 
@@ -172,7 +129,7 @@ public class IndividualDashboard extends JPanel {
         return bookNow;
     }
 
-    private JPanel activeBooking(){
+    public JPanel activeBooking(){
         JPanel activeBooking = new JPanel();
         activeBooking.setLayout(new BoxLayout(activeBooking, BoxLayout.Y_AXIS));
 
@@ -188,26 +145,10 @@ public class IndividualDashboard extends JPanel {
         JScrollPane scroll = new JScrollPane(activeBookings);
         head.add(scroll, BorderLayout.CENTER);
 
-        JPanel btnHolder = new JPanel();
-        btnHolder.setLayout(new FlowLayout());
-        head.add(btnHolder, BorderLayout.SOUTH);
-
-        JButton btnCancel = new JButton("Cancel");
-        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
-        btnCancel.setFocusable(false);
-        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
-        btnHolder.add(btnCancel);
-
-        JButton btnEdit = new JButton("Edit");
-        btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
-        btnEdit.setFocusable(false);
-        btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
-        btnHolder.add(btnEdit);
-
         return activeBooking;
     }
 
-    private JPanel pendingBooking(){
+    public JPanel pendingBooking(){
         JPanel pendingBooking = new JPanel();
         pendingBooking.setLayout(new BoxLayout(pendingBooking, BoxLayout.Y_AXIS));
 
@@ -242,7 +183,7 @@ public class IndividualDashboard extends JPanel {
         return pendingBooking;
     }
 
-    private JPanel bookingHistory(){
+    public JPanel bookingHistory(){
         JPanel bookingHistory = new JPanel();
         bookingHistory.setLayout(new BoxLayout(bookingHistory, BoxLayout.Y_AXIS));
 
@@ -257,22 +198,6 @@ public class IndividualDashboard extends JPanel {
         JTable activeBookings = new JTable();
         JScrollPane scroll = new JScrollPane(activeBookings);
         head.add(scroll, BorderLayout.CENTER);
-
-        JPanel btnHolder = new JPanel();
-        btnHolder.setLayout(new FlowLayout());
-        head.add(btnHolder, BorderLayout.SOUTH);
-
-        JButton btnCancel = new JButton("Cancel");
-        btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
-        btnCancel.setFocusable(false);
-        btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
-        btnHolder.add(btnCancel);
-
-        JButton btnEdit = new JButton("Edit");
-        btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
-        btnEdit.setFocusable(false);
-        btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
-        btnHolder.add(btnEdit);
 
         return bookingHistory;
     }

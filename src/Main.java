@@ -14,6 +14,6 @@ public class Main {
 //		Window.getWindow().add(new Login());
 //		Window.getWindow().add(new IndividualRegistration());
 //		Window.getWindow().add(new CorporateRegistration());
-		Window.getWindow().add(new IndividualDashboard());
+		Window.getWindow().add(new ReceptionistDashboard());
 	}
 }
