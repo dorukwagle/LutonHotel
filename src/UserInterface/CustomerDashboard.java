@@ -84,5 +84,4 @@ public abstract class CustomerDashboard extends JPanel {
     public abstract JPanel activeBooking();
     public abstract JPanel pendingBooking();
     public abstract JPanel bookingHistory();
-
 }

@@ -63,7 +63,7 @@ public class ReceptionistDashboard extends JPanel {
         contentHolder.setLayout(new BoxLayout(contentHolder, BoxLayout.Y_AXIS));
         add(contentHolder);
 
-        contentHolder.add(homePage());
+        contentHolder.add(roomsPage());
     }
 
     private JPanel homePage(){
@@ -105,5 +105,56 @@ public class ReceptionistDashboard extends JPanel {
         return container;
     }
 
+    private JPanel roomsPage(){
+        JPanel roomsPage = new JPanel();
+        roomsPage.setLayout(new BoxLayout(roomsPage, BoxLayout.Y_AXIS));
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new BorderLayout());
+        roomsPage.add(btnPanel);
+
+        JPanel controls = new JPanel();
+        controls.setLayout(new FlowLayout());
+        btnPanel.add(controls, BorderLayout.SOUTH);
+
+        JPanel subControl = new JPanel();
+        subControl.setLayout(new BorderLayout());
+        subControl.setPreferredSize(new Dimension(Values.widthPct(container, 100), Values.heightPct(container, 10)));
+        controls.add(subControl);
+
+        JPanel btns = new JPanel();
+        btns.setLayout(new FlowLayout());
+        subControl.add(btns, BorderLayout.WEST);
+
+        JButton addRoom = new JButton("Add Room");
+        addRoom.setFont(new Font("Serif", Font.BOLD, 30));
+        addRoom.setFocusable(false);
+        btns.add(addRoom);
+
+        JButton removeRoom = new JButton("Remove Room");
+        removeRoom.setFont(new Font("Serif", Font.BOLD, 30));
+        removeRoom.setFocusable(false);
+        btns.add(removeRoom);
+
+        JPanel filters = new JPanel();
+        filters.setLayout(new FlowLayout());
+        subControl.add(filters, BorderLayout.EAST);
+
+        String[] availableOptions = {"Available Rooms", "Booked Rooms"};
+        JComboBox availability = new JComboBox(availableOptions);
+        availability.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(availability);
+
+        String[] roomTypes = {"Single Rooms", "Double Rooms", "Twin Rooms"};
+        JComboBox roomtType = new JComboBox(roomTypes);
+        roomtType.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(roomtType);
+
+        JTable activeBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(activeBookings);
+        roomsPage.add(scroll);
+
+        return roomsPage;
+    }
 
 }
