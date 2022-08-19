@@ -8,6 +8,8 @@ import java.awt.*;
 public class Window extends JFrame {
     private static Window windowInstance = null;
     private static Container container;
+
+    //create private constructor to restrict access from outside
     private Window(){
         super("Luton Hotel");
         setSize(Values.displayPct(80));
@@ -17,6 +19,7 @@ public class Window extends JFrame {
         setVisible(true);
     }
 
+    //always return a single instance of the window
     public static Window getWindow() {
         if( windowInstance == null ){
             windowInstance = new Window();
@@ -27,7 +30,6 @@ public class Window extends JFrame {
     public Container getContainer(){
         return container;
     }
-
     @Override
     public Component add(Component content){
         this.container.add(content);
@@ -35,6 +37,7 @@ public class Window extends JFrame {
         return content;
     }
 
+    //method to remove all the childs added to the Window
     public void removeAllChild(){
         this.container.removeAll();
         this.paint();

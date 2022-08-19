@@ -4,8 +4,10 @@ import Utility.Values;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class IndividualRegistration extends JPanel {
+public class IndividualRegistration extends JPanel implements ActionListener {
     private Window window;
     private Container container;
     public IndividualRegistration(){
@@ -19,6 +21,7 @@ public class IndividualRegistration extends JPanel {
         topBar.setMaximumSize(new Dimension(Values.widthPct(this, 100), Values.heightPct(this, 5)));
         add(topBar);
         JButton backBtn = new JButton("< Back");
+        backBtn.addActionListener(this);
         backBtn.setFocusable(false);
         backBtn.setFont(new Font("Serif", Font.BOLD, 30));
         topBar.add(backBtn, BorderLayout.WEST);
@@ -138,5 +141,17 @@ public class IndividualRegistration extends JPanel {
         JButton register = new JButton("Register");
         register.setFont(new Font("Serif", Font.BOLD, 40));
         subHolder.add(register, BorderLayout.SOUTH);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae){
+        String command = ae.getActionCommand();
+        if(command.equals("< Back")){
+            this.window.removeAllChild();
+            this.window.add(new HomePage());
+        } else if (command.equals("")) {
+
+        }
+
     }
 }

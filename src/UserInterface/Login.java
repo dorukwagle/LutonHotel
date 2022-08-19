@@ -4,8 +4,10 @@ import Utility.Values;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Login extends JPanel {
+public class Login extends JPanel implements ActionListener {
     private Window window;
     private Container container;
     public Login(){
@@ -19,6 +21,7 @@ public class Login extends JPanel {
         topBar.setMaximumSize(new Dimension(Values.widthPct(this, 100), Values.heightPct(this, 5)));
         add(topBar);
         JButton backBtn = new JButton("< Back");
+        backBtn.addActionListener(this);
         backBtn.setFocusable(false);
         backBtn.setFont(new Font("Serif", Font.BOLD, 30));
         topBar.add(backBtn, BorderLayout.WEST);
@@ -85,5 +88,13 @@ public class Login extends JPanel {
         loginBtn.setFont(new Font("Serif", Font.BOLD, 40));
         btnHolder.add(loginBtn, BorderLayout.NORTH);
 
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if (command.equals("< Back")) {
+            this.window.removeAllChild();
+            this.window.add(new HomePage());
+        }
     }
 }

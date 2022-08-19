@@ -5,13 +5,14 @@ import Utility.Values;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class IndividualDashboard extends CustomerDashboard {
     public IndividualDashboard(){
         this.contentHolder.add(aboutPage());
     }
 
-    public JPanel aboutPage(){
+    protected JPanel aboutPage(){
         JPanel aboutPage = new JPanel();
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
 
@@ -70,7 +71,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return aboutPage;
     }
 
-    public JPanel bookNow(){
+    protected JPanel bookNow(){
         JPanel bookNow = new JPanel();
         bookNow.setLayout(new BoxLayout(bookNow, BoxLayout.Y_AXIS));
 
@@ -129,7 +130,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return bookNow;
     }
 
-    public JPanel activeBooking(){
+    protected JPanel activeBooking(){
         JPanel activeBooking = new JPanel();
         activeBooking.setLayout(new BoxLayout(activeBooking, BoxLayout.Y_AXIS));
 
@@ -148,7 +149,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return activeBooking;
     }
 
-    public JPanel pendingBooking(){
+    protected JPanel pendingBooking(){
         JPanel pendingBooking = new JPanel();
         pendingBooking.setLayout(new BoxLayout(pendingBooking, BoxLayout.Y_AXIS));
 
@@ -183,7 +184,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return pendingBooking;
     }
 
-    public JPanel bookingHistory(){
+    protected JPanel bookingHistory(){
         JPanel bookingHistory = new JPanel();
         bookingHistory.setLayout(new BoxLayout(bookingHistory, BoxLayout.Y_AXIS));
 
@@ -201,4 +202,5 @@ public class IndividualDashboard extends CustomerDashboard {
 
         return bookingHistory;
     }
+
 }

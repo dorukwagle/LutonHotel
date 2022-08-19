@@ -230,7 +230,8 @@ public class ReceptionistDashboard extends JPanel {
         controls.add(subControl);
 
         JPanel btns = new JPanel();
-        btns.setLayout(new FlowLayout());
+
+        btns.setLayout(new GridLayout(1, 0, 10, 0));
         subControl.add(btns, BorderLayout.EAST);
 
         JLabel emailLable = new JLabel("Email or Username:");

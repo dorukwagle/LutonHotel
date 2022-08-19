@@ -50,11 +50,6 @@ public class Values {
         return new Dimension((int) (screenWidth() * percent), (int) (screenHeight() * percent) );
     }
 
-//    public static Dimension parentPct(Component parent, float percent){
-//        percent /= 100;
-//        return new Dimension((int) (parent.getWidth() * percent), (int) (parent.getHeight() * percent));
-//    }
-
     //return the applied dimension of the component, i.e. via setSize() or setMaximumSize() etc
     private static Dimension getDimension(Component parent){
         int w = parent.getWidth();
@@ -89,6 +84,6 @@ public class Values {
     }
 
     public static String getResPath(String name){
-        return resPath()  + name;
+        return resPath() + "/"  + name;
     }
 }
