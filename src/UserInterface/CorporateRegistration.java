@@ -170,7 +170,6 @@ public class CorporateRegistration extends JPanel implements ActionListener {
                 window.removeAllChild();
                 window.add(new CorporateDashboard());
             }
-            //TODO all fixed now fix exception part
         } catch (Exception e) {
             String msg = e.getMessage();
             if(msg.contains("Null")){
@@ -178,12 +177,6 @@ public class CorporateRegistration extends JPanel implements ActionListener {
             }
             else if(msg.contains("InvalidContact")){
                 errorMsg.setText("Invalid phone number");
-            }
-            else if(msg.contains("FullName")){
-                errorMsg.setText("Please enter your full name");
-            }
-            else if(msg.contains("CreditCard")){
-                errorMsg.setText("Please provide a valid Credit Card Number");
             }
             else if(msg.contains("EmailAddress")){
                 errorMsg.setText("Invalid Email Address");

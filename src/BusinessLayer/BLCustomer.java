@@ -56,11 +56,18 @@ public class BLCustomer {
                 customer.getAddress().equals("") ||
                 customer.getWebsite().equals("") ||
                 customer.getUserName().equals("");
+
         if(isNull) {
             throw new InputException("Null: Empty fields");
         }
         else if(!(customer.getContact().length() >= 10)) {
             throw new InputException("InvalidContact: must be atleast 10 digit");
+        }
+        //check if contact is a number not a string
+        try{
+            long num = Long.parseLong(customer.getContact());
+        }catch (Exception e){
+            throw new InputException("InvalidContact: contact is not number");
         }
         return true;
     }
@@ -75,7 +82,6 @@ public class BLCustomer {
                 customer.getCustGender().equals("") ||
                 customer.getUserName().equals("");
 
-        System.out.println(customer.getCustGender());
         if(isNull) {
             throw new InputException("Null: Empty fields");
         }
