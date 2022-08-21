@@ -12,7 +12,7 @@ public class Customer {
 	private String website;
 	private String accountValidTill;
 	private String nextBillingDate;
-	private String discountPercent;
+	private float discountPercent;
 	private String customerType;
 	private String userName;
 
@@ -28,7 +28,7 @@ public class Customer {
 		this.website = "";
 		this.accountValidTill = "";
 		this.nextBillingDate = "";
-		this.discountPercent = "";
+		this.discountPercent = 0;
 		this.customerType = "";
 		this.userName = "";
 	}
@@ -77,7 +77,7 @@ public class Customer {
 		return nextBillingDate;
 	}
 
-	public String getDiscountPercent() {
+	public float getDiscountPercent() {
 		return discountPercent;
 	}
 
@@ -133,7 +133,7 @@ public class Customer {
 		this.nextBillingDate = nextBillingDate;
 	}
 
-	public void setDiscountPercent(String discountPercent) {
+	public void setDiscountPercent(float discountPercent) {
 		this.discountPercent = discountPercent;
 	}
 

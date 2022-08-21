@@ -7,6 +7,7 @@ import DatabaseLayer.DLUser;
 import Utility.InputException;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 
 public class BLCustomer {
     private Customer customer;
@@ -99,12 +100,27 @@ public class BLCustomer {
         }
     }
 
-    //method to fetch the information about the user whent the user logs in
-    public Customer getCustomerInfo(){
-        //yet to implement
-        //when the user logs in, the username is foreign key, so the customer will only contain foreign key & user role
-        //now with the help of that foreign key and user role (i.e. customer_type for customer table), all the other information is fetched
-        //the userinterface layer creates BLCustomer object with only the username
-        return new Customer();
+    //method to fetch the information about the user when the user logs in, or just fetch the user information for other use
+    //like renewal of corporate customer account
+    public Customer getCustomerInfo() throws Exception{
+        //method to obtain full user information during login or account renewal
+        //the customer will contain, user_name and cust_id only
+        try{
+            DLCustomer dlCustomer = new DLCustomer(this.customer);
+            return dlCustomer.getCustomerInfo();
+        }catch (Exception e){
+            throw e;
+        }
     }
+
+    //method to calculate discount for the corporate customer
+    public Customer setUpDiscount(){
+        DecimalFormat df = new DecimalFormat("0.00");
+        //generate random percentage value, maximum is 15 minimum is 5
+        float random = 5 + (float) (Math.random() * (15 - 5) );
+        String discount  =  df.format(random);
+        this.customer.setDiscountPercent(Float.parseFloat(discount));
+        return this.customer;
+    }
+
 }
