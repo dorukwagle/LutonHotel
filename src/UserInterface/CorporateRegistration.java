@@ -61,13 +61,13 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         website.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(website);
 
-        JLabel emailLabel = new JLabel("Organization Email: ");
-        emailLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(emailLabel);
+        JLabel addressLabel = new JLabel("Company/Org. Address: ");
+        addressLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(addressLabel);
 
-        JTextField email = new JTextField();
-        email.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(email);
+        JTextField address = new JTextField();
+        address.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(address);
 
         JLabel contactLabel = new JLabel("Contact: ");
         contactLabel.setFont(new Font("Serif", Font.BOLD, 20));
@@ -76,6 +76,14 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         JTextField contact = new JTextField();
         contact.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(contact);
+
+        JLabel emailLabel = new JLabel("Organization Email: ");
+        emailLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(emailLabel);
+
+        JTextField email = new JTextField();
+        email.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(email);
 
         JLabel usernameLabel = new JLabel("Username: ");
         usernameLabel.setFont(new Font("Serif", Font.BOLD, 20));

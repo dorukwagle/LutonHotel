@@ -10,7 +10,7 @@ public class Main {
 
 		Values.initializeValues();
 		//add the home page for the first time
-		Window.getWindow().add(new IndividualDashboard());
-//		Window.getWindow().add(new HomePage());
+//		Window.getWindow().add(new IndividualDashboard());
+		Window.getWindow().add(new HomePage());
 	}
 }

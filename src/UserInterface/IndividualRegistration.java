@@ -76,7 +76,7 @@ public class IndividualRegistration extends JPanel implements ActionListener {
         contact.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(contact);
 
-        JLabel creditLabel = new JLabel("Credit Card Number: ");
+        JLabel creditLabel = new JLabel("Credit Card No.:(optional) ");
         creditLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(creditLabel);
 

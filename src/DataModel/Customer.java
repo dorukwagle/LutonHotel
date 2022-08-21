@@ -3,7 +3,7 @@ package DataModel;
 public class Customer {
 	private int custId;
 	private String custFullName;
-	private String custAddress;
+	private String address;
 	private String custAge;
 	private String custGender;
 	private String contact;
@@ -19,7 +19,7 @@ public class Customer {
 	public Customer() {
 		this.custId = 0;
 		this.custFullName = "";
-		this.custAddress = "";
+		this.address = "";
 		this.custAge = "";
 		this.custGender = "";
 		this.contact = "";
@@ -41,8 +41,8 @@ public class Customer {
 		return custFullName;
 	}
 
-	public String getCustAddress() {
-		return custAddress;
+	public String getAddress() {
+		return address;
 	}
 
 	public String getCustAge() {
@@ -97,8 +97,8 @@ public class Customer {
 		this.custFullName = custFullName;
 	}
 
-	public void setCustAddress(String custAddress) {
-		this.custAddress = custAddress;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public void setCustAge(String custAge) {
