@@ -43,7 +43,7 @@ public class Window extends JFrame {
         this.paint();
     }
 
-    private void paint(){
+    public void paint(){
         this.container.revalidate();
         this.container.repaint();
     }

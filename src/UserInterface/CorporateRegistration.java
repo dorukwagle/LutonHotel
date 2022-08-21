@@ -1,5 +1,9 @@
 package UserInterface;
 
+import BusinessLayer.BLCustomer;
+import BusinessLayer.BLLoginDetails;
+import DataModel.Customer;
+import DataModel.LoginDetails;
 import Utility.Values;
 
 import javax.swing.*;
@@ -10,7 +14,8 @@ import java.awt.event.ActionListener;
 public class CorporateRegistration extends JPanel implements ActionListener {
     private Window window;
     private Container container;
-
+    private JTextField orgName, userName, address, website, email, contact, password;
+    private JLabel errorMsg;
     public CorporateRegistration(){
         window = Window.getWindow();
         container = window.getContainer();
@@ -49,7 +54,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         orgNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(orgNameLabel);
 
-        JTextField orgName = new JTextField();
+        orgName = new JTextField();
         orgName.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(orgName);
 
@@ -57,7 +62,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         websiteLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(websiteLabel);
 
-        JTextField website = new JTextField();
+        website = new JTextField();
         website.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(website);
 
@@ -65,7 +70,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         addressLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(addressLabel);
 
-        JTextField address = new JTextField();
+        address = new JTextField();
         address.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(address);
 
@@ -73,7 +78,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         contactLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(contactLabel);
 
-        JTextField contact = new JTextField();
+        contact = new JTextField();
         contact.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(contact);
 
@@ -81,7 +86,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         emailLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(emailLabel);
 
-        JTextField email = new JTextField();
+        email = new JTextField();
         email.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(email);
 
@@ -89,7 +94,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         usernameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(usernameLabel);
 
-        JTextField userName = new JTextField();
+        userName = new JTextField();
         userName.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(userName);
 
@@ -97,7 +102,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         passwordLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(passwordLabel);
 
-        JTextField password = new JTextField();
+        password = new JTextField();
         password.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(password);
 
@@ -109,7 +114,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         subHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 15)));
         holder.add(subHolder);
 
-        JLabel errorMsg = new JLabel("error msg");
+        errorMsg = new JLabel("");
         errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
         errorMsg.setForeground(Color.RED);
         errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
@@ -117,6 +122,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
 
         JButton register = new JButton("Register");
         register.setFont(new Font("Serif", Font.BOLD, 40));
+        register.addActionListener(this);
         subHolder.add(register, BorderLayout.SOUTH);
     }
 
@@ -126,6 +132,71 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         if(command.equals("< Back")){
             this.window.removeAllChild();
             this.window.add(new HomePage());
+        }
+        else if(command.equals("Register")){
+            this.register();
+        }
+    }
+    private void register(){
+        try {
+            //before regestering firs check if the user already exists
+            LoginDetails loginDetails = new LoginDetails();
+            loginDetails.setUserPassword(password.getText().trim());
+            loginDetails.setEmailAddress(email.getText().trim());
+            loginDetails.setUserRole("corporate");
+            loginDetails.setUserName(userName.getText().trim());
+            loginDetails.setModelType("register");
+
+            //now validate the login information
+            BLLoginDetails blLoginDetails = new BLLoginDetails(loginDetails);
+
+            Customer customer = new Customer();
+            customer.setCustomerType("corporate");
+            customer.setOrganizationName(orgName.getText().trim());
+            customer.setAddress(address.getText().trim());
+            customer.setContact(contact.getText().trim());
+            customer.setWebsite(website.getText().trim());
+            customer.setUserName(userName.getText().trim());
+
+            //now validate customer information
+            BLCustomer blCustomer = new BLCustomer(customer);
+
+            //now save the login details first, in case if the user already exists we can terminate the process
+            loginDetails = blLoginDetails.save();
+            //now finally save the user information
+            customer = blCustomer.save();
+
+            if(customer != null && loginDetails != null){
+                window.removeAllChild();
+                window.add(new CorporateDashboard());
+            }
+            //TODO all fixed now fix exception part
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            if(msg.contains("Null")){
+                errorMsg.setText("Please fill all the details");
+            }
+            else if(msg.contains("InvalidContact")){
+                errorMsg.setText("Invalid phone number");
+            }
+            else if(msg.contains("FullName")){
+                errorMsg.setText("Please enter your full name");
+            }
+            else if(msg.contains("CreditCard")){
+                errorMsg.setText("Please provide a valid Credit Card Number");
+            }
+            else if(msg.contains("EmailAddress")){
+                errorMsg.setText("Invalid Email Address");
+            }
+            else if(msg.contains("Password")){
+                errorMsg.setText("Password should contain at least 4 characters");
+            }
+            else if(msg.equals("Email")){
+                errorMsg.setText("An user already exists with the given username");
+            }
+            else if(msg.equals("UserName")){
+                errorMsg.setText("Username is already used");
+            }
         }
     }
 }

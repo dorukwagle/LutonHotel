@@ -22,9 +22,7 @@ public class BLCustomer {
 
     public void setCustomer(Customer customer) throws InputException{
         try{
-            if(this.validateCustomer(customer));{
-                this.customer = customer;
-            }
+            this.validateCustomer(customer);
         } catch (InputException e){
             throw e;
         }
@@ -34,12 +32,16 @@ public class BLCustomer {
         //since there are two type of customers
         // it needs to be validated differently
         try{
-            if (customer.getCustomerType().equals("corporate"))
-                if (this.corporateValidation(customer))
+            if (customer.getCustomerType().equals("corporate")) {
+                if (this.corporateValidation(customer)) {
                     this.customer = customer;
-            else if (customer.getCustomerType().equals("individual"))
-                if (this.individualValidation(customer))
+                }
+            }
+            else if (customer.getCustomerType().equals("individual")) {
+                if (this.individualValidation(customer)) {
                     this.customer = customer;
+                }
+            }
         } catch (InputException e){
             throw e;
         }
@@ -54,7 +56,6 @@ public class BLCustomer {
                 customer.getAddress().equals("") ||
                 customer.getWebsite().equals("") ||
                 customer.getUserName().equals("");
-
         if(isNull) {
             throw new InputException("Null: Empty fields");
         }
@@ -74,8 +75,9 @@ public class BLCustomer {
                 customer.getCustGender().equals("") ||
                 customer.getUserName().equals("");
 
+        System.out.println(customer.getCustGender());
         if(isNull) {
-            throw new InputException("Null: fields");
+            throw new InputException("Null: Empty fields");
         }
         else if(!(customer.getContact().length() >= 10)) {
             throw new InputException("InvalidContact: must be atleast 10 digit");
@@ -86,7 +88,20 @@ public class BLCustomer {
         else if(!(customer.getCreditCardNo().equals("") || customer.getCreditCardNo().length() == 16)) {
             throw new InputException("CreditCard: Invalid credit card number");
         }
-
+        //check if contact is a number not a string
+        try{
+            long num = Long.parseLong(customer.getContact());
+        }catch (Exception e){
+            throw new InputException("InvalidContact: contact is not number");
+        }
+        try {
+            short age = Short.parseShort(customer.getCustAge());
+            if(age < 1 || age > 150 ){
+                throw new InputException("InvalidAge: not a valid age");
+            }
+        }catch (Exception e){
+            throw new InputException("InvalidAge: not a valid age");
+        }
         return true;
     }
 
