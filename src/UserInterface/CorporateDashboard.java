@@ -1,5 +1,7 @@
 package UserInterface;
 
+import DataModel.Customer;
+import DataModel.LoginDetails;
 import Utility.Values;
 
 import javax.swing.*;
@@ -7,13 +9,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class CorporateDashboard extends CustomerDashboard {
-    public CorporateDashboard(){
+    private Customer customer;
+    private LoginDetails loginDetails;
+    public CorporateDashboard(Customer customer, LoginDetails loginDetails){
+        this.customer = customer;
+        this.loginDetails = loginDetails;
         this.contentHolder.add(aboutPage());
     }
 
     protected JPanel aboutPage(){
         JPanel aboutPage = new JPanel();
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
+
+        //set heading text
+        String txt = "Welcome Back, " +  customer.getOrganizationName();
+        this.headingText.setText(txt);
 
         JPanel profileHolder = new JPanel();
         profileHolder.setLayout(new GridLayout(0, 1));
@@ -23,27 +33,35 @@ public class CorporateDashboard extends CustomerDashboard {
         head.setFont(new Font("Serif", Font.BOLD, 25));
         profileHolder.add(head);
 
-        JLabel name = new JLabel("Organization: <organizatoinName>");
+        JLabel name = new JLabel("Organization: " + customer.getOrganizationName());
         name.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(name);
 
-        JLabel website = new JLabel("Website: <website>");
+        JLabel email = new JLabel("Email Address: " + loginDetails.getEmailAddress());
+        email.setFont(new Font("Serif", Font.BOLD, 15));
+        profileHolder.add(email);
+
+        JLabel username = new JLabel("Username: @" + customer.getUserName());
+        username.setFont(new Font("Serif", Font.BOLD, 15));
+        profileHolder.add(username);
+
+        JLabel website = new JLabel("Website: " + customer.getWebsite());
         website.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(website);
 
-        JLabel expiry = new JLabel("Account Expiry Date: <account expiry date>");
+        JLabel expiry = new JLabel("Account Expiry Date: " + customer.getAccountValidTill());
         expiry.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(expiry);
 
-        JLabel billingDate = new JLabel("Next Billing Date: <next billing date>");
+        JLabel billingDate = new JLabel("Next Billing Date: " + customer.getNextBillingDate());
         billingDate.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(billingDate);
 
-        JLabel billingAmount = new JLabel("Billing Amount of Current Month: <amount>");
-        billingAmount.setFont(new Font("Serif", Font.BOLD, 15));
-        profileHolder.add(billingAmount);
+//        JLabel billingAmount = new JLabel("Billing Amount of Current Month: <amount>");
+//        billingAmount.setFont(new Font("Serif", Font.BOLD, 15));
+//        profileHolder.add(billingAmount);
 
-        JLabel discount = new JLabel("Discount Offered: <percent>");
+        JLabel discount = new JLabel("Discount Offered: " + customer.getDiscountPercent());
         discount.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(discount);
 

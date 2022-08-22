@@ -197,8 +197,10 @@ public class IndividualRegistration extends JPanel implements ActionListener {
                 customer = blCustomer.save();
 
                 if(customer != null && loginDetails != null){
+                        blCustomer = new BLCustomer(customer);
+                        customer = blCustomer.getCustomerInfo();
                         window.removeAllChild();
-                        window.add(new IndividualDashboard());
+                        window.add(new IndividualDashboard(customer, loginDetails));
                 }
             } catch (Exception e) {
                 String msg = e.getMessage();

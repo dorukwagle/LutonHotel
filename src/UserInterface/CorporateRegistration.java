@@ -169,8 +169,10 @@ public class CorporateRegistration extends JPanel implements ActionListener {
             customer = blCustomer.save();
 
             if(customer != null && loginDetails != null){
+                blCustomer = new BLCustomer(customer);
+                customer = blCustomer.getCustomerInfo();
                 window.removeAllChild();
-                window.add(new CorporateDashboard());
+                window.add(new CorporateDashboard(customer, loginDetails));
             }
         } catch (Exception e) {
             String msg = e.getMessage();

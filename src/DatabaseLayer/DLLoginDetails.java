@@ -77,12 +77,9 @@ public class DLLoginDetails {
 
     public LoginDetails checkLogin() throws Exception{
         try{
-            boolean isEmail = !this.loginDetails.getEmailAddress().equals("");
-            boolean isUserName = !this.loginDetails.getUserName().equals("");
-
-            String query = "SELECT * FROM login_details WHERE" + (isEmail? "email_address" : "user_name" ) + " = ? AND user_password = ?";
+            String query = "SELECT * FROM login_details WHERE user_name = ? AND user_password = ?";
             PreparedStatement statement = this.connection.prepareStatement(query);
-            statement.setString(1, (isUserName ? this.loginDetails.getUserName() : this.loginDetails.getEmailAddress()));
+            statement.setString(1, this.loginDetails.getUserName());
             statement.setString(2, this.loginDetails.getUserPassword());
 
             ResultSet rs = statement.executeQuery();
@@ -91,7 +88,6 @@ public class DLLoginDetails {
                 ld.setUserName(rs.getString("user_name"));
                 ld.setEmailAddress(rs.getString("email_address"));
                 ld.setUserRole(rs.getString("user_role"));
-                ld.setUserPassword(rs.getString("user_password"));
                 return this.loginDetails;
             }
             else {

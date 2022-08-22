@@ -1,5 +1,7 @@
 package UserInterface;
 
+import DataModel.Customer;
+import DataModel.LoginDetails;
 import Utility.Values;
 
 import javax.swing.*;
@@ -8,13 +10,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class IndividualDashboard extends CustomerDashboard {
-    public IndividualDashboard(){
+    private Customer customer;
+    private LoginDetails loginDetails;
+    public IndividualDashboard(Customer customer, LoginDetails loginDetails){
+        this.customer = customer;
+        this.loginDetails = loginDetails;
         this.contentHolder.add(aboutPage());
     }
 
     protected JPanel aboutPage(){
         JPanel aboutPage = new JPanel();
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
+
+        //set heading text
+        String txt = "Welcome Back, " + (customer.getCustGender().equals("male") ? "Mr." : "Ms.") + customer.getCustFullName();
+        this.headingText.setText(txt);
 
         JPanel profileHolder = new JPanel();
         profileHolder.setLayout(new GridLayout(0, 1));
@@ -24,23 +34,23 @@ public class IndividualDashboard extends CustomerDashboard {
         head.setFont(new Font("Serif", Font.BOLD, 25));
         profileHolder.add(head);
 
-        JLabel name = new JLabel("Name: <name>");
+        JLabel name = new JLabel("Name: " + customer.getCustFullName());
         name.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(name);
 
-        JLabel username = new JLabel("Username: @<username>");
+        JLabel username = new JLabel("Username: @" + customer.getUserName());
         username.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(username);
 
-        JLabel gender = new JLabel("gender: <gender>");
+        JLabel gender = new JLabel("gender: " + customer.getCustGender());
         gender.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(gender);
 
-        JLabel email = new JLabel("Email Address: <email address>");
+        JLabel email = new JLabel("Email Address: " + loginDetails.getEmailAddress());
         email.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(email);
 
-        JLabel creditCard = new JLabel("Credit Card No.: <card number>");
+        JLabel creditCard = new JLabel("Credit Card No.: " + customer.getCreditCardNo());
         creditCard.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(creditCard);
 

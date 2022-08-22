@@ -1,5 +1,9 @@
 package UserInterface;
 
+import BusinessLayer.BLCustomer;
+import BusinessLayer.BLLoginDetails;
+import DataModel.Customer;
+import DataModel.LoginDetails;
 import Utility.Values;
 
 import javax.swing.*;
@@ -10,6 +14,8 @@ import java.awt.event.ActionListener;
 public class Login extends JPanel implements ActionListener {
     private Window window;
     private Container container;
+    private JTextField userName, password;
+    private JLabel errorMsg;
     public Login(){
         window = Window.getWindow();
         container = window.getContainer();
@@ -46,12 +52,12 @@ public class Login extends JPanel implements ActionListener {
         inputPanel1.setLayout(new FlowLayout());
         inputHolder.add(inputPanel1, BorderLayout.NORTH);
 
-        JLabel emailLable = new JLabel("Email/Username: ");
+        JLabel emailLable = new JLabel("Username: ");
         emailLable.setFont(new Font("Serif", Font.BOLD, 20));
         emailLable.setPreferredSize(new Dimension(Values.widthPct(container, 15), Values.heightPct(container, 7)));
         inputPanel1.add(emailLable);
 
-        JTextField userName = new JTextField();
+        userName = new JTextField();
         userName.setFont(new Font("Serif", Font.BOLD, 20));
         userName.setPreferredSize(new Dimension(Values.widthPct(container, 30), Values.heightPct(container, 7)));
         inputPanel1.add(userName);
@@ -65,12 +71,12 @@ public class Login extends JPanel implements ActionListener {
         pwLabel.setPreferredSize(new Dimension(Values.widthPct(container, 15), Values.heightPct(container, 7)));
         inputPanel2.add(pwLabel);
 
-        JTextField password = new JTextField();
+        password = new JPasswordField();
         password.setFont(new Font("Serif", Font.BOLD, 20));
         password.setPreferredSize(new Dimension(Values.widthPct(container, 30), Values.heightPct(container, 7)));
         inputPanel2.add(password);
 
-        JLabel errorMsg = new JLabel("error msg");
+        errorMsg = new JLabel("");
         errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
         errorMsg.setForeground(Color.RED);
         errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
@@ -86,6 +92,8 @@ public class Login extends JPanel implements ActionListener {
 
         JButton loginBtn = new JButton("Log In");
         loginBtn.setFont(new Font("Serif", Font.BOLD, 40));
+        loginBtn.addActionListener(this);
+        loginBtn.setFocusable(false);
         btnHolder.add(loginBtn, BorderLayout.NORTH);
 
     }
@@ -96,5 +104,54 @@ public class Login extends JPanel implements ActionListener {
             this.window.removeAllChild();
             this.window.add(new HomePage());
         }
+        else if(command.equals("Log In")){
+            this.login();
+        }
+    }
+    private void login(){
+        try {
+            //firs create a login data model
+            LoginDetails loginDetails = new LoginDetails();
+            loginDetails.setUserPassword(password.getText().trim());
+            loginDetails.setUserName(userName.getText().trim());
+            loginDetails.setModelType("login");
+
+            BLLoginDetails blLoginDetails = new BLLoginDetails(loginDetails);
+            loginDetails = blLoginDetails.checkLogin();
+
+            if(loginDetails != null){
+                //display individual dashboard for individual customer
+                if(loginDetails.getUserRole().equals("individual")){
+                    //create a customer object
+                    Customer customer = new Customer();
+                    customer.setUserName(loginDetails.getUserName());
+
+                    //now send this customer object to the business layer and get all the information about the customer
+                    BLCustomer blCustomer = new BLCustomer(customer);
+                    customer = blCustomer.getCustomerInfo();
+
+                    window.removeAllChild();
+                    window.add(new IndividualDashboard(customer, loginDetails));
+                }
+                //display corporate dashboard for corporate customer
+                else if(loginDetails.getUserRole().equals("corporate")){
+                    Customer customer = new Customer();
+                    customer.setUserName(loginDetails.getUserName());
+
+                    BLCustomer blCustomer = new BLCustomer(customer);
+                    customer = blCustomer.getCustomerInfo();
+
+                    window.removeAllChild();
+                    window.add(new CorporateDashboard(customer, loginDetails));
+                }
+                //display receptionist dashboard for receptionist
+                else if(loginDetails.getUserRole().equals("receptionist")){
+
+                }
+            }
+        }catch (Exception e){
+            errorMsg.setText("Invalid username or password");
+        }
+
     }
 }

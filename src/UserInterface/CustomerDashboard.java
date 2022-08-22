@@ -11,7 +11,7 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
     protected Window window;
     protected Container container;
     protected JPanel contentHolder;
-
+    protected JLabel headingText;
     protected JButton about, bookNow, activeBookings, pendingBookings, history, logOut;
     public CustomerDashboard(){
         window = Window.getWindow();
@@ -69,7 +69,7 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
         heading.setLayout(new FlowLayout());
         add(heading);
 
-        JLabel headingText = new JLabel("Welcome Back, <<mr/ms>. <Name>!> / <organization name>");
+        headingText = new JLabel("");
         headingText.setFont(new Font("Serif", Font.BOLD, 25));
         heading.add(headingText);
 

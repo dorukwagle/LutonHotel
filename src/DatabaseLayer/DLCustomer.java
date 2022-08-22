@@ -85,11 +85,10 @@ public class DLCustomer {
 
     public Customer getCustomerInfo() throws Exception{
         Customer customer = new Customer();
-        String query = "SELECT * FROM customer WHERE cust_id = ? AND user_name = ?";
+        String query = "SELECT * FROM customer WHERE user_name = ?";
         try{
             PreparedStatement statement = this.connection.prepareStatement(query);
-            statement.setInt(1, this.customer.getCustId());
-            statement.setString(2, this.customer.getUserName());
+            statement.setString(1, this.customer.getUserName());
             ResultSet rs = statement.executeQuery();
             if(rs.next()){
                 if(rs.getString("customer_type").equals("corporate")){
