@@ -220,11 +220,15 @@ public class IndividualRegistration extends JPanel implements ActionListener {
                 else if(msg.contains("Password")){
                     errorMsg.setText("Password should contain at least 4 characters");
                 }
-                else if(msg.equals("Email")){
-                    errorMsg.setText("An user already exists with the given username");
+                else if(msg.contains("Email")){
+                    errorMsg.setText("An user already exists with the given email");
                 }
-                else if(msg.equals("UserName")){
+                else if(msg.contains("UserName")){
                     errorMsg.setText("Username is already used");
+                } else if (msg.contains("InvalidAge")) {
+                    errorMsg.setText("Please enter your age");
+                } else {
+                    System.out.println(msg);
                 }
             }
         }

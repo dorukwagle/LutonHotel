@@ -135,13 +135,12 @@ public class BLCustomer {
     }
 
     //method to calculate discount for the corporate customer
-    public Customer setUpDiscount(){
+    public void setUpDiscount(){
         DecimalFormat df = new DecimalFormat("0.00");
         //generate random percentage value, maximum is 15 minimum is 5
         float random = 5 + (float) (Math.random() * (15 - 5) );
         String discount  =  df.format(random);
         this.customer.setDiscountPercent(Float.parseFloat(discount));
-        return this.customer;
     }
 
 }

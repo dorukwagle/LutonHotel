@@ -123,6 +123,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         JButton register = new JButton("Register");
         register.setFont(new Font("Serif", Font.BOLD, 40));
         register.addActionListener(this);
+        register.setFocusable(false);
         subHolder.add(register, BorderLayout.SOUTH);
     }
 
@@ -160,7 +161,8 @@ public class CorporateRegistration extends JPanel implements ActionListener {
 
             //now validate customer information
             BLCustomer blCustomer = new BLCustomer(customer);
-
+            //set up discount for corporate user
+            blCustomer.setUpDiscount();
             //now save the login details first, in case if the user already exists we can terminate the process
             loginDetails = blLoginDetails.save();
             //now finally save the user information
@@ -184,11 +186,14 @@ public class CorporateRegistration extends JPanel implements ActionListener {
             else if(msg.contains("Password")){
                 errorMsg.setText("Password should contain at least 4 characters");
             }
-            else if(msg.equals("Email")){
-                errorMsg.setText("An user already exists with the given username");
+            else if(msg.contains("Email")){
+                errorMsg.setText("An user already exists with the given email");
             }
-            else if(msg.equals("UserName")){
+            else if(msg.contains("UserName")){
                 errorMsg.setText("Username is already used");
+            }
+            else {
+                System.out.println(msg);;
             }
         }
     }

@@ -34,16 +34,17 @@ public class DLCustomer {
             //create query for individual customer
             if (this.customer.getCustomerType().equals("individual")) {
                 String[] generated = {"cust_id"};
-                query = "INSERT INTO customer(cust_full_name, cust_age, address, cust_gender, contact, credit_card_no, user_name)" +
-                        " VALUES(?, ?, ?, ?, ?, ?, ?)";
+                query = "INSERT INTO customer(cust_full_name, cust_age, address, cust_gender, contact, credit_card_no, user_name, customer_type)" +
+                        " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
                 statement = this.connection.prepareStatement(query, generated);
                 statement.setString(1, this.customer.getCustFullName());
                 statement.setString(2, this.customer.getCustAge());
                 statement.setString(3, this.customer.getAddress());
                 statement.setString(4, this.customer.getCustGender());
-                statement.setString(5, this.customer.getCustAge());
+                statement.setString(5, this.customer.getContact());
                 statement.setString(6, this.customer.getCreditCardNo());
                 statement.setString(7, this.customer.getUserName());
+                statement.setString(8, this.customer.getCustomerType());
                 int updates = statement.executeUpdate();
                 if(updates > 0){
                     ResultSet rs = statement.getGeneratedKeys();
@@ -55,9 +56,9 @@ public class DLCustomer {
             }
             //if the customer is corporate organization
             else if (this.customer.getCustomerType().equals("corporate")) {
-                String[] generated = {"cust_id", "account_valid_till", "next_billing_date", "discount_percent"};
-                query = "INSERT INTO customer(organization_name, website, contact, account_valid_till, next_billing_date, discount_percent, user_name, address)" +
-                        " VALUES(?, ?, ?, DATE_ADD(CURRENT_DATE(), INTERVAL 365 DAY), DATE_ADD(CURRENT_DATE(), INTERVAL 30 DAY), ?, ?)";
+                String[] generated = {"cust_id"};
+                query = "INSERT INTO customer(organization_name, website, contact, account_valid_till, next_billing_date, discount_percent, user_name, address, customer_type)" +
+                        " VALUES(?, ?, ?, DATE_ADD(CURRENT_DATE(), INTERVAL 365 DAY), DATE_ADD(CURRENT_DATE(), INTERVAL 30 DAY), ?, ?, ?, ?)";
                 statement = this.connection.prepareStatement(query, generated);
                 statement.setString(1, this.customer.getOrganizationName());
                 statement.setString(2, this.customer.getWebsite());
@@ -65,15 +66,13 @@ public class DLCustomer {
                 statement.setFloat(4, this.customer.getDiscountPercent());
                 statement.setString(5, this.customer.getUserName());
                 statement.setString(6, this.customer.getAddress());
+                statement.setString(7, this.customer.getCustomerType());
                 //execute the query
                 int updates = statement.executeUpdate();
                 if(updates > 0){
                     ResultSet rs = statement.getGeneratedKeys();
                     if(rs.next()){
                         this.customer.setCustId(rs.getInt(1));
-                        this.customer.setAccountValidTill(String.valueOf(rs.getDate(2)));
-                        this.customer.setNextBillingDate(String.valueOf(rs.getDate(3)));
-                        this.customer.setDiscountPercent(rs.getFloat(4));
                         return this.customer;
                     }
                 }
@@ -100,6 +99,10 @@ public class DLCustomer {
                     customer.setCustId(rs.getInt("cust_id"));
                     customer.setAddress(rs.getString("address"));
                     customer.setUserName(rs.getString("user_name"));
+                    customer.setCustomerType(rs.getString("customer_type"));
+                    customer.setAccountValidTill(String.valueOf(rs.getDate("account_valid_till")));
+                    customer.setNextBillingDate(String.valueOf(rs.getDate("next_billing_date")));
+                    customer.setDiscountPercent(rs.getFloat("discount_percent"));
                     customer.setCustomerType(rs.getString("customer_type"));
                 }
                 else {
