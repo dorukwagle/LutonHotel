@@ -36,7 +36,7 @@ public class BLLoginDetails {
         //check if any value is null in case of register form
         boolean email = loginDetails.getEmailAddress().equals("");
         boolean userName = loginDetails.getUserName().equals("");
-        boolean isNull = (loginDetails.getModelType().equals("login") ? (!email || !userName ) : (email || userName)) ||
+        boolean isNull = (loginDetails.getModelType().equals("login") ? (userName) : (email || userName)) ||
                 loginDetails.getUserPassword().equals("");
 
         //check if the email address is valid

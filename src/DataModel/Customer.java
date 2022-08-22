@@ -16,6 +16,9 @@ public class Customer {
 	private String customerType;
 	private String userName;
 
+	//store if the customer object is created by login process or registration process
+	private String modelType; //login or register
+
 	public Customer() {
 		this.custId = 0;
 		this.custFullName = "";
@@ -143,5 +146,13 @@ public class Customer {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getModelType() {
+		return modelType;
+	}
+
+	public void setModelType(String modelType) {
+		this.modelType = modelType;
 	}
 }

@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 public class CorporateDashboard extends CustomerDashboard {
     private Customer customer;
     private LoginDetails loginDetails;
+    private JTable upcomingBookings;
     public CorporateDashboard(Customer customer, LoginDetails loginDetails){
         this.customer = customer;
         this.loginDetails = loginDetails;
@@ -61,7 +62,7 @@ public class CorporateDashboard extends CustomerDashboard {
 //        billingAmount.setFont(new Font("Serif", Font.BOLD, 15));
 //        profileHolder.add(billingAmount);
 
-        JLabel discount = new JLabel("Discount Offered: " + customer.getDiscountPercent());
+        JLabel discount = new JLabel("Discount Offered: " + customer.getDiscountPercent() + "%");
         discount.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(discount);
 
@@ -69,7 +70,7 @@ public class CorporateDashboard extends CustomerDashboard {
         head1.setFont(new Font("Serif", Font.BOLD, 30));
         profileHolder.add(head1);
 
-        JTable upcomingBookings = new JTable();
+        upcomingBookings = new JTable();
         JScrollPane scroll = new JScrollPane(upcomingBookings);
         aboutPage.add(scroll);
 

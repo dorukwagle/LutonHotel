@@ -2,6 +2,7 @@ package DatabaseLayer;
 
 import DataModel.LoginDetails;
 import UserInterface.Login;
+import Utility.AuthenticationException;
 import Utility.DatabaseConnector;
 
 import java.sql.Connection;
@@ -88,11 +89,11 @@ public class DLLoginDetails {
                 ld.setUserName(rs.getString("user_name"));
                 ld.setEmailAddress(rs.getString("email_address"));
                 ld.setUserRole(rs.getString("user_role"));
-                return this.loginDetails;
+                return ld;
             }
             else {
-                //the username of password is incorrect so return null
-                return null;
+                //the username of password is incorrect so raise an exception
+                throw new AuthenticationException("InvalidCredentials: username or password not found");
             }
         }catch (Exception e){
             throw e;

@@ -31,8 +31,13 @@ public class BLCustomer {
     }
 
     private boolean validateCustomer(Customer customer) throws InputException{
+        //if the user is logging in, the data does not need to be validated
+        if(customer.getModelType().equals("login")){
+            this.customer = customer;
+            return true;
+        }
         //since there are two type of customers
-        // it needs to be validated differently
+        // it needs to be validated differently during registration
         try{
             if (customer.getCustomerType().equals("corporate")) {
                 if (this.corporateValidation(customer)) {

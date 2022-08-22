@@ -125,6 +125,8 @@ public class Login extends JPanel implements ActionListener {
                     //create a customer object
                     Customer customer = new Customer();
                     customer.setUserName(loginDetails.getUserName());
+                    customer.setCustomerType(loginDetails.getUserRole());
+                    customer.setModelType("login");
 
                     //now send this customer object to the business layer and get all the information about the customer
                     BLCustomer blCustomer = new BLCustomer(customer);
@@ -137,6 +139,8 @@ public class Login extends JPanel implements ActionListener {
                 else if(loginDetails.getUserRole().equals("corporate")){
                     Customer customer = new Customer();
                     customer.setUserName(loginDetails.getUserName());
+                    customer.setCustomerType(loginDetails.getUserRole());
+                    customer.setModelType("login");
 
                     BLCustomer blCustomer = new BLCustomer(customer);
                     customer = blCustomer.getCustomerInfo();
@@ -150,7 +154,13 @@ public class Login extends JPanel implements ActionListener {
                 }
             }
         }catch (Exception e){
-            errorMsg.setText("Invalid username or password");
+            String msg = e.getMessage();
+            if(msg.contains("InvalidCredentials")){
+                errorMsg.setText("Incorrect username or password");
+            }
+            else if(msg.contains("Null")){
+                errorMsg.setText("Please fill all the fields");
+            }
         }
 
     }
