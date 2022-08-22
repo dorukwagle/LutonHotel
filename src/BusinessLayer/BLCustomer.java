@@ -8,6 +8,8 @@ import Utility.InputException;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BLCustomer {
     private Customer customer;
@@ -62,6 +64,13 @@ public class BLCustomer {
         }
         else if(!(customer.getContact().length() >= 10)) {
             throw new InputException("InvalidContact: must be atleast 10 digit");
+        }
+        //check if the url is valid
+        Pattern pattern = Pattern.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(customer.getWebsite());
+        boolean validUrl = matcher.find();
+        if(!validUrl){
+            throw new InputException("InvalidUrl: website is not valid");
         }
         //check if contact is a number not a string
         try{

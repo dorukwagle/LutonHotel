@@ -192,8 +192,8 @@ public class CorporateRegistration extends JPanel implements ActionListener {
             else if(msg.contains("UserName")){
                 errorMsg.setText("Username is already used");
             }
-            else {
-                System.out.println(msg);;
+            else if(msg.contains("InvalidUrl")){
+                errorMsg.setText("Please enter your website url");
             }
         }
     }

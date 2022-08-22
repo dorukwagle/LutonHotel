@@ -7,6 +7,9 @@ import Utility.AuthenticationException;
 import Utility.InputException;
 import com.mysql.cj.log.Log;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class BLLoginDetails {
     private LoginDetails loginDetails;
     private DLLoginDetails dlLoginDetails;
@@ -37,8 +40,9 @@ public class BLLoginDetails {
                 loginDetails.getUserPassword().equals("");
 
         //check if the email address is valid
-        boolean validEmail = loginDetails.getEmailAddress().contains("@") &&
-                loginDetails.getEmailAddress().contains(".");
+        Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(loginDetails.getEmailAddress());
+        boolean validEmail = matcher.find();
         //if the data is coming from login form, there may not be email address
         validEmail = !loginDetails.getModelType().equals("register") || validEmail;
 

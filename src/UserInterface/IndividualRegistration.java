@@ -227,8 +227,6 @@ public class IndividualRegistration extends JPanel implements ActionListener {
                     errorMsg.setText("Username is already used");
                 } else if (msg.contains("InvalidAge")) {
                     errorMsg.setText("Please enter your age");
-                } else {
-                    System.out.println(msg);
                 }
             }
         }
