@@ -53,6 +53,7 @@ public class DLBooking {
         return null;
     }
 
+    //method for querying the data from booking table for receptionist
     public ArrayList<Booking> getAllBookings() throws Exception {
         try {
             return this.queryBookings("all");
@@ -84,6 +85,41 @@ public class DLBooking {
             throw e;
         }
     }
+
+    //methods for querying data from booking tables for users
+    public ArrayList<Booking> getUserBookings(int userId) throws Exception {
+        try {
+            return this.queryUserBookings(userId,"all");
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public ArrayList<Booking> getUserUpComingBookings(int userId) throws Exception {
+        try {
+            return this.queryUserBookings(userId,"guaranteed");
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public ArrayList<Booking> getUserActiveBookings(int userId) throws Exception{
+        try {
+            return this.queryUserBookings(userId, "active");
+        } catch (Exception e){
+            throw e;
+        }
+    }
+
+    public ArrayList<Booking> getUserPendingBookings(int userId) throws Exception{
+        try {
+            return this.queryUserBookings(userId,"pending");
+        } catch (Exception e){
+            throw e;
+        }
+    }
+
+    //method that actually communicates with database and returns the data for receptionist
     private ArrayList<Booking> queryBookings(String filter) throws Exception {
         try {
             ArrayList<Booking> bookings = new ArrayList<Booking>();
@@ -118,4 +154,38 @@ public class DLBooking {
         }
     }
 
+    //method for querying the database for users
+    private ArrayList<Booking> queryUserBookings(int userId, String filter) throws Exception {
+        try {
+            ArrayList<Booking> bookings = new ArrayList<Booking>();
+            String query;
+            if(filter.equals("all")) {
+                query = "SELECT * FROM booking WHERE cust_id = '" + userId + "' ORDER BY booking_date DESC";
+            }
+            else {
+                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' AND cust_id = '" + userId + "' ORDER BY check_in_date";
+            }
+            Statement statement = this.connection.createStatement();
+
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                Booking booking = new Booking();
+                booking.setBookingId(rs.getInt("booking_id"));
+                booking.setBookingDate(rs.getDate("booking_date").toString());
+                booking.setCheckInDate(rs.getDate("check_in_date").toString());
+                booking.setCheckOutDate(rs.getDate("check_out_date").toString());
+                booking.setCustId(rs.getInt("cust_id"));
+                booking.setBookingStatus(rs.getString("booking_status"));
+                booking.setPreferredRoomType(rs.getString("preferred_room_type"));
+                booking.setInvoiceId(rs.getInt("invoice_id"));
+                booking.setRoomNo(rs.getInt("room_no"));
+                booking.setStaffId(rs.getInt("staff_id"));
+
+                bookings.add(booking);
+            }
+            return bookings;
+        } catch (Exception e){
+            throw e;
+        }
+    }
 }
