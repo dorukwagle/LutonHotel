@@ -1,5 +1,6 @@
 package UserInterface;
 
+import DataModel.Booking;
 import DataModel.Customer;
 import DataModel.LoginDetails;
 import Utility.Values;
@@ -12,10 +13,13 @@ import java.awt.event.ActionEvent;
 public class IndividualDashboard extends CustomerDashboard {
     private Customer customer;
     private LoginDetails loginDetails;
+
+    private JTable upcomingBookings, activeBookings, pendingBookings, bookingsHistory;
     public IndividualDashboard(Customer customer, LoginDetails loginDetails){
         this.customer = customer;
         this.loginDetails = loginDetails;
         this.contentHolder.add(aboutPage());
+
     }
 
     protected JPanel aboutPage(){
@@ -58,7 +62,7 @@ public class IndividualDashboard extends CustomerDashboard {
         head1.setFont(new Font("Serif", Font.BOLD, 30));
         profileHolder.add(head1);
 
-        JTable upcomingBookings = new JTable();
+        upcomingBookings = new JTable();
         JScrollPane scroll = new JScrollPane(upcomingBookings);
         aboutPage.add(scroll);
 
@@ -135,6 +139,8 @@ public class IndividualDashboard extends CustomerDashboard {
         bookNow.add(btnHold);
         JButton requestBooking = new JButton("Request Booking");
         requestBooking.setFont(new Font("Serif", Font.BOLD, 40));
+        requestBooking.setFocusable(false);
+        requestBooking.addActionListener(this);
         btnHold.add(requestBooking);
 
         return bookNow;
@@ -152,7 +158,7 @@ public class IndividualDashboard extends CustomerDashboard {
         heading.setFont(new Font("Serif", Font.BOLD, 30));
         head.add(heading, BorderLayout.NORTH);
 
-        JTable activeBookings = new JTable();
+        activeBookings = new JTable();
         JScrollPane scroll = new JScrollPane(activeBookings);
         head.add(scroll, BorderLayout.CENTER);
 
@@ -171,8 +177,8 @@ public class IndividualDashboard extends CustomerDashboard {
         heading.setFont(new Font("Serif", Font.BOLD, 30));
         head.add(heading, BorderLayout.NORTH);
 
-        JTable activeBookings = new JTable();
-        JScrollPane scroll = new JScrollPane(activeBookings);
+        pendingBookings = new JTable();
+        JScrollPane scroll = new JScrollPane(pendingBookings);
         head.add(scroll, BorderLayout.CENTER);
 
         JPanel btnHolder = new JPanel();
@@ -182,12 +188,14 @@ public class IndividualDashboard extends CustomerDashboard {
         JButton btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
         btnCancel.setFocusable(false);
+        btnCancel.addActionListener(this);
         btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnCancel);
 
         JButton btnEdit = new JButton("Edit");
         btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
         btnEdit.setFocusable(false);
+        btnEdit.addActionListener(this);
         btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnEdit);
 
@@ -206,11 +214,26 @@ public class IndividualDashboard extends CustomerDashboard {
         heading.setFont(new Font("Serif", Font.BOLD, 30));
         head.add(heading, BorderLayout.NORTH);
 
-        JTable activeBookings = new JTable();
-        JScrollPane scroll = new JScrollPane(activeBookings);
+        bookingsHistory = new JTable();
+        JScrollPane scroll = new JScrollPane(bookingsHistory);
         head.add(scroll, BorderLayout.CENTER);
 
         return bookingHistory;
     }
 
+    //override methods for handling button clicks
+    @Override
+    protected Booking requestBooking() {
+        return null;
+    }
+
+    @Override
+    protected void cancelBooking() {
+
+    }
+
+    @Override
+    protected Booking editBooking() {
+        return null;
+    }
 }

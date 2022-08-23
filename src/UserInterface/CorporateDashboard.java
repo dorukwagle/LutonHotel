@@ -1,5 +1,6 @@
 package UserInterface;
 
+import DataModel.Booking;
 import DataModel.Customer;
 import DataModel.LoginDetails;
 import Utility.Values;
@@ -217,4 +218,19 @@ public class CorporateDashboard extends CustomerDashboard {
         return bookingHistory;
     }
 
+    //implement methods for button clicks
+    @Override
+    protected Booking requestBooking() {
+        return null;
+    }
+
+    @Override
+    protected void cancelBooking() {
+
+    }
+
+    @Override
+    protected Booking editBooking() {
+        return null;
+    }
 }

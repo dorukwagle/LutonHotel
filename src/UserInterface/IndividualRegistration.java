@@ -111,7 +111,7 @@ public class IndividualRegistration extends JPanel implements ActionListener {
         passwordLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(passwordLabel);
 
-        password = new JTextField();
+        password = new JPasswordField();
         password.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(password);
 
@@ -187,6 +187,7 @@ public class IndividualRegistration extends JPanel implements ActionListener {
                 String gender = (male.isSelected()? "male" : "");
                 gender = (female.isSelected()? "female" : gender);
                 customer.setCustGender(gender);
+                customer.setModelType("register");
 
                 //now validate customer information
                 BLCustomer blCustomer = new BLCustomer(customer);

@@ -58,7 +58,7 @@ public class DLCustomer {
             else if (this.customer.getCustomerType().equals("corporate")) {
                 String[] generated = {"cust_id"};
                 query = "INSERT INTO customer(organization_name, website, contact, account_valid_till, next_billing_date, discount_percent, user_name, address, customer_type)" +
-                        " VALUES(?, ?, ?, DATE_ADD(CURRENT_DATE(), INTERVAL 365 DAY), DATE_ADD(CURRENT_DATE(), INTERVAL 30 DAY), ?, ?, ?, ?)";
+                        " VALUES(?, ?, ?, DATE_ADD(CURRENT_DATE(), INTERVAL 365 DAY), adddate(last_day(subdate(now(), interval 1 month)), 1 ), ?, ?, ?, ?)";
                 statement = this.connection.prepareStatement(query, generated);
                 statement.setString(1, this.customer.getOrganizationName());
                 statement.setString(2, this.customer.getWebsite());

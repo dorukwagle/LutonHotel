@@ -102,7 +102,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
         passwordLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(passwordLabel);
 
-        password = new JTextField();
+        password = new JPasswordField();
         password.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(password);
 
@@ -158,6 +158,7 @@ public class CorporateRegistration extends JPanel implements ActionListener {
             customer.setContact(contact.getText().trim());
             customer.setWebsite(website.getText().trim());
             customer.setUserName(userName.getText().trim());
+            customer.setModelType("register");
 
             //now validate customer information
             BLCustomer blCustomer = new BLCustomer(customer);

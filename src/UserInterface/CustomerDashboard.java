@@ -1,5 +1,6 @@
 package UserInterface;
 
+import DataModel.Booking;
 import Utility.Values;
 
 import javax.swing.*;
@@ -134,10 +135,23 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
             this.window.removeAllChild();
             this.window.add(new HomePage());
         }
+        else if (command.equals("Edit")){
+            this.editBooking();
+        }
+        else if(command.equals("Cancel")){
+            this.cancelBooking();
+        }
+        else if(command.equals("Request Booking")){
+            this.requestBooking();
+        }
     }
+
     protected abstract JPanel bookNow();
     protected abstract JPanel aboutPage();
     protected abstract JPanel activeBooking();
     protected abstract JPanel pendingBooking();
     protected abstract JPanel bookingHistory();
+    protected abstract Booking requestBooking();
+    protected abstract void cancelBooking();
+    protected abstract Booking editBooking();
 }
