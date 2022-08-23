@@ -1,6 +1,7 @@
 package DatabaseLayer;
 
 import DataModel.Customer;
+import Utility.AuthenticationException;
 import Utility.DatabaseConnector;
 
 import java.sql.Connection;
@@ -119,6 +120,25 @@ public class DLCustomer {
             return customer;
 
         } catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Customer updateCreditCard() throws Exception{
+        String query = "UPDATE customer set credit_card_no = ? where cust_id = ?";
+        try {
+            PreparedStatement statement = this.connection.prepareStatement(query);
+            statement.setString(1, this.customer.getCreditCardNo());
+            statement.setInt(2, this.customer.getCustId());
+            //execute the query
+            int updates = statement.executeUpdate();
+            if(updates > 0){
+                return this.customer;
+            }
+            else {
+                throw new Exception("Unable to execute query");
+            }
+        }catch (Exception e){
             throw e;
         }
     }

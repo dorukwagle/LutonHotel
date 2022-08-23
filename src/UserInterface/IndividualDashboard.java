@@ -62,7 +62,12 @@ public class IndividualDashboard extends CustomerDashboard {
         head1.setFont(new Font("Serif", Font.BOLD, 30));
         profileHolder.add(head1);
 
-        upcomingBookings = new JTable();
+        String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
+        String[] column = {"No upcoming bookings"};
+        upcomingBookings = new JTable(data, column);
+        upcomingBookings.setRowHeight(30);
+        upcomingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
+
         JScrollPane scroll = new JScrollPane(upcomingBookings);
         aboutPage.add(scroll);
 
@@ -100,7 +105,7 @@ public class IndividualDashboard extends CustomerDashboard {
         inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
         center.add(inputHolder);
 
-        JLabel checkinLabel = new JLabel("Check In Date(dd/mm/yyyy): ");
+        JLabel checkinLabel = new JLabel("Check In Date(dd-MM-yyyy): ");
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
@@ -108,25 +113,25 @@ public class IndividualDashboard extends CustomerDashboard {
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
-        JLabel websiteLabel = new JLabel("Check Out Date(dd/mm/yyyy): ");
-        websiteLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(websiteLabel);
+        JLabel checkoutLabel = new JLabel("Check Out Date(dd-MM-yyyy): ");
+        checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkoutLabel);
 
-        JTextField website = new JTextField();
-        website.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(website);
+        JTextField checkoutDate = new JTextField();
+        checkoutDate.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkoutDate);
 
-        JLabel emailLabel = new JLabel("Credit Card No.: ");
-        emailLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(emailLabel);
+        JLabel creditLabel = new JLabel("Credit Card No.: ");
+        creditLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(creditLabel);
 
-        JTextField email = new JTextField();
-        email.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(email);
+        JTextField credit = new JTextField(this.customer.getCreditCardNo());
+        credit.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(credit);
 
-        JLabel contactLabel = new JLabel("Room Type: ");
-        contactLabel.setFont(new Font("Serif", Font.BOLD, 20));
-        inputHolder.add(contactLabel);
+        JLabel roomLabel = new JLabel("Room Type: ");
+        roomLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(roomLabel);
 
         String[] rooms = {"Single", "Double", "Twin"};
         JComboBox roomType = new JComboBox(rooms);
@@ -158,7 +163,11 @@ public class IndividualDashboard extends CustomerDashboard {
         heading.setFont(new Font("Serif", Font.BOLD, 30));
         head.add(heading, BorderLayout.NORTH);
 
-        activeBookings = new JTable();
+        String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
+        String[] column = {"No active bookings"};
+        activeBookings = new JTable(data, column);
+        activeBookings.setRowHeight(30);
+        activeBookings.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(activeBookings);
         head.add(scroll, BorderLayout.CENTER);
 
@@ -177,7 +186,11 @@ public class IndividualDashboard extends CustomerDashboard {
         heading.setFont(new Font("Serif", Font.BOLD, 30));
         head.add(heading, BorderLayout.NORTH);
 
-        pendingBookings = new JTable();
+        String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
+        String[] column = {"No pending bookings"};
+        pendingBookings = new JTable(data, column);
+        pendingBookings.setRowHeight(30);
+        pendingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(pendingBookings);
         head.add(scroll, BorderLayout.CENTER);
 
@@ -214,7 +227,11 @@ public class IndividualDashboard extends CustomerDashboard {
         heading.setFont(new Font("Serif", Font.BOLD, 30));
         head.add(heading, BorderLayout.NORTH);
 
-        bookingsHistory = new JTable();
+        String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
+        String[] column = {"No bookings History"};
+        bookingsHistory = new JTable(data, column);
+        bookingsHistory.setRowHeight(30);
+        bookingsHistory.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(bookingsHistory);
         head.add(scroll, BorderLayout.CENTER);
 

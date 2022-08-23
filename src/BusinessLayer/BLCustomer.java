@@ -4,6 +4,7 @@ import DataModel.Customer;
 import DataModel.User;
 import DatabaseLayer.DLCustomer;
 import DatabaseLayer.DLUser;
+import Utility.AuthenticationException;
 import Utility.InputException;
 
 import javax.swing.*;
@@ -105,8 +106,16 @@ public class BLCustomer {
         else if(!customer.getCustFullName().contains(" ")) {
             throw new InputException("FullName: full name not given");
         }
-        else if(!(customer.getCreditCardNo().equals("") || customer.getCreditCardNo().length() == 16)) {
-            throw new InputException("CreditCard: Invalid credit card number");
+        //check if credit card contains valid length
+        if(!customer.getCreditCardNo().equals("")) {
+            if(customer.getCreditCardNo().length() < 13 ) {
+                throw new InputException("CreditCard: Invalid credit card number");
+            }
+            try{
+                Long.parseLong(customer.getCreditCardNo());
+            }catch (Exception e){
+                throw new InputException("CreditCard: Invalid credit card number");
+            }
         }
         //check if contact is a number not a string
         try{
@@ -157,4 +166,20 @@ public class BLCustomer {
         this.customer.setDiscountPercent(Float.parseFloat(discount));
     }
 
+    public Customer updateCreditCard()throws Exception{
+        if(customer.getCreditCardNo().trim().length() < 13 ){
+            throw new InputException("InvalidCreditCard");
+        }
+        try{
+            Long.parseLong(customer.getCreditCardNo().trim());
+        }catch (Exception e){
+            throw new InputException("InvalidCreditCard");
+        }
+        try {
+            DLCustomer dlCustomer = new DLCustomer(customer);
+            return dlCustomer.updateCreditCard();
+        } catch (Exception e){
+            throw e;
+        }
+    }
 }
