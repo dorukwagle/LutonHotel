@@ -9,12 +9,16 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.function.Supplier;
 
 public class IndividualDashboard extends CustomerDashboard {
     private Customer customer;
     private LoginDetails loginDetails;
 
     private JTable upcomingBookings, activeBookings, pendingBookings, bookingsHistory;
+    private JLabel creditCard;
+    private JTextField checkinDate, checkoutDate, credit;
+    private JComboBox roomType;
     public IndividualDashboard(Customer customer, LoginDetails loginDetails){
         this.customer = customer;
         this.loginDetails = loginDetails;
@@ -54,7 +58,7 @@ public class IndividualDashboard extends CustomerDashboard {
         email.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(email);
 
-        JLabel creditCard = new JLabel("Credit Card No.: " + customer.getCreditCardNo());
+        creditCard = new JLabel("Credit Card No.: " + customer.getCreditCardNo());
         creditCard.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(creditCard);
 
@@ -109,7 +113,7 @@ public class IndividualDashboard extends CustomerDashboard {
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
-        JTextField checkinDate = new JTextField();
+        checkinDate = new JTextField();
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
@@ -117,7 +121,7 @@ public class IndividualDashboard extends CustomerDashboard {
         checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutLabel);
 
-        JTextField checkoutDate = new JTextField();
+        checkoutDate = new JTextField();
         checkoutDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutDate);
 
@@ -125,7 +129,7 @@ public class IndividualDashboard extends CustomerDashboard {
         creditLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(creditLabel);
 
-        JTextField credit = new JTextField(this.customer.getCreditCardNo());
+        credit = new JTextField(this.customer.getCreditCardNo());
         credit.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(credit);
 
@@ -134,7 +138,7 @@ public class IndividualDashboard extends CustomerDashboard {
         inputHolder.add(roomLabel);
 
         String[] rooms = {"Single", "Double", "Twin"};
-        JComboBox roomType = new JComboBox(rooms);
+        roomType = new JComboBox(rooms);
         roomType.setFont(new Font("Serif", Font.BOLD, 25));
         inputHolder.add(roomType);
 
@@ -241,6 +245,7 @@ public class IndividualDashboard extends CustomerDashboard {
     //override methods for handling button clicks
     @Override
     protected Booking requestBooking() {
+
         return null;
     }
 

@@ -87,33 +87,33 @@ public class DLBooking {
     }
 
     //methods for querying data from booking tables for users
-    public ArrayList<Booking> getUserBookings(int userId) throws Exception {
+    public ArrayList<Booking> getUserBookings() throws Exception {
         try {
-            return this.queryUserBookings(userId,"all");
+            return this.queryUserBookings("all");
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public ArrayList<Booking> getUserUpComingBookings(int userId) throws Exception {
+    public ArrayList<Booking> getUserUpComingBookings() throws Exception {
         try {
-            return this.queryUserBookings(userId,"guaranteed");
+            return this.queryUserBookings("guaranteed");
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public ArrayList<Booking> getUserActiveBookings(int userId) throws Exception{
+    public ArrayList<Booking> getUserActiveBookings() throws Exception{
         try {
-            return this.queryUserBookings(userId, "active");
+            return this.queryUserBookings("active");
         } catch (Exception e){
             throw e;
         }
     }
 
-    public ArrayList<Booking> getUserPendingBookings(int userId) throws Exception{
+    public ArrayList<Booking> getUserPendingBookings() throws Exception{
         try {
-            return this.queryUserBookings(userId,"pending");
+            return this.queryUserBookings("pending");
         } catch (Exception e){
             throw e;
         }
@@ -155,15 +155,15 @@ public class DLBooking {
     }
 
     //method for querying the database for users
-    private ArrayList<Booking> queryUserBookings(int userId, String filter) throws Exception {
+    private ArrayList<Booking> queryUserBookings(String filter) throws Exception {
         try {
             ArrayList<Booking> bookings = new ArrayList<Booking>();
             String query;
             if(filter.equals("all")) {
-                query = "SELECT * FROM booking WHERE cust_id = '" + userId + "' ORDER BY booking_date DESC";
+                query = "SELECT * FROM booking WHERE cust_id = '" + this.booking.getCustId() + "' ORDER BY booking_date DESC";
             }
             else {
-                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' AND cust_id = '" + userId + "' ORDER BY check_in_date";
+                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' AND cust_id = '" + this.booking.getCustId() + "' ORDER BY check_in_date";
             }
             Statement statement = this.connection.createStatement();
 
