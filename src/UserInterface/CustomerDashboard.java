@@ -151,7 +151,7 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
     protected abstract JPanel activeBooking();
     protected abstract JPanel pendingBooking();
     protected abstract JPanel bookingHistory();
-    protected abstract Booking requestBooking();
+    protected abstract void requestBooking();
     protected abstract void cancelBooking();
-    protected abstract Booking editBooking();
+    protected abstract void editBooking();
 }

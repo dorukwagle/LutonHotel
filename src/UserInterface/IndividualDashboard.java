@@ -1,14 +1,19 @@
 package UserInterface;
 
+import BusinessLayer.BLBooking;
+import BusinessLayer.BLCustomer;
 import DataModel.Booking;
 import DataModel.Customer;
 import DataModel.LoginDetails;
 import Utility.Values;
+import com.mysql.cj.xdevapi.Table;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class IndividualDashboard extends CustomerDashboard {
@@ -16,7 +21,7 @@ public class IndividualDashboard extends CustomerDashboard {
     private LoginDetails loginDetails;
 
     private JTable upcomingBookings, activeBookings, pendingBookings, bookingsHistory;
-    private JLabel creditCard;
+    private JLabel creditCard, errorMsg;
     private JTextField checkinDate, checkoutDate, credit;
     private JComboBox roomType;
     public IndividualDashboard(Customer customer, LoginDetails loginDetails){
@@ -68,7 +73,8 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No upcoming bookings"};
-        upcomingBookings = new JTable(data, column);
+        DefaultTableModel model = new DefaultTableModel(data, column);
+        upcomingBookings = new JTable(model);
         upcomingBookings.setRowHeight(30);
         upcomingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
 
@@ -91,6 +97,7 @@ public class IndividualDashboard extends CustomerDashboard {
         btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnEdit);
 
+        this.loadUpcomingBookings();
         return aboutPage;
     }
 
@@ -109,7 +116,7 @@ public class IndividualDashboard extends CustomerDashboard {
         inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
         center.add(inputHolder);
 
-        JLabel checkinLabel = new JLabel("Check In Date(dd-MM-yyyy): ");
+        JLabel checkinLabel = new JLabel("Check In Date(yyyy-MM-dd): ");
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
@@ -117,7 +124,7 @@ public class IndividualDashboard extends CustomerDashboard {
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
-        JLabel checkoutLabel = new JLabel("Check Out Date(dd-MM-yyyy): ");
+        JLabel checkoutLabel = new JLabel("Check Out Date(yyyy-MM-dd): ");
         checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutLabel);
 
@@ -141,6 +148,15 @@ public class IndividualDashboard extends CustomerDashboard {
         roomType = new JComboBox(rooms);
         roomType.setFont(new Font("Serif", Font.BOLD, 25));
         inputHolder.add(roomType);
+
+        JPanel errPanel = new JPanel();
+        errPanel.setLayout(new FlowLayout());
+        bookNow.add(errPanel);
+        errorMsg = new JLabel("");
+        errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
+        errorMsg.setForeground(Color.RED);
+        errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
+        errPanel.add(errorMsg);
 
         JPanel btnHold = new JPanel();
         btnHold.setLayout(new FlowLayout());
@@ -169,11 +185,14 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No active bookings"};
-        activeBookings = new JTable(data, column);
+        DefaultTableModel model = new DefaultTableModel(data, column);
+        activeBookings = new JTable(model);
         activeBookings.setRowHeight(30);
         activeBookings.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(activeBookings);
         head.add(scroll, BorderLayout.CENTER);
+
+        this.loadActiveBookings();
 
         return activeBooking;
     }
@@ -192,7 +211,8 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No pending bookings"};
-        pendingBookings = new JTable(data, column);
+        DefaultTableModel model = new DefaultTableModel(data, column);
+        pendingBookings = new JTable(model);
         pendingBookings.setRowHeight(30);
         pendingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(pendingBookings);
@@ -216,6 +236,7 @@ public class IndividualDashboard extends CustomerDashboard {
         btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnEdit);
 
+        this.loadPendingBookings();
         return pendingBooking;
     }
 
@@ -233,20 +254,146 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No bookings History"};
-        bookingsHistory = new JTable(data, column);
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn(column);
+        model.addRow(data);
+        bookingsHistory = new JTable(model);
         bookingsHistory.setRowHeight(30);
         bookingsHistory.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(bookingsHistory);
         head.add(scroll, BorderLayout.CENTER);
 
+        this.loadBookingHistory();
         return bookingHistory;
     }
 
+    //method to load all the upcoming bookings in the table
+    private void loadUpcomingBookings(){
+        try {
+            BLBooking blBooking = new BLBooking();
+            ArrayList<Booking> bookings = blBooking.getUserUpComingBookings(this.customer.getCustId());
+            if(!(bookings.size() > 0)){
+                return;
+            }
+            //finally load data to the table
+            this.loadTable(bookings, this.upcomingBookings);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //method to load all the active bookings
+    public void loadActiveBookings(){
+        try {
+            BLBooking blBooking = new BLBooking();
+            ArrayList<Booking> bookings = blBooking.getUserActiveBookings(this.customer.getCustId());
+            if(!(bookings.size() > 0)){
+                return;
+            }
+            //finally load data to the table
+            this.loadTable(bookings, this.activeBookings);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //method to load all the  pending bookings in the table
+    public void loadPendingBookings(){
+        try {
+            BLBooking blBooking = new BLBooking();
+            ArrayList<Booking> bookings = blBooking.getUserPendingBookings(this.customer.getCustId());
+            if(!(bookings.size() > 0)){
+                return;
+            }
+            //finally load data to the table
+            this.loadTable(bookings, this.pendingBookings);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //method to load all the booking history in the table
+    public void loadBookingHistory(){
+        try {
+            BLBooking blBooking = new BLBooking();
+            ArrayList<Booking> bookings = blBooking.getUserBookings(this.customer.getCustId());
+            if(!(bookings.size() > 0)){
+                return;
+            }
+            //finally load data to the table
+            this.loadTable(bookings, this.bookingsHistory);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //method to load the table data
+    private void loadTable(ArrayList<Booking> bookings, JTable table){
+        //remove existing data from table
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+        table.revalidate();
+
+        //add new data to the table
+        model.addColumn("FullName");
+        model.addColumn("ID");
+        model.addColumn("BookedOn");
+        model.addColumn("CheckIn");
+        model.addColumn("CheckOut");
+        model.addColumn("RoomType");
+        model.addColumn("RoomNumber");
+        model.addColumn("Status");
+        //now add new data to the model
+        Booking booking;
+        for(int i = 0; i < bookings.size(); ++i){
+            booking = bookings.get(i);
+            model.insertRow(model.getRowCount(), new String[] {
+                    this.customer.getCustFullName(),
+                    String.valueOf(booking.getBookingId()),
+                    booking.getBookingDate(),
+                    booking.getCheckInDate(),
+                    booking.getCheckOutDate(),
+                    booking.getPreferredRoomType(),
+                    String.valueOf(booking.getRoomNo()),
+                    booking.getBookingStatus()
+            });
+        }
+    }
     //override methods for handling button clicks
     @Override
-    protected Booking requestBooking() {
+    protected void requestBooking() {
+        Booking booking = new Booking();
+        booking.setCustId(this.customer.getCustId());
+        booking.setPreferredRoomType(this.roomType.getSelectedItem().toString());
+        booking.setCheckInDate(this.checkinDate.getText());
+        booking.setCheckOutDate(this.checkoutDate.getText());
 
-        return null;
+        //set credit card info as well
+        this.customer.setCreditCardNo(credit.getText().trim());
+        //use BLCustomer layer to update credit card
+
+        try {
+            BLBooking blBooking = new BLBooking(booking);
+            this.customer.setModelType("login");
+            BLCustomer blCustomer = new BLCustomer(this.customer);
+            this.customer = blCustomer.updateCreditCard();
+            booking = blBooking.requestBooking();
+
+            if(booking != null){
+                this.changePage(this.pendingBooking(), super.pendingBookings);
+            }
+        }catch (Exception e){
+            String msg = e.getMessage();
+            if(msg.contains("InvalidDate")){
+                this.errorMsg.setText("Please enter a valid date");
+            }
+            else if(msg.contains("InvalidCreditCard")){
+                this.errorMsg.setText("Please enter a valid credit card number");
+            }
+            else {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
@@ -255,7 +402,7 @@ public class IndividualDashboard extends CustomerDashboard {
     }
 
     @Override
-    protected Booking editBooking() {
-        return null;
+    protected void editBooking() {
+
     }
 }

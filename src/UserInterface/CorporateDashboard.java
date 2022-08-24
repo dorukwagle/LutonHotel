@@ -13,6 +13,7 @@ public class CorporateDashboard extends CustomerDashboard {
     private Customer customer;
     private LoginDetails loginDetails;
     private JTable upcomingBookings;
+    private JLabel errorMsg;
     public CorporateDashboard(Customer customer, LoginDetails loginDetails){
         this.customer = customer;
         this.loginDetails = loginDetails;
@@ -134,6 +135,15 @@ public class CorporateDashboard extends CustomerDashboard {
         roomType.setFont(new Font("Serif", Font.BOLD, 25));
         inputHolder.add(roomType);
 
+        JPanel errPanel = new JPanel();
+        errPanel.setLayout(new FlowLayout());
+        bookNow.add(errPanel);
+        errorMsg = new JLabel("");
+        errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
+        errorMsg.setForeground(Color.RED);
+        errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
+        errPanel.add(errorMsg);
+
         JPanel btnHold = new JPanel();
         btnHold.setLayout(new FlowLayout());
         btnHold.setPreferredSize(new Dimension(Values.widthPct(this.container, 40), Values.heightPct(this.container, 10)));
@@ -220,8 +230,8 @@ public class CorporateDashboard extends CustomerDashboard {
 
     //implement methods for button clicks
     @Override
-    protected Booking requestBooking() {
-        return null;
+    protected void requestBooking() {
+
     }
 
     @Override
@@ -230,7 +240,7 @@ public class CorporateDashboard extends CustomerDashboard {
     }
 
     @Override
-    protected Booking editBooking() {
-        return null;
+    protected void editBooking() {
+
     }
 }

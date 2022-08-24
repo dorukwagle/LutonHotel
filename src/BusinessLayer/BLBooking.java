@@ -30,7 +30,7 @@ public class BLBooking {
     public void setBooking(Booking booking) throws Exception{
         try{
             //validate the date
-            DateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
             date.setLenient(false);
             date.parse(booking.getCheckInDate());
             date.parse(booking.getCheckOutDate());
@@ -49,40 +49,9 @@ public class BLBooking {
         }
     }
 
-    public Booking setBookingStatus(String status) throws Exception{
+    //method to change or edit or update the booking
+    public Booking updateBooking() throws Exception{
         try {
-            this.booking.setBookingStatus(status);
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.setBookingStatus();
-        } catch (Exception e){
-            throw e;
-        }
-    }
-
-    public Booking setRoomNo(int roomId) throws Exception{
-        try {
-            this.booking.setRoomNo(roomId);
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.setRoomNo();
-        } catch (Exception e){
-            throw e;
-        }
-    }
-
-    public Booking setInvoiceId(int invoiceId) throws Exception{
-        try{
-            this.booking.setInvoiceId(invoiceId);
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.setInvoiceId();
-        } catch (Exception e){
-            throw e;
-        }
-    }
-
-    //method to change or edit the booking
-    public Booking updateBooking(int bookingId) throws Exception{
-        try {
-            this.booking.setBookingId(bookingId);
             DLBooking dlBooking = new DLBooking(this.booking);
             return dlBooking.updateBooking();
         } catch (Exception e){

@@ -43,7 +43,7 @@ public class DLBooking {
             if (updates > 0) {
                 ResultSet rs = statement.getGeneratedKeys();
                 if (rs.next()) {
-                    this.booking.setBookingId(rs.getInt("booking_id"));
+                    this.booking.setBookingId(rs.getInt(1));
                     return this.booking;
                 }
             }
@@ -185,6 +185,36 @@ public class DLBooking {
             }
             return bookings;
         } catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Booking updateBooking() throws Exception{
+        try{
+            String query = "UPDATE booking set booking_date = DATE(?), check_in_date = DATE(?), " +
+                    "check_out_date = DATE(?), preferred_room_type = ?, booking_status = ?, cust_id = ?, " +
+                    "staff_id = ?, room_no = ?, invoice_id = ?  WHERE booking_id = ?)";
+
+            PreparedStatement statement = this.connection.prepareStatement(query);
+            statement.setString(1, this.booking.getBookingDate());
+            statement.setString(2, this.booking.getCheckInDate());
+            statement.setString(3, this.booking.getCheckOutDate());
+            statement.setString(4, this.booking.getPreferredRoomType());
+            statement.setString(5, this.booking.getBookingStatus());
+            statement.setInt(6, this.booking.getCustId());
+            statement.setInt(7, this.booking.getStaffId());
+            statement.setInt(8, this.booking.getRoomNo());
+            statement.setInt(9, this.booking.getInvoiceId());
+            statement.setInt(10, this.booking.getBookingId());
+
+            int updates = statement.executeUpdate();
+            if (updates > 0) {
+                return this.booking;
+            }
+            else {
+                return null;
+            }
+        }catch (Exception e){
             throw e;
         }
     }
