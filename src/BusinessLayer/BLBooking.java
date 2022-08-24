@@ -137,4 +137,14 @@ public class BLBooking {
             throw e;
         }
     }
+
+    public Booking getBooking(int bookingId) throws Exception{
+        try{
+            this.booking.setBookingId(bookingId);
+            DLBooking dlBooking = new DLBooking(this.booking);
+            return dlBooking.getBooking();
+        } catch (Exception e){
+            throw e;
+        }
+    }
 }

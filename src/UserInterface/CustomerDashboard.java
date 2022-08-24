@@ -1,5 +1,6 @@
 package UserInterface;
 
+import BusinessLayer.BLBooking;
 import DataModel.Booking;
 import Utility.Values;
 
@@ -144,6 +145,100 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
         else if(command.equals("Request Booking")){
             this.requestBooking();
         }
+    }
+
+    protected void editBooking(Booking booking){
+        JDialog dialog = new JDialog(this.window, "Edit Booking");
+
+        JPanel bookNow = new JPanel();
+        bookNow.setLayout(new BoxLayout(bookNow, BoxLayout.Y_AXIS));
+
+        JPanel center = new JPanel();
+        center.setLayout(new FlowLayout());
+        bookNow.add(center);
+
+        JPanel inputHolder = new JPanel();
+        GridLayout glay = new GridLayout(0, 2);
+        glay.setVgap(10);
+        inputHolder.setLayout(glay);
+        inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
+        center.add(inputHolder);
+
+        JLabel checkinLabel = new JLabel("Check In Date(yyyy-MM-dd): ");
+        checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkinLabel);
+
+        JTextField checkinDate = new JTextField();
+        checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkinDate);
+
+        JLabel checkoutLabel = new JLabel("Check Out Date(yyyy-MM-dd): ");
+        checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkoutLabel);
+
+        JTextField checkoutDate = new JTextField();
+        checkoutDate.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkoutDate);
+
+        JLabel roomLabel = new JLabel("Room Type: ");
+        roomLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(roomLabel);
+
+        String[] rooms = {"Single", "Double", "Twin"};
+        JComboBox roomType = new JComboBox(rooms);
+        roomType.setFont(new Font("Serif", Font.BOLD, 25));
+        inputHolder.add(roomType);
+
+        JPanel errPanel = new JPanel();
+        errPanel.setLayout(new FlowLayout());
+        bookNow.add(errPanel);
+        JLabel errorMsg = new JLabel("");
+        errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
+        errorMsg.setForeground(Color.RED);
+        errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
+        errPanel.add(errorMsg);
+
+        JPanel btnHold = new JPanel();
+        btnHold.setLayout(new FlowLayout());
+        btnHold.setPreferredSize(new Dimension(Values.widthPct(this.container, 40), Values.heightPct(this.container, 10)));
+        bookNow.add(btnHold);
+        JButton requestBooking = new JButton("Save Booking");
+        requestBooking.setFont(new Font("Serif", Font.BOLD, 40));
+        requestBooking.setFocusable(false);
+        requestBooking.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Booking booking1;
+                //get all the booking information and manually over write it
+                try {
+                    BLBooking blBooking = new BLBooking();
+                    booking1 = blBooking.getBooking(booking.getBookingId());
+                    booking1.setBookingStatus("pending");
+                    booking1.setRoomNo(0);
+                    booking1.setCheckInDate(checkinDate.getText().trim());
+                    booking1.setCheckOutDate(checkoutDate.getText().trim());
+                    booking1.setPreferredRoomType(roomType.getSelectedItem().toString());
+
+                    blBooking = new BLBooking(booking1);
+                    blBooking.updateBooking();
+                    dialog.dispose();
+                } catch (Exception e){
+                    String msg = e.getMessage();
+                    if(msg.contains("InvalidDate")){
+                        errorMsg.setText("Please enter the valid date");
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+        btnHold.add(requestBooking);
+
+        dialog.add(bookNow);
+
+        dialog.setSize(new Dimension(Values.widthPct(this.container, 90), Values.heightPct(this.container, 90)));
+        dialog.setVisible(true);
     }
 
     protected abstract JPanel bookNow();

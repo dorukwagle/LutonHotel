@@ -6,7 +6,6 @@ import DataModel.Booking;
 import DataModel.Customer;
 import DataModel.LoginDetails;
 import Utility.Values;
-import com.mysql.cj.xdevapi.Table;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,7 +13,6 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
 public class IndividualDashboard extends CustomerDashboard {
     private Customer customer;
@@ -24,14 +22,17 @@ public class IndividualDashboard extends CustomerDashboard {
     private JLabel creditCard, errorMsg;
     private JTextField checkinDate, checkoutDate, credit;
     private JComboBox roomType;
+
+    private String currentPage = "";
+
     public IndividualDashboard(Customer customer, LoginDetails loginDetails){
         this.customer = customer;
         this.loginDetails = loginDetails;
-        this.contentHolder.add(aboutPage());
-
+        this.contentHolder.add(this.aboutPage());
     }
 
     protected JPanel aboutPage(){
+        this.currentPage = "about";
         JPanel aboutPage = new JPanel();
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
 
@@ -73,7 +74,12 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No upcoming bookings"};
-        DefaultTableModel model = new DefaultTableModel(data, column);
+        DefaultTableModel model = new DefaultTableModel(data, column){
+          @Override
+          public boolean isCellEditable(int row, int column){
+              return false;
+          }
+        };
         upcomingBookings = new JTable(model);
         upcomingBookings.setRowHeight(30);
         upcomingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
@@ -88,6 +94,7 @@ public class IndividualDashboard extends CustomerDashboard {
         JButton btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
         btnCancel.setFocusable(false);
+        btnCancel.addActionListener(this);
         btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnCancel);
 
@@ -172,6 +179,7 @@ public class IndividualDashboard extends CustomerDashboard {
     }
 
     protected JPanel activeBooking(){
+        this.currentPage = "active";
         JPanel activeBooking = new JPanel();
         activeBooking.setLayout(new BoxLayout(activeBooking, BoxLayout.Y_AXIS));
 
@@ -185,7 +193,12 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No active bookings"};
-        DefaultTableModel model = new DefaultTableModel(data, column);
+        DefaultTableModel model = new DefaultTableModel(data, column){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
         activeBookings = new JTable(model);
         activeBookings.setRowHeight(30);
         activeBookings.setFont(new Font("Serif", Font.PLAIN, 20));
@@ -198,6 +211,7 @@ public class IndividualDashboard extends CustomerDashboard {
     }
 
     protected JPanel pendingBooking(){
+        this.currentPage = "pending";
         JPanel pendingBooking = new JPanel();
         pendingBooking.setLayout(new BoxLayout(pendingBooking, BoxLayout.Y_AXIS));
 
@@ -211,7 +225,12 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No pending bookings"};
-        DefaultTableModel model = new DefaultTableModel(data, column);
+        DefaultTableModel model = new DefaultTableModel(data, column){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
         pendingBookings = new JTable(model);
         pendingBookings.setRowHeight(30);
         pendingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
@@ -241,6 +260,7 @@ public class IndividualDashboard extends CustomerDashboard {
     }
 
     protected JPanel bookingHistory(){
+        this.currentPage = "history";
         JPanel bookingHistory = new JPanel();
         bookingHistory.setLayout(new BoxLayout(bookingHistory, BoxLayout.Y_AXIS));
 
@@ -254,7 +274,12 @@ public class IndividualDashboard extends CustomerDashboard {
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
         String[] column = {"No bookings History"};
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
         model.addColumn(column);
         model.addRow(data);
         bookingsHistory = new JTable(model);
@@ -331,6 +356,7 @@ public class IndividualDashboard extends CustomerDashboard {
         //remove existing data from table
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
+        model.setColumnCount(0);
         table.revalidate();
 
         //add new data to the table
@@ -398,11 +424,79 @@ public class IndividualDashboard extends CustomerDashboard {
 
     @Override
     protected void cancelBooking() {
+        //check if the table is empty
+        JTable table;
+        String page = this.currentPage;
+        if(page.equals("about") && !this.upcomingBookings.getSelectionModel().isSelectionEmpty()){
+            table = this.upcomingBookings;
+        }
+        else if(page.equals("pending") && !this.pendingBookings.getSelectionModel().isSelectionEmpty()){
+            table = this.pendingBookings;
+        }
+        else {
+            return;
+        }
+        //now check if the table is empty
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        //already there is one column
+        if(model.getColumnCount() < 2){
+            return;
+        }
+        try {
+            //now extract the data from selected row
+            int row = table.getSelectedRow();
+            String id = model.getValueAt(row, 1).toString();
+            String status = "cancelled";
 
+            //get booking information
+            BLBooking blBooking = new BLBooking();
+            Booking booking = blBooking.getBooking(Integer.parseInt(id));
+            booking.setBookingStatus(status);
+
+            //now update the booking
+            BLBooking blBooking1 = new BLBooking(booking);
+            blBooking1.updateBooking();
+            if(page.equals("about")){
+                this.loadUpcomingBookings();
+            }
+            else {
+                this.loadPendingBookings();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void editBooking() {
+        //check if the table is empty
+        JTable table;
+        String page = this.currentPage;
+        if(page.equals("about") && !this.upcomingBookings.getSelectionModel().isSelectionEmpty()){
+            table = this.upcomingBookings;
+        }
+        else if(page.equals("pending") && !this.pendingBookings.getSelectionModel().isSelectionEmpty()){
+            table = this.pendingBookings;
+        }
+        else {
+            return;
+        }
+        //now check if the table is empty
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        //already there is one column
+        if(model.getColumnCount() < 2){
+            return;
+        }
 
+        //get the booking id from selected row
+        int row = table.getSelectedRow();
+        String id = model.getValueAt(row, 1).toString();
+
+        //create a booking object with booking id and pass it to editBooking method
+        Booking booking = new Booking();
+        booking.setBookingId(Integer.parseInt(id));
+        this.editBooking(booking);
+        //update table after editing
+        this.loadPendingBookings();
     }
 }

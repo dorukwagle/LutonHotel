@@ -128,7 +128,7 @@ public class DLBooking {
                 query = "SELECT * FROM booking ORDER BY booking_date DESC";
             }
             else {
-                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' ORDER BY check_in_date";
+                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' ORDER BY booking_date DESC";
             }
             Statement statement = this.connection.createStatement();
 
@@ -163,7 +163,7 @@ public class DLBooking {
                 query = "SELECT * FROM booking WHERE cust_id = '" + this.booking.getCustId() + "' ORDER BY booking_date DESC";
             }
             else {
-                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' AND cust_id = '" + this.booking.getCustId() + "' ORDER BY check_in_date";
+                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' AND cust_id = '" + this.booking.getCustId() + "' ORDER BY booking_date DESC";
             }
             Statement statement = this.connection.createStatement();
 
@@ -193,7 +193,7 @@ public class DLBooking {
         try{
             String query = "UPDATE booking set booking_date = DATE(?), check_in_date = DATE(?), " +
                     "check_out_date = DATE(?), preferred_room_type = ?, booking_status = ?, cust_id = ?, " +
-                    "staff_id = ?, room_no = ?, invoice_id = ?  WHERE booking_id = ?)";
+                    "staff_id = ?, room_no = ?, invoice_id = ?  WHERE booking_id = ?";
 
             PreparedStatement statement = this.connection.prepareStatement(query);
             statement.setString(1, this.booking.getBookingDate());
@@ -215,6 +215,33 @@ public class DLBooking {
                 return null;
             }
         }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Booking getBooking() throws Exception{
+        try{
+            String query = "SELECT * FROM booking WHERE booking_id = " + this.booking.getBookingId();
+            Statement statement = this.connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            if(rs.next()){
+                Booking booking = new Booking();
+                booking.setBookingId(rs.getInt("booking_id"));
+                booking.setBookingDate(rs.getDate("booking_date").toString());
+                booking.setCheckInDate(rs.getDate("check_in_date").toString());
+                booking.setCheckOutDate(rs.getDate("check_out_date").toString());
+                booking.setCustId(rs.getInt("cust_id"));
+                booking.setBookingStatus(rs.getString("booking_status"));
+                booking.setPreferredRoomType(rs.getString("preferred_room_type"));
+                booking.setInvoiceId(rs.getInt("invoice_id"));
+                booking.setRoomNo(rs.getInt("room_no"));
+                booking.setStaffId(rs.getInt("staff_id"));
+                return booking;
+            }
+            else {
+                return null;
+            }
+        } catch (Exception e){
             throw e;
         }
     }
