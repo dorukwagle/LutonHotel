@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public abstract class CustomerDashboard extends JPanel implements ActionListener {
     protected Window window;
@@ -222,6 +223,8 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
                     blBooking = new BLBooking(booking1);
                     blBooking.updateBooking();
                     dialog.dispose();
+                    //update table content after saving
+                    changePage(pendingBooking(), pendingBookings);
                 } catch (Exception e){
                     String msg = e.getMessage();
                     if(msg.contains("InvalidDate")){
@@ -237,7 +240,7 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
 
         dialog.add(bookNow);
 
-        dialog.setSize(new Dimension(Values.widthPct(this.container, 90), Values.heightPct(this.container, 90)));
+        dialog.setSize(new Dimension(Values.widthPct(this.container, 60), Values.heightPct(this.container, 60)));
         dialog.setVisible(true);
     }
 
@@ -249,4 +252,6 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
     protected abstract void requestBooking();
     protected abstract void cancelBooking();
     protected abstract void editBooking();
+
+    protected abstract void loadTable(ArrayList<Booking> booking, JTable table);
 }

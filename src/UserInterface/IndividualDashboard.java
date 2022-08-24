@@ -73,7 +73,7 @@ public class IndividualDashboard extends CustomerDashboard {
         profileHolder.add(head1);
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
-        String[] column = {"No upcoming bookings"};
+        String[] column = {"No Upcoming bookings"};
         DefaultTableModel model = new DefaultTableModel(data, column){
           @Override
           public boolean isCellEditable(int row, int column){
@@ -101,6 +101,7 @@ public class IndividualDashboard extends CustomerDashboard {
         JButton btnEdit = new JButton("Edit");
         btnEdit.setFont(new Font("Serif", Font.BOLD, 40));
         btnEdit.setFocusable(false);
+        btnEdit.addActionListener(this);
         btnEdit.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnEdit);
 
@@ -192,7 +193,7 @@ public class IndividualDashboard extends CustomerDashboard {
         head.add(heading, BorderLayout.NORTH);
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
-        String[] column = {"No active bookings"};
+        String[] column = {"No Active bookings"};
         DefaultTableModel model = new DefaultTableModel(data, column){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -224,7 +225,7 @@ public class IndividualDashboard extends CustomerDashboard {
         head.add(heading, BorderLayout.NORTH);
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
-        String[] column = {"No pending bookings"};
+        String[] column = {"No Pending bookings"};
         DefaultTableModel model = new DefaultTableModel(data, column){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -273,7 +274,7 @@ public class IndividualDashboard extends CustomerDashboard {
         head.add(heading, BorderLayout.NORTH);
 
         String[][] data = {{"Please click on 'Book Now' to make new a booking"}};
-        String[] column = {"No bookings History"};
+        String[] column = {"No Booking History"};
         DefaultTableModel model = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -352,7 +353,7 @@ public class IndividualDashboard extends CustomerDashboard {
         }
     }
     //method to load the table data
-    private void loadTable(ArrayList<Booking> bookings, JTable table){
+    protected void loadTable(ArrayList<Booking> bookings, JTable table){
         //remove existing data from table
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
@@ -496,7 +497,5 @@ public class IndividualDashboard extends CustomerDashboard {
         Booking booking = new Booking();
         booking.setBookingId(Integer.parseInt(id));
         this.editBooking(booking);
-        //update table after editing
-        this.loadPendingBookings();
     }
 }
