@@ -37,7 +37,7 @@ public class IndividualDashboard extends CustomerDashboard {
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
 
         //set heading text
-        String txt = "Welcome Back, " + (customer.getCustGender().equals("male") ? "Mr." : "Ms.") + customer.getCustFullName();
+        String txt = "Welcome, " + (customer.getCustGender().equals("male") ? "Mr." : "Ms.") + customer.getCustFullName();
         this.headingText.setText(txt);
 
         JPanel profileHolder = new JPanel();

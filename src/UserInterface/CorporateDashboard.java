@@ -34,7 +34,7 @@ public class CorporateDashboard extends CustomerDashboard {
         aboutPage.setLayout(new BoxLayout(aboutPage, BoxLayout.Y_AXIS));
 
         //set heading text
-        String txt = "Welcome Back, " +  customer.getOrganizationName();
+        String txt = "Welcome, " +  customer.getOrganizationName();
         this.headingText.setText(txt);
 
         JPanel profileHolder = new JPanel();
@@ -69,9 +69,9 @@ public class CorporateDashboard extends CustomerDashboard {
         billingDate.setFont(new Font("Serif", Font.BOLD, 15));
         profileHolder.add(billingDate);
 
-//        JLabel billingAmount = new JLabel("Total Bill: <amount>");
-//        billingAmount.setFont(new Font("Serif", Font.BOLD, 15));
-//        profileHolder.add(billingAmount);
+        JLabel billingAmount = new JLabel("Total Bill: <amount>");
+        billingAmount.setFont(new Font("Serif", Font.BOLD, 15));
+        profileHolder.add(billingAmount);
 
         JLabel discount = new JLabel("Discount Offered: " + customer.getDiscountPercent() + "%");
         discount.setFont(new Font("Serif", Font.BOLD, 15));

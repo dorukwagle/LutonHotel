@@ -1,17 +1,27 @@
 package UserInterface;
 
+import BusinessLayer.BLBooking;
+import DataModel.Booking;
+import DataModel.BookingReceptionist;
+import DataModel.Staff;
 import Utility.Values;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.FieldPosition;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class ReceptionistDashboard extends JPanel {
+public class ReceptionistDashboard extends JPanel implements ActionListener {
     private Window window;
     private Container container;
     private JPanel contentHolder;
     private JButton home, rooms, bookings, billings;
-    public ReceptionistDashboard(){
+    private JTable pendingBookings, allRooms, bookingsList, bills;
+    private JComboBox roomtType, availability, bRoomtType, bookFilter;
+    private String currentPage = "";
+    public ReceptionistDashboard(Staff staff){
         window = Window.getWindow();
         container = window.getContainer();
         setPreferredSize(new Dimension(Values.fillParent(container)));
@@ -30,25 +40,30 @@ public class ReceptionistDashboard extends JPanel {
         home.setFont(new Font("Serif", Font.BOLD, 20));
         home.setFocusable(false);
         home.setEnabled(false);
+        home.addActionListener(this);
         btnBar.add(home);
 
         rooms = new JButton("Rooms");
         rooms.setFont(new Font("Serif", Font.BOLD, 20));
         rooms.setFocusable(false);
+        rooms.addActionListener(this);
         btnBar.add(rooms);
 
         bookings = new JButton("Bookings");
         bookings.setFont(new Font("Serif", Font.BOLD, 20));
         bookings.setFocusable(false);
+        bookings.addActionListener(this);
         btnBar.add(bookings);
 
         billings = new JButton("Billings");
         billings.setFont(new Font("Serif", Font.BOLD, 20));
         billings.setFocusable(false);
+        billings.addActionListener(this);
         btnBar.add(billings);
 
         JButton backBtn = new JButton("< Log Out");
         backBtn.setFocusable(false);
+        backBtn.addActionListener(this);
         backBtn.setFont(new Font("Serif", Font.BOLD, 20));
         topBar.add(backBtn, BorderLayout.EAST);
 
@@ -56,18 +71,26 @@ public class ReceptionistDashboard extends JPanel {
         heading.setLayout(new FlowLayout());
         add(heading);
 
-        JLabel headingText = new JLabel("<mr/ms>. <Name>!> Welcome to your Receptionist Dashboard");
+        JLabel headingText = new JLabel("Welcome, " + (staff.getStaffGender().equals("male") ? "Mr. " : "Ms. ") + staff.getStaffFullName());
         headingText.setFont(new Font("Serif", Font.BOLD, 30));
         heading.add(headingText);
-
-        contentHolder = new JPanel();
+        contentHolder = new JPanel(){
+            @Override
+            public Component add(Component comp){
+                super.add(comp);
+                revalidate();
+                repaint();
+                return comp;
+            }
+        };
         contentHolder.setLayout(new BoxLayout(contentHolder, BoxLayout.Y_AXIS));
         add(contentHolder);
 
-        contentHolder.add(billingPage());
+        contentHolder.add(this.homePage());
     }
 
     private JPanel homePage(){
+        this.currentPage = "home";
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout(2,100));
 
@@ -83,8 +106,17 @@ public class ReceptionistDashboard extends JPanel {
         heading.setFont(new Font("Serif", Font.BOLD, 20));
         head.add(heading, BorderLayout.NORTH);
 
-        JTable activeBookings = new JTable();
-        JScrollPane scroll = new JScrollPane(activeBookings);
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        model.addColumn("No Pending Bookings");
+        pendingBookings = new JTable(model);
+        pendingBookings.setRowHeight(30);
+        pendingBookings.setFont(new Font("Serif", Font.PLAIN, 20));
+        JScrollPane scroll = new JScrollPane(pendingBookings);
         head.add(scroll, BorderLayout.CENTER);
 
         JPanel btnHolder = new JPanel();
@@ -103,10 +135,12 @@ public class ReceptionistDashboard extends JPanel {
         btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnCancel);
 
+        this.loadPendingBookings();
         return container;
     }
 
     private JPanel roomsPage(){
+        this.currentPage = "rooms";
         JPanel roomsPage = new JPanel();
         roomsPage.setLayout(new BoxLayout(roomsPage, BoxLayout.Y_AXIS));
 
@@ -142,23 +176,34 @@ public class ReceptionistDashboard extends JPanel {
         subControl.add(filters, BorderLayout.EAST);
 
         String[] availableOptions = {"Available Rooms", "Booked Rooms"};
-        JComboBox availability = new JComboBox(availableOptions);
+        availability = new JComboBox(availableOptions);
         availability.setFont(new Font("Serif", Font.BOLD, 20));
         filters.add(availability);
 
         String[] roomTypes = {"Single Rooms", "Double Rooms", "Twin Rooms"};
-        JComboBox roomtType = new JComboBox(roomTypes);
+        roomtType = new JComboBox(roomTypes);
         roomtType.setFont(new Font("Serif", Font.BOLD, 20));
         filters.add(roomtType);
 
-        JTable activeBookings = new JTable();
-        JScrollPane scroll = new JScrollPane(activeBookings);
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        model.addColumn("No Rooms To Show");
+        allRooms = new JTable(model);
+        allRooms.setRowHeight(30);
+        allRooms.setFont(new Font("Serif", Font.PLAIN, 20));
+        JScrollPane scroll = new JScrollPane(allRooms);
         roomsPage.add(scroll);
 
+        this.loadRooms();
         return roomsPage;
     }
 
     private JPanel bookingPage(){
+        this.currentPage = "bookingReceptionist";
         JPanel bookingPage = new JPanel();
         bookingPage.setLayout(new BoxLayout(bookingPage, BoxLayout.Y_AXIS));
 
@@ -180,17 +225,26 @@ public class ReceptionistDashboard extends JPanel {
         subControl.add(filters, BorderLayout.EAST);
 
         String[] bookingFilter = {"History", "Cancelled", "Completed", "Upcoming"};
-        JComboBox bookFilter = new JComboBox(bookingFilter);
+        bookFilter = new JComboBox(bookingFilter);
         bookFilter.setFont(new Font("Serif", Font.BOLD, 20));
         filters.add(bookFilter);
 
         String[] roomTypes = {"Single Rooms", "Double Rooms", "Twin Rooms"};
-        JComboBox roomtType = new JComboBox(roomTypes);
-        roomtType.setFont(new Font("Serif", Font.BOLD, 20));
-        filters.add(roomtType);
+        bRoomtType = new JComboBox(roomTypes);
+        bRoomtType.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(bRoomtType);
 
-        JTable activeBookings = new JTable();
-        JScrollPane scroll = new JScrollPane(activeBookings);
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        model.addColumn("No Bookings To Show");
+        bookingsList = new JTable(model);
+        bookingsList.setRowHeight(30);
+        bookingsList.setFont(new Font("Serif", Font.PLAIN, 20));
+        JScrollPane scroll = new JScrollPane(bookingsList);
         bookingPage.add(scroll);
 
         JPanel btnHolder = new JPanel();
@@ -200,19 +254,23 @@ public class ReceptionistDashboard extends JPanel {
         JButton btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
         btnCancel.setFocusable(false);
+        btnCancel.addActionListener(this);
         btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnCancel);
 
         JButton btnActive = new JButton("Set As Active");
-        btnActive.setFont(new Font("Serif", Font.BOLD, 40));
+        btnActive.setFont(new Font("Serif", Font.BOLD, 40))
         btnActive.setFocusable(false);
+        btnActive.addActionListener(this);
         btnActive.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnActive);
 
+        this.loadBookings();
         return bookingPage;
     }
 
     private JPanel billingPage(){
+        this.currentPage = "billing";
         JPanel bookingPage = new JPanel();
         bookingPage.setLayout(new BoxLayout(bookingPage, BoxLayout.Y_AXIS));
 
@@ -249,6 +307,7 @@ public class ReceptionistDashboard extends JPanel {
 
         JButton search = new JButton("Search");
         search.setFont(new Font("Serif", Font.BOLD, 20));
+        search.addActionListener(this);
         search.setFocusable(false);
         btns.add(search);
 
@@ -261,14 +320,114 @@ public class ReceptionistDashboard extends JPanel {
 
         JButton generate = new JButton("Generate Bill");
         generate.setFocusable(false);
+        generate.addActionListener(this);
         generate.setFont(new Font("Serif", Font.BOLD, 30));
         btnhold.add(generate);
 
-        JTable activeBookings = new JTable();
-        JScrollPane scroll = new JScrollPane(activeBookings);
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        model.addColumn("No Bills");
+        bills = new JTable(model);
+        bills.setRowHeight(30);
+        bills.setFont(new Font("Serif", Font.PLAIN, 20));
+        JScrollPane scroll = new JScrollPane(bills);
         bookingPage.add(scroll);
 
         return bookingPage;
     }
 
+    private void setFocused(JButton btn){
+        this.home.setEnabled(true);
+        this.rooms.setEnabled(true);
+        this.bookings.setEnabled(true);
+        this.billings.setEnabled(true);
+        btn.setEnabled(false);
+    }
+
+    //method to change the page, i.e. when a button the menu bar is clicked, change the page content respectively
+    private void changePage(JPanel page, JButton btn){
+        this.setFocused(btn);
+        this.contentHolder.removeAll();
+        this.contentHolder.add(page);
+    }
+
+    //method to load all the  pending bookings in the table
+    public void loadPendingBookings(){
+        try {
+            BLBooking blBooking = new BLBooking();
+            ArrayList<BookingReceptionist> bookingReceptionists = blBooking.getUserPendingBookings(this.customer.getCustId());
+            if(!(bookingReceptionists.size() > 0)){
+                return;
+            }
+            //finally load data to the table
+            this.loadBookingsTable(bookingReceptionists, this.pendingBookings);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //method to load the table data
+    protected void loadBookingsTable(ArrayList<BookingReceptionist> bookingReceptionists, JTable table){
+        //remove existing data from table
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+        model.setColumnCount(0);
+        table.revalidate();
+
+        //add new data to the table
+        model.addColumn("FullName");
+        model.addColumn("Contact");
+        model.addColumn("Email");
+        model.addColumn("BookingID");
+        model.addColumn("BookedOn");
+        model.addColumn("CheckIn");
+        model.addColumn("CheckOut");
+        model.addColumn("RoomType");
+        model.addColumn("RoomNumber");
+        model.addColumn("Status");
+        //now add new data to the model
+        BookingReceptionist bookingReceptionist;
+        for(int i = 0; i < bookingReceptionists.size(); ++i){
+            bookingReceptionist = bookingReceptionists.get(i);
+
+            model.insertRow(model.getRowCount(), new String[] {
+                    bookingReceptionist.getCustomerName(),
+                    bookingReceptionist.getContact(),
+                    bookingReceptionist.getEmail(),
+                    String.valueOf(bookingReceptionist.getBookingId()),
+                    bookingReceptionist.getBookingDate(),
+                    bookingReceptionist.getCheckInDate(),
+                    bookingReceptionist.getCheckOutDate(),
+                    bookingReceptionist.getPreferredRoomType(),
+                    String.valueOf(bookingReceptionist.getRoomNo()),
+                    bookingReceptionist.getBookingStatus()
+            });
+        }
+    }
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        String cmd = actionEvent.getActionCommand();
+        //firs check for navigation command to change the page
+        if(cmd.equals("< Log Out")){
+            this.window.removeAllChild();
+            this.window.add(new HomePage());
+        }
+        else if(cmd.equals("Home")){
+            this.changePage(this.homePage(), this.home);
+        }
+        else if(cmd.equals("Rooms")){
+            this.changePage(this.roomsPage(), this.rooms);
+        }
+        else if (cmd.equals("Bookings")) {
+            this.changePage(this.bookingPage(), this.bookings);
+        }
+        else if(cmd.equals("Billings")){
+            this.changePage(this.billingPage(), this.billings);
+        }
+
+    }
 }

@@ -1,16 +1,16 @@
 package DataModel;
 
 public class Booking {
-    private int bookingId;
-    private String bookingDate;
-    private String checkInDate;
-    private String checkOutDate;
-    private String preferredRoomType;
-    private String bookingStatus;
-    private int custId;
-    private int roomNo;
-    private int staffId;
-    private int invoiceId;
+    protected int bookingId;
+    protected String bookingDate;
+    protected String checkInDate;
+    protected String checkOutDate;
+    protected String preferredRoomType;
+    protected String bookingStatus;
+    protected int custId;
+    protected int roomNo;
+    protected int staffId;
+    protected int invoiceId;
 
     public Booking() {
         this.bookingId = 0;

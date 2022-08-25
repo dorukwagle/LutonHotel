@@ -2,8 +2,10 @@ package UserInterface;
 
 import BusinessLayer.BLCustomer;
 import BusinessLayer.BLLoginDetails;
+import BusinessLayer.BLStaff;
 import DataModel.Customer;
 import DataModel.LoginDetails;
+import DataModel.Staff;
 import Utility.Values;
 
 import javax.swing.*;
@@ -150,7 +152,12 @@ public class Login extends JPanel implements ActionListener {
                 }
                 //display receptionist dashboard for receptionist
                 else if(loginDetails.getUserRole().equals("receptionist")){
+                    Staff staff;
+                    BLStaff blStaff = new BLStaff();
+                    staff = blStaff.getStaffInfo(loginDetails.getUserName());
 
+                    window.removeAllChild();
+                    window.add(new ReceptionistDashboard(staff));
                 }
             }
         }catch (Exception e){
