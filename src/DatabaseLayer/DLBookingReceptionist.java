@@ -1,6 +1,7 @@
 package DatabaseLayer;
 
 import DataModel.Booking;
+import DataModel.BookingReceptionist;
 import Utility.DatabaseConnector;
 
 import java.sql.Connection;
@@ -26,7 +27,7 @@ public class DLBookingReceptionist {
     }
 
     //method for querying the data from booking table for receptionist
-    public ArrayList<Booking> getAllBookings() throws Exception {
+    public ArrayList<BookingReceptionist> getAllBookings() throws Exception {
         try {
             return this.queryBookings("all");
         } catch (Exception e) {
@@ -34,7 +35,7 @@ public class DLBookingReceptionist {
         }
     }
 
-    public ArrayList<Booking> getUpComingBookings() throws Exception {
+    public ArrayList<BookingReceptionist> getUpComingBookings() throws Exception {
         try {
             return this.queryBookings("guaranteed");
         } catch (Exception e) {
@@ -42,7 +43,7 @@ public class DLBookingReceptionist {
         }
     }
 
-    public ArrayList<Booking> getActiveBookings() throws Exception{
+    public ArrayList<BookingReceptionist> getActiveBookings() throws Exception{
         try {
             return this.queryBookings("active");
         } catch (Exception e){
@@ -50,7 +51,7 @@ public class DLBookingReceptionist {
         }
     }
 
-    public ArrayList<Booking> getPendingBookings() throws Exception{
+    public ArrayList<BookingReceptionist> getPendingBookings() throws Exception{
         try {
             return this.queryBookings("pending");
         } catch (Exception e){
@@ -59,35 +60,39 @@ public class DLBookingReceptionist {
     }
 
     //method that actually communicates with database and returns the data for receptionist
-    private ArrayList<Booking> queryBookings(String filter) throws Exception {
+    private ArrayList<BookingReceptionist> queryBookings(String filter) throws Exception {
         try {
-            ArrayList<Booking> bookings = new ArrayList<Booking>();
-            String query;
+            ArrayList<BookingReceptionist> bookingReceptionists = new ArrayList<BookingReceptionist>();
+            String query = "SELECT c.cust_full_name fullname, c.contact contact, ld.email_address email, b.* FROM customer c" +
+                    " INNER JOIN booking b on c.cust_id = b.cust_id INNER  JOIN login_details ld on ld.user_name = c.user_name ";
             if(filter.equals("all")) {
-                query = "SELECT * FROM booking ORDER BY booking_date DESC";
+                query += " ORDER BY booking_date DESC";
             }
             else {
-                query = "SELECT * FROM booking WHERE booking_status = '" + filter + "' ORDER BY booking_date DESC";
+                query += " WHERE b.booking_status = '" + filter + "' ORDER BY booking_date DESC";
             }
             Statement statement = this.connection.createStatement();
 
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                Booking booking = new Booking();
-                booking.setBookingId(rs.getInt("booking_id"));
-                booking.setBookingDate(rs.getDate("booking_date").toString());
-                booking.setCheckInDate(rs.getDate("check_in_date").toString());
-                booking.setCheckOutDate(rs.getDate("check_out_date").toString());
-                booking.setCustId(rs.getInt("cust_id"));
-                booking.setBookingStatus(rs.getString("booking_status"));
-                booking.setPreferredRoomType(rs.getString("preferred_room_type"));
-                booking.setInvoiceId(rs.getInt("invoice_id"));
-                booking.setRoomNo(rs.getInt("room_no"));
-                booking.setStaffId(rs.getInt("staff_id"));
+                BookingReceptionist bookingReceptionist = new BookingReceptionist();
+                bookingReceptionist.setCustomerName(rs.getString("fullname"));
+                bookingReceptionist.setContact(rs.getString("contact"));
+                bookingReceptionist.setEmail(rs.getString("email"));
+                bookingReceptionist.setBookingId(rs.getInt("booking_id"));
+                bookingReceptionist.setBookingDate(rs.getDate("booking_date").toString());
+                bookingReceptionist.setCheckInDate(rs.getDate("check_in_date").toString());
+                bookingReceptionist.setCheckOutDate(rs.getDate("check_out_date").toString());
+                bookingReceptionist.setCustId(rs.getInt("cust_id"));
+                bookingReceptionist.setBookingStatus(rs.getString("booking_status"));
+                bookingReceptionist.setPreferredRoomType(rs.getString("preferred_room_type"));
+                bookingReceptionist.setInvoiceId(rs.getInt("invoice_id"));
+                bookingReceptionist.setRoomNo(rs.getInt("room_no"));
+                bookingReceptionist.setStaffId(rs.getInt("staff_id"));
 
-                bookings.add(booking);
+                bookingReceptionists.add(bookingReceptionist);
             }
-            return bookings;
+            return bookingReceptionists;
         } catch (Exception e){
             throw e;
         }

@@ -229,7 +229,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         filters.setLayout(new FlowLayout());
         subControl.add(filters, BorderLayout.EAST);
 
-        String[] bookingFilter = {"Upcoming", "Active", "Completed", "History"};
+        String[] bookingFilter = {"Upcoming", "Active", "History"};
         bookFilter = new JComboBox(bookingFilter);
         bookFilter.setFont(new Font("Serif", Font.BOLD, 20));
         filters.add(bookFilter);

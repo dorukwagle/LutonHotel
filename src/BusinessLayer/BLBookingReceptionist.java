@@ -46,13 +46,4 @@ public class BLBookingReceptionist {
             throw e;
         }
     }
-
-    public ArrayList<BookingReceptionist> getCompletedBookings() throws Exception{
-        try {
-            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
-            return dlBookingReceptionist.getCompletedBookings();
-        } catch (Exception e){
-            throw e;
-        }
-    }
 }
