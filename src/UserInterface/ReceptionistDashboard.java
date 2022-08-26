@@ -1,6 +1,7 @@
 package UserInterface;
 
 import BusinessLayer.BLBooking;
+import BusinessLayer.BLBookingReceptionist;
 import DataModel.Booking;
 import DataModel.BookingReceptionist;
 import DataModel.Room;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class ReceptionistDashboard extends JPanel implements ActionListener {
     private Window window;
@@ -20,7 +22,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     private JPanel contentHolder;
     private JButton home, rooms, bookings, billings;
     private JTable pendingBookings, allRooms, bookingsList, bills;
-    private JComboBox roomtType, availability, bRoomtType, bookFilter;
+    private JComboBox roomType, availability, bRoomType, bookFilter;
     private String currentPage = "";
 
     private Staff staff;
@@ -182,13 +184,25 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
         String[] availableOptions = {"Available Rooms", "Booked Rooms"};
         availability = new JComboBox(availableOptions);
+        availability.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                loadRooms();
+            }
+        });
         availability.setFont(new Font("Serif", Font.BOLD, 20));
         filters.add(availability);
 
         String[] roomTypes = {"Single Rooms", "Double Rooms", "Twin Rooms"};
-        roomtType = new JComboBox(roomTypes);
-        roomtType.setFont(new Font("Serif", Font.BOLD, 20));
-        filters.add(roomtType);
+        roomType = new JComboBox(roomTypes);
+        roomType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                loadRooms();
+            }
+        });
+        roomType.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(roomType);
 
         DefaultTableModel model = new DefaultTableModel(){
             @Override
@@ -235,15 +249,15 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         filters.add(bookFilter);
 
         String[] roomTypes = {"All", "Single Rooms", "Double Rooms", "Twin Rooms"};
-        bRoomtType = new JComboBox(roomTypes);
-        bRoomtType.addActionListener(new ActionListener() {
+        bRoomType = new JComboBox(roomTypes);
+        bRoomType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 filterListener();
             }
         });
-        bRoomtType.setFont(new Font("Serif", Font.BOLD, 20));
-        filters.add(bRoomtType);
+        bRoomType.setFont(new Font("Serif", Font.BOLD, 20));
+        filters.add(bRoomType);
 
         DefaultTableModel model = new DefaultTableModel(){
             @Override
@@ -293,7 +307,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             }
         });
 
-        this.loadBookings();
+//        this.loadBookings();
         return bookingPage;
     }
 
@@ -385,17 +399,17 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
     //method to load all the  pending bookings in the table
     public void loadPendingBookings(){
-//        try {
-//            BLBooking blBooking = new BLBooking();
-//            ArrayList<BookingReceptionist> bookingReceptionists = blBooking.getUserPendingBookings(this.staff.getStaffId());
-//            if(!(bookingReceptionists.size() > 0)){
-//                return;
-//            }
-//            //finally load data to the table
-//            this.loadBookingsTable(bookingReceptionists, this.pendingBookings);
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
+        try {
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            ArrayList<BookingReceptionist> bookingReceptionists = blBookingReceptionist.getPendingBookings();
+            if(!(bookingReceptionists.size() > 0)){
+                return;
+            }
+            //finally load data to the table
+            this.loadBookingsTable(bookingReceptionists, this.pendingBookings);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //method to load the table data
@@ -423,7 +437,8 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             bookingReceptionist = bookingReceptionists.get(i);
 
             model.insertRow(model.getRowCount(), new String[] {
-                    bookingReceptionist.getCustomerName(),
+                    (bookingReceptionist.getCustomerType().equals("individual") ?
+                            bookingReceptionist.getCustomerName() : bookingReceptionist.getOrganizationName()),
                     bookingReceptionist.getContact(),
                     bookingReceptionist.getEmail(),
                     String.valueOf(bookingReceptionist.getBookingId()),
@@ -437,13 +452,41 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         }
     }
 
-    private void loadRoomTable(ArrayList<Room> rooms, JTable table){
+    //method to load rooms according to the filter applied
+    private void loadRooms(){
 
+    }
+
+
+    private void loadRoomTable(ArrayList<Room> rooms, JTable table){
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+        model.setColumnCount(0);
+        table.revalidate();
+
+        model.addColumn("Room No.");
+        model.addColumn("Room Type");
+        model.addColumn("Price");
+        model.addColumn("Availability");
+        model.addColumn("Telephone No.");
+
+        Room room;
+        for(int i = 0; i < rooms.size(); ++i){
+            room = rooms.get(i);
+
+            model.insertRow(model.getRowCount(), new String[]{
+                    String.valueOf(room.getRoomNo()),
+                    room.getRoomType(),
+                    String.valueOf(room.getRoomPrice()),
+                    room.getRoomAvailability(),
+                    room.getRoomTelephoneNo()
+            });
+        }
     }
 
     //method to change the table data according to the applied filter
     private void filterListener(){
-        String roomFilter = (String) this.bRoomtType.getSelectedItem();
+        String roomFilter = (String) this.bRoomType.getSelectedItem();
         String bookingFilter = (String) this.bookFilter.getSelectedItem();
     }
 

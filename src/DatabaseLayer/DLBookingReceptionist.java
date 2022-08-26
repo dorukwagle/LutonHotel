@@ -63,8 +63,9 @@ public class DLBookingReceptionist {
     private ArrayList<BookingReceptionist> queryBookings(String filter) throws Exception {
         try {
             ArrayList<BookingReceptionist> bookingReceptionists = new ArrayList<BookingReceptionist>();
-            String query = "SELECT c.cust_full_name fullname, c.contact contact, ld.email_address email, b.* FROM customer c" +
-                    " INNER JOIN booking b on c.cust_id = b.cust_id INNER  JOIN login_details ld on ld.user_name = c.user_name ";
+            String query = "SELECT c.cust_full_name fullname, c.contact contact, c.customer_type customerType, c.organization_name orgName, " +
+                    "ld.email_address email, b.* FROM customer c INNER JOIN booking b on c.cust_id = b.cust_id " +
+                    "INNER JOIN login_details ld on ld.user_name = c.user_name ";
             if(filter.equals("all")) {
                 query += " ORDER BY booking_date DESC";
             }
@@ -89,6 +90,8 @@ public class DLBookingReceptionist {
                 bookingReceptionist.setInvoiceId(rs.getInt("invoice_id"));
                 bookingReceptionist.setRoomNo(rs.getInt("room_no"));
                 bookingReceptionist.setStaffId(rs.getInt("staff_id"));
+                bookingReceptionist.setCustomerType(rs.getString("customerType"));
+                bookingReceptionist.setOrganizationName(rs.getString("orgName"));
 
                 bookingReceptionists.add(bookingReceptionist);
             }
