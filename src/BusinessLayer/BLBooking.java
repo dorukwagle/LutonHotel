@@ -59,44 +59,6 @@ public class BLBooking {
         }
     }
 
-    //method to list all the bookings for receptionist
-    public ArrayList<Booking> getAllBookings() throws Exception {
-        try {
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.getAllBookings();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    //returns list all the upcoming bookings
-    public ArrayList<Booking> getUpComingBookings() throws Exception {
-        try {
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.getUpComingBookings();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public ArrayList<Booking> getActiveBookings() throws Exception{
-        try {
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.getActiveBookings();
-        } catch (Exception e){
-            throw e;
-        }
-    }
-
-    public ArrayList<Booking> getPendingBookings() throws Exception{
-        try {
-            DLBooking dlBooking = new DLBooking(this.booking);
-            return dlBooking.getPendingBookings();
-        } catch (Exception e){
-            throw e;
-        }
-    }
-
     //methods for querying data from booking tables for users
     public ArrayList<Booking> getUserBookings(int userId) throws Exception {
         try {
