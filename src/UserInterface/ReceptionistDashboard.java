@@ -2,6 +2,7 @@ package UserInterface;
 
 import BusinessLayer.BLBooking;
 import BusinessLayer.BLBookingReceptionist;
+import BusinessLayer.BLRooms;
 import DataModel.Booking;
 import DataModel.BookingReceptionist;
 import DataModel.Room;
@@ -454,9 +455,25 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
     //method to load rooms according to the filter applied
     private void loadRooms(){
-
+        String availFilt = this.availability.getSelectedItem().toString();
+        String roomFilt = this.roomType.getSelectedItem().toString();
+        availFilt = (availFilt.contains("Available") ? "available" : "booked");
+        if(roomFilt.contains("Single")){
+            roomFilt = "single";
+        }
+        else if(roomFilt.contains("Double")){
+            roomFilt = "double";
+        }
+        else {
+            roomFilt = "twin";
+        }
+        try{
+            BLRooms blRooms = new BLRooms();
+            this.loadRoomTable(blRooms.getFilteredRooms(availFilt, roomFilt), this.allRooms);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
 
     private void loadRoomTable(ArrayList<Room> rooms, JTable table){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
