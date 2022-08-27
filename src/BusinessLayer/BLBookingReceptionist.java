@@ -9,30 +9,10 @@ import java.util.ArrayList;
 
 public class BLBookingReceptionist {
 
-    //method to list all the bookings for receptionist
-    public ArrayList<BookingReceptionist> getAllBookings() throws Exception {
+    public ArrayList<BookingReceptionist> getFilteredBookings(String bookFilter, String roomFilter) throws Exception{
         try {
             DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
-            return dlBookingReceptionist.getAllBookings();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    //returns list all the upcoming bookings
-    public ArrayList<BookingReceptionist> getUpComingBookings() throws Exception {
-        try {
-            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
-            return dlBookingReceptionist.getUpComingBookings();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public ArrayList<BookingReceptionist> getActiveBookings() throws Exception{
-        try {
-            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
-            return dlBookingReceptionist.getActiveBookings();
+            return dlBookingReceptionist.getFilteredBookings(bookFilter, roomFilter);
         } catch (Exception e){
             throw e;
         }

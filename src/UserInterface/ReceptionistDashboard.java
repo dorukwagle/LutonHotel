@@ -254,7 +254,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         bRoomType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                filterListener();
+                loadBookings();
             }
         });
         bRoomType.setFont(new Font("Serif", Font.BOLD, 20));
@@ -304,11 +304,11 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                     btnCancel.setEnabled(false);
                 }
                 //now call the filter listener to change the table data
-                filterListener();
+                loadBookings();
             }
         });
 
-//        this.loadBookings();
+        this.loadBookings();
         return bookingPage;
     }
 
@@ -398,8 +398,43 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         this.contentHolder.add(page);
     }
 
+    //method to load the bookings data according to the applied filter
+    private void loadBookings(){
+        String bookFilt = this.bookFilter.getSelectedItem().toString();
+        String roomFilt = this.bRoomType.getSelectedItem().toString();
+        //check for booking type filter
+        if(bookFilt.equals("Upcoming")){
+            bookFilt = "guaranteed";
+        }
+        else if(bookFilt.equals("Active")){
+            bookFilt = "active";
+        }
+        else{
+            bookFilt = "History";
+        }
+
+        //check for room type filter
+        if(roomFilt.contains("Single")){
+            roomFilt = "single";
+        }
+        else if(roomFilt.contains("Double")){
+            roomFilt = "double";
+        }
+        else if (roomFilt.contains("Twin")){
+            roomFilt = "twin";
+        }
+        else{
+            roomFilt = "All";
+        }
+        try{
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            this.loadBookingsTable(blBookingReceptionist.getFilteredBookings(bookFilt, roomFilt), this.bookingsList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     //method to load all the  pending bookings in the table
-    public void loadPendingBookings(){
+    private void loadPendingBookings(){
         try {
             BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
             ArrayList<BookingReceptionist> bookingReceptionists = blBookingReceptionist.getPendingBookings();
@@ -499,12 +534,6 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                     room.getRoomTelephoneNo()
             });
         }
-    }
-
-    //method to change the table data according to the applied filter
-    private void filterListener(){
-        String roomFilter = (String) this.bRoomType.getSelectedItem();
-        String bookingFilter = (String) this.bookFilter.getSelectedItem();
     }
 
     @Override

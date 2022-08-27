@@ -53,25 +53,23 @@ public class DLBookingReceptionist {
 
     public ArrayList<BookingReceptionist> getPendingBookings() throws Exception{
         try {
-            return this.queryBookings("pending");
+            String filter = " WHERE b.booking_status = 'pending' ";
+            return this.queryBookings(filter);
         } catch (Exception e){
             throw e;
         }
     }
 
     //method that actually communicates with database and returns the data for receptionist
-    private ArrayList<BookingReceptionist> queryBookings(String filter) throws Exception {
+    private ArrayList<BookingReceptionist> queryBookings(String filterQuery) throws Exception {
         try {
             ArrayList<BookingReceptionist> bookingReceptionists = new ArrayList<BookingReceptionist>();
-            String query = "SELECT c.cust_full_name fullname, c.contact contact, c.customer_type customerType, c.organization_name orgName, " +
+            String querySuffix = "SELECT c.cust_full_name fullname, c.contact contact, c.customer_type customerType, c.organization_name orgName, " +
                     "ld.email_address email, b.* FROM customer c INNER JOIN booking b on c.cust_id = b.cust_id " +
                     "INNER JOIN login_details ld on ld.user_name = c.user_name ";
-            if(filter.equals("all")) {
-                query += " ORDER BY booking_date DESC";
-            }
-            else {
-                query += " WHERE b.booking_status = '" + filter + "' ORDER BY booking_date DESC";
-            }
+            String queryPrefix = " ORDER BY booking_date DESC";
+            String query = querySuffix + filterQuery + queryPrefix;
+
             Statement statement = this.connection.createStatement();
 
             ResultSet rs = statement.executeQuery(query);
@@ -101,4 +99,32 @@ public class DLBookingReceptionist {
         }
     }
 
+    public ArrayList<BookingReceptionist> getFilteredBookings(String bookFilter, String roomFilter) throws Exception{
+        try {
+            String where = " WHERE ";
+            String and = " AND ";
+            String roomFilt = ( roomFilter.equals("All") ? " " :
+                    " b.preferred_room_type = '" + roomFilter + "' ");
+
+            String bookFilt = (bookFilter.equals("History") ? " " :
+                " b.booking_status = '" + bookFilter + "' " );
+
+            String filterQuery;
+            //if bothe the filters are empty, means no filter is needed, query all the data
+            if(roomFilt.equals(" ") && bookFilt.equals(" ")){
+                filterQuery = " ";
+            }
+            //if both the filters are given than, apply both the filters using 'WHERE' and 'AND'
+            else if(!roomFilt.equals(" ") && !bookFilt.equals(" ")){
+                filterQuery = where + roomFilt + and + bookFilt;
+            }
+            //if only one of the filter is applied then apply only one filter with WHERE
+            else{
+                filterQuery = (roomFilt.equals(" ") ? where + bookFilt : where + roomFilt);
+            }
+            return this.queryBookings(filterQuery);
+        }catch (Exception e){
+            throw e;
+        }
+    }
 }
