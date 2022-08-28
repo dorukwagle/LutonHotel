@@ -162,7 +162,6 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
         GridLayout glay = new GridLayout(0, 2);
         glay.setVgap(10);
         inputHolder.setLayout(glay);
-        inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
         center.add(inputHolder);
 
         JLabel checkinLabel = new JLabel("Check In Date(yyyy-MM-dd): ");
@@ -201,7 +200,6 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
 
         JPanel btnHold = new JPanel();
         btnHold.setLayout(new FlowLayout());
-        btnHold.setPreferredSize(new Dimension(Values.widthPct(this.container, 40), Values.heightPct(this.container, 10)));
         bookNow.add(btnHold);
         JButton requestBooking = new JButton("Save Booking");
         requestBooking.setFont(new Font("Serif", Font.BOLD, 40));

@@ -7,6 +7,8 @@ import DataModel.Booking;
 import DataModel.BookingReceptionist;
 import DataModel.Room;
 import DataModel.Staff;
+import DatabaseLayer.DLBooking;
+import DatabaseLayer.DLBookingReceptionist;
 import Utility.Values;
 
 import javax.swing.*;
@@ -134,12 +136,14 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         JButton btnConfirm = new JButton("Confirm");
         btnConfirm.setFont(new Font("Serif", Font.BOLD, 40));
         btnConfirm.setFocusable(false);
+        btnConfirm.addActionListener(this);
         btnConfirm.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnConfirm);
 
         JButton btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Serif", Font.BOLD, 40));
         btnCancel.setFocusable(false);
+        btnCancel.addActionListener(this);
         btnCancel.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 8)));
         btnHolder.add(btnCancel);
 
@@ -171,28 +175,19 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
         JButton addRoom = new JButton("Add Room");
         addRoom.setFont(new Font("Serif", Font.BOLD, 30));
+        addRoom.addActionListener(this);
         addRoom.setFocusable(false);
         btns.add(addRoom);
 
         JButton removeRoom = new JButton("Remove Room");
         removeRoom.setFont(new Font("Serif", Font.BOLD, 30));
         removeRoom.setFocusable(false);
+        removeRoom.addActionListener(this);
         btns.add(removeRoom);
 
         JPanel filters = new JPanel();
         filters.setLayout(new FlowLayout());
         subControl.add(filters, BorderLayout.EAST);
-
-        String[] availableOptions = {"Available Rooms", "Booked Rooms"};
-        availability = new JComboBox(availableOptions);
-        availability.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                loadRooms();
-            }
-        });
-        availability.setFont(new Font("Serif", Font.BOLD, 20));
-        filters.add(availability);
 
         String[] roomTypes = {"Single Rooms", "Double Rooms", "Twin Rooms"};
         roomType = new JComboBox(roomTypes);
@@ -223,7 +218,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     }
 
     private JPanel bookingPage(){
-        this.currentPage = "bookingReceptionist";
+        this.currentPage = "booking";
         JPanel bookingPage = new JPanel();
         bookingPage.setLayout(new BoxLayout(bookingPage, BoxLayout.Y_AXIS));
 
@@ -490,9 +485,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
     //method to load rooms according to the filter applied
     private void loadRooms(){
-        String availFilt = this.availability.getSelectedItem().toString();
         String roomFilt = this.roomType.getSelectedItem().toString();
-        availFilt = (availFilt.contains("Available") ? "available" : "booked");
         if(roomFilt.contains("Single")){
             roomFilt = "single";
         }
@@ -504,12 +497,30 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         }
         try{
             BLRooms blRooms = new BLRooms();
-            this.loadRoomTable(blRooms.getFilteredRooms(availFilt, roomFilt), this.allRooms);
+            this.loadRoomTable(blRooms.getFilteredRooms(roomFilt), this.allRooms);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    //method
+    private void removeRoom(){
+        DefaultTableModel model = (DefaultTableModel) this.allRooms.getModel();
+        //already there is one column
+        if(model.getColumnCount() < 2 || this.allRooms.getSelectionModel().isSelectionEmpty()){
+            return;
+        }
+        try{
+            //now extract the data from selected row
+            int row = this.allRooms.getSelectedRow();
+            String id = model.getValueAt(row, 0).toString();
+            BLRooms blRooms = new BLRooms();
+            blRooms.removeRoom(Integer.parseInt(id));
+            this.loadRooms();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private void loadRoomTable(ArrayList<Room> rooms, JTable table){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
@@ -519,7 +530,6 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         model.addColumn("Room No.");
         model.addColumn("Room Type");
         model.addColumn("Price");
-        model.addColumn("Availability");
         model.addColumn("Telephone No.");
 
         Room room;
@@ -530,12 +540,134 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                     String.valueOf(room.getRoomNo()),
                     room.getRoomType(),
                     String.valueOf(room.getRoomPrice()),
-                    room.getRoomAvailability(),
                     room.getRoomTelephoneNo()
             });
         }
     }
 
+    private void cancelBooking(){
+        //check if the table is empty
+        JTable table;
+        String page = this.currentPage;
+        if(page.equals("home") && !this.pendingBookings.getSelectionModel().isSelectionEmpty()){
+            table = this.pendingBookings;
+        }
+        else if(page.equals("booking") && !this.bookingsList.getSelectionModel().isSelectionEmpty()){
+            table = this.bookingsList;
+        }
+        else {
+            return;
+        }
+        //now check if the table is empty
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        //already there is one column
+        if(model.getColumnCount() < 2){
+            return;
+        }
+
+        try {
+            //now extract the data from selected row
+            int row = table.getSelectedRow();
+            String id = model.getValueAt(row, 3).toString();
+            String status = "cancelled";
+
+            //get booking information
+            BLBooking blBooking = new BLBooking();
+            Booking booking = blBooking.getBooking(Integer.parseInt(id));
+            booking.setBookingStatus(status);
+
+            //now update the booking
+            BLBooking blBooking1 = new BLBooking(booking);
+            blBooking1.updateBooking();
+            if(page.equals("home")){
+                this.loadPendingBookings();
+            }
+            else {
+                this.loadBookings();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void confirmBooking(){
+        if(this.pendingBookings.getSelectionModel().isSelectionEmpty()){
+            return;
+        }
+        String roomNo = JOptionPane.showInputDialog("Enter the room Number: ");
+        if(roomNo.trim().equals("")) {
+            return;
+        }
+        int room = 0;
+        try{
+            room = Integer.parseInt(roomNo);
+        }catch (Exception e){
+            confirmBooking();
+        }
+
+        try {
+            //now check if the table is empty
+            DefaultTableModel model = (DefaultTableModel) this.pendingBookings.getModel();
+            //already there is one column
+            if(model.getColumnCount() < 2){
+                return;
+            }
+            //get the booking id from selected row
+            int row = this.pendingBookings.getSelectedRow();
+
+            //check if the room is available
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            boolean available = blBookingReceptionist.isAvailable(room, model.getValueAt(row, 5).toString(), model.getValueAt(row, 6).toString());
+            if(!available){
+                JOptionPane.showMessageDialog(this.window, "The room is not available for the given date.",
+                        "!Room Not Available", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int id = Integer.parseInt(model.getValueAt(row, 3).toString());
+            BLBooking blBooking = new BLBooking();
+            Booking booking = blBooking.getBooking(id);
+            booking.setRoomNo(room);
+            booking.setBookingStatus("guaranteed");
+
+            //now update the booking
+            blBooking = new BLBooking(booking);
+            blBooking.updateBooking();
+            this.loadPendingBookings();
+        }catch (Exception e) {
+            if (e.getMessage().contains("InvalidRoom")) {
+                JOptionPane.showMessageDialog(this.window, "Room Not Available in the database, please add it to the database",
+                        "Invalid Room Number", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    }
+
+    private void setAsActive(){
+        if(this.bookingsList.getSelectionModel().isSelectionEmpty()){
+            return;
+        }
+        try {
+            //now check if the table is empty
+            DefaultTableModel model = (DefaultTableModel) this.bookingsList.getModel();
+            //already there is one column
+            if (model.getColumnCount() < 2) {
+                return;
+            }
+            //get the booking id from selected row
+            int row = this.bookingsList.getSelectedRow();
+            int id = Integer.parseInt(model.getValueAt(row, 3).toString());
+            BLBooking blBooking = new BLBooking();
+            Booking booking = blBooking.getBooking(id);
+            booking.setBookingStatus("active");
+
+            //now update the booking
+            blBooking = new BLBooking(booking);
+            blBooking.updateBooking();
+            this.loadBookings();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         String cmd = actionEvent.getActionCommand();
@@ -557,5 +689,18 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             this.changePage(this.billingPage(), this.billings);
         }
 
+        else if(cmd.equals("Cancel")){
+            this.cancelBooking();
+        }
+        else if(cmd.equals("Confirm")){
+            this.confirmBooking();
+        }
+
+        else if(cmd.equals("Add Room")){
+
+        }
+        else if(cmd.equals("Remove Room")){
+            this.removeRoom();
+        }
     }
 }

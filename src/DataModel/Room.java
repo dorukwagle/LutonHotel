@@ -4,7 +4,6 @@ public class Room {
     private int roomNo;
     private String roomType;
     private float roomPrice;
-    private String roomAvailability;
     private String roomTelephoneNo;
 
     //while adding new room, this constructor is called
@@ -12,7 +11,6 @@ public class Room {
         this.roomNo = roomNo;
         this.roomType = roomType;
         this.roomPrice = roomPrice;
-        this.roomAvailability = roomAvailability;
         this.roomTelephoneNo = roomTelephoneNo;
     }
 
@@ -20,7 +18,6 @@ public class Room {
         this.roomNo = 0;
         this.roomType = "";
         this.roomPrice = 0f;
-        this.roomAvailability = "";
         this.roomTelephoneNo = "";
     }
 
@@ -46,14 +43,6 @@ public class Room {
 
     public void setRoomPrice(float roomPrice) {
         this.roomPrice = roomPrice;
-    }
-
-    public String getRoomAvailability() {
-        return roomAvailability;
-    }
-
-    public void setRoomAvailability(String roomAvailability) {
-        this.roomAvailability = roomAvailability;
     }
 
     public String getRoomTelephoneNo() {

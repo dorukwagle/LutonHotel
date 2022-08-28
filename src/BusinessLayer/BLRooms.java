@@ -24,10 +24,19 @@ public class BLRooms {
             throw e;
         }
     }
-    public ArrayList<Room> getFilteredRooms(String availFilter, String roomTypeFilt) throws Exception{
+    public ArrayList<Room> getFilteredRooms(String roomTypeFilt) throws Exception{
         try{
             DLRooms dlRooms = new DLRooms(this.room);
-            return dlRooms.getFilteredRooms(availFilter, roomTypeFilt);
+            return dlRooms.getFilteredRooms(roomTypeFilt);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public void removeRoom(int id) throws Exception{
+        try{
+            this.room.setRoomNo(id);
+            new DLRooms(this.room).removeRoom();
         }catch (Exception e){
             throw e;
         }

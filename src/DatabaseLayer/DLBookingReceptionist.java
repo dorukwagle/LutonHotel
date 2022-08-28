@@ -2,6 +2,7 @@ package DatabaseLayer;
 
 import DataModel.Booking;
 import DataModel.BookingReceptionist;
+import Utility.AuthenticationException;
 import Utility.DatabaseConnector;
 
 import java.sql.Connection;
@@ -123,6 +124,30 @@ public class DLBookingReceptionist {
                 filterQuery = (roomFilt.equals(" ") ? where + bookFilt : where + roomFilt);
             }
             return this.queryBookings(filterQuery);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public boolean isAvailable(int room, String checkin, String checkout) throws Exception{
+        try{
+            //first check if the room exists in the room table
+            String query1 = "SELECT * FROM room WHERE room_no = " + room;
+            ResultSet rs1 = this.connection.createStatement().executeQuery(query1);
+            if(!rs1.next()){
+                throw new AuthenticationException("InvalidRoom");
+            }
+            //now check if the room is available for the particular date
+            String query = "SELECT * FROM booking b INNER JOIN room r " +
+                    " ON r.room_no = b.room_no WHERE b.room_no = " + room + " AND (b.check_in_date > DATE(" + checkout + ") OR " +
+                    "b.check_out_date < DATE(" + checkin + ")) AND b.booking_status != 'guaranteed' AND b.booking_status != 'active'";
+            Statement statement = this.connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            if(!rs.next()){
+                return true;
+            }else {
+                return false;
+            }
         }catch (Exception e){
             throw e;
         }
