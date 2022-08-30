@@ -26,13 +26,13 @@ public class DLRooms {
     }
 
     public void save() throws Exception{
-        String query = "INSERT INTO rooms(room_no, room_type, room_price, room_telephone_no) VALUES(?, ?, ?, ?)";
+        String query = "INSERT INTO room(room_no, room_type, room_price, room_telephone_no) VALUES(?, ?, ?, ?)";
         try{
             PreparedStatement statement = this.connection.prepareStatement(query);
             statement.setInt(1, this.room.getRoomNo());
             statement.setString(2, this.room.getRoomType().toLowerCase());
             statement.setFloat(3, this.room.getRoomPrice());
-            statement.setString(5, this.room.getRoomTelephoneNo());
+            statement.setString(4, this.room.getRoomTelephoneNo());
 
             statement.executeUpdate();
         }catch (Exception e){

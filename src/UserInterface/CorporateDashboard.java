@@ -39,6 +39,7 @@ public class CorporateDashboard extends CustomerDashboard {
 
         JPanel profileHolder = new JPanel();
         profileHolder.setLayout(new GridLayout(0, 1));
+        profileHolder.setBackground(Color.WHITE);
         aboutPage.add(profileHolder);
 
         JLabel head = new JLabel("Account Information");
@@ -46,35 +47,35 @@ public class CorporateDashboard extends CustomerDashboard {
         profileHolder.add(head);
 
         JLabel name = new JLabel("Organization: " + customer.getOrganizationName());
-        name.setFont(new Font("Serif", Font.BOLD, 15));
+        name.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(name);
 
         JLabel email = new JLabel("Email Address: " + loginDetails.getEmailAddress());
-        email.setFont(new Font("Serif", Font.BOLD, 15));
+        email.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(email);
 
         JLabel username = new JLabel("Username: @" + customer.getUserName());
-        username.setFont(new Font("Serif", Font.BOLD, 15));
+        username.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(username);
 
         JLabel website = new JLabel("Website: " + customer.getWebsite());
-        website.setFont(new Font("Serif", Font.BOLD, 15));
+        website.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(website);
 
         JLabel expiry = new JLabel("Account Expiry Date: " + customer.getAccountValidTill());
-        expiry.setFont(new Font("Serif", Font.BOLD, 15));
+        expiry.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(expiry);
 
         JLabel billingDate = new JLabel("Next Billing Date: " + customer.getNextBillingDate());
-        billingDate.setFont(new Font("Serif", Font.BOLD, 15));
+        billingDate.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(billingDate);
 
         JLabel billingAmount = new JLabel("Total Bill: <amount>");
-        billingAmount.setFont(new Font("Serif", Font.BOLD, 15));
+        billingAmount.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(billingAmount);
 
         JLabel discount = new JLabel("Discount Offered: " + customer.getDiscountPercent() + "%");
-        discount.setFont(new Font("Serif", Font.BOLD, 15));
+        discount.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(discount);
 
         JLabel head1 = new JLabel("Upcoming Bookings");

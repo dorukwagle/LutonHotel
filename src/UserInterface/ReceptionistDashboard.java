@@ -662,11 +662,108 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
             //now update the booking
             blBooking = new BLBooking(booking);
-            blBooking.updateBooking();
+            booking = blBooking.updateBooking();
             this.loadBookings();
+
+            //TODO now generate invoice as well other required information in the invoice table
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void addRoom(){
+        JDialog dialog = new JDialog(this.window, "Add Room");
+
+        JPanel bookNow = new JPanel();
+        bookNow.setLayout(new BoxLayout(bookNow, BoxLayout.Y_AXIS));
+
+        JPanel center = new JPanel();
+        center.setLayout(new FlowLayout());
+        bookNow.add(center);
+
+        JPanel inputHolder = new JPanel();
+        GridLayout glay = new GridLayout(0, 2);
+        glay.setVgap(10);
+        inputHolder.setLayout(glay);
+        center.add(inputHolder);
+
+        JLabel checkinLabel = new JLabel("Room No.: ");
+        checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkinLabel);
+
+        JTextField roomNo = new JTextField();
+        roomNo.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(roomNo);
+
+        JLabel checkoutLabel = new JLabel("Room Price: ");
+        checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(checkoutLabel);
+
+        JTextField roomPrice = new JTextField();
+        roomPrice.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(roomPrice);
+
+        JLabel roomLabel = new JLabel("Room Type: ");
+        roomLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(roomLabel);
+
+        String[] roomList = {"Single", "Double", "Twin"};
+        JComboBox roomType = new JComboBox(roomList);
+        roomType.setFont(new Font("Serif", Font.BOLD, 25));
+        inputHolder.add(roomType);
+
+        JLabel phoneLabel = new JLabel("Room Telephone No.: ");
+        phoneLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(phoneLabel);
+
+        JTextField roomTelephone = new JTextField();
+        roomTelephone.setFont(new Font("Serif", Font.BOLD, 20));
+        inputHolder.add(roomTelephone);
+
+
+        JPanel errPanel = new JPanel();
+        errPanel.setLayout(new FlowLayout());
+        bookNow.add(errPanel);
+        JLabel errorMsg = new JLabel("");
+        errorMsg.setFont(new Font("Serif", Font.BOLD, 20));
+        errorMsg.setForeground(Color.RED);
+        errorMsg.setHorizontalAlignment(SwingConstants.CENTER);
+        errPanel.add(errorMsg);
+
+        JPanel btnHold = new JPanel();
+        btnHold.setLayout(new FlowLayout());
+        bookNow.add(btnHold);
+        JButton requestBooking = new JButton("Update Room");
+        requestBooking.setFont(new Font("Serif", Font.BOLD, 40));
+        requestBooking.setFocusable(false);
+        requestBooking.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Room room = new Room();
+                    room.setRoomNo(Integer.parseInt(roomNo.getText().trim()));
+                    room.setRoomType(roomType.getSelectedItem().toString());
+                    room.setRoomTelephoneNo(roomTelephone.getText().trim());
+                    room.setRoomPrice(Float.parseFloat(roomPrice.getText().trim()));
+                    BLRooms rooms1 = new BLRooms(room);
+                    rooms1.save();
+
+                    dialog.dispose();
+                    changePage(roomsPage(), rooms);
+                } catch (Exception e){
+                    errorMsg.setText("Please enter the valid room data");
+                }
+
+            }
+        });
+        btnHold.add(requestBooking);
+
+        dialog.add(bookNow);
+
+        dialog.setSize(new Dimension(Values.widthPct(this.container, 60), Values.heightPct(this.container, 60)));
+        dialog.setVisible(true);
     }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
@@ -697,10 +794,13 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         }
 
         else if(cmd.equals("Add Room")){
-
+            this.addRoom();
         }
         else if(cmd.equals("Remove Room")){
             this.removeRoom();
+        }
+        else if(cmd.equals("Set As Active")){
+            this.setAsActive();
         }
     }
 }

@@ -42,6 +42,7 @@ public class IndividualDashboard extends CustomerDashboard {
 
         JPanel profileHolder = new JPanel();
         profileHolder.setLayout(new GridLayout(0, 1));
+        profileHolder.setBackground(Color.WHITE);
         aboutPage.add(profileHolder);
 
         JLabel head = new JLabel("Profile Details");
@@ -49,24 +50,25 @@ public class IndividualDashboard extends CustomerDashboard {
         profileHolder.add(head);
 
         JLabel name = new JLabel("Name: " + customer.getCustFullName());
-        name.setFont(new Font("Serif", Font.BOLD, 15));
+        name.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(name);
 
         JLabel username = new JLabel("Username: @" + customer.getUserName());
-        username.setFont(new Font("Serif", Font.BOLD, 15));
+        username.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(username);
 
         JLabel gender = new JLabel("gender: " + customer.getCustGender());
-        gender.setFont(new Font("Serif", Font.BOLD, 15));
+        gender.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(gender);
 
         JLabel email = new JLabel("Email Address: " + loginDetails.getEmailAddress());
-        email.setFont(new Font("Serif", Font.BOLD, 15));
+        email.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(email);
 
         creditCard = new JLabel("Credit Card No.: " + customer.getCreditCardNo());
-        creditCard.setFont(new Font("Serif", Font.BOLD, 15));
+        creditCard.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(creditCard);
+
 
         JLabel head1 = new JLabel("Upcoming Bookings");
         head1.setFont(new Font("Serif", Font.BOLD, 30));
