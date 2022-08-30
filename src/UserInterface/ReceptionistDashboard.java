@@ -23,7 +23,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     private JPanel contentHolder;
     private JButton home, rooms, bookings, billings;
     private JTable pendingBookings, allRooms, bookingsList, bills;
-    private JComboBox roomType, availability, bRoomType, bookFilter;
+    private JComboBox roomType, checkoutOpt, bRoomType, bookFilter;
     private String currentPage = "";
 
     private Staff staff;
@@ -337,9 +337,9 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         btns.add(email);
 
         String[] availableOptions = {"Individual", "Corporate"};
-        JComboBox availability = new JComboBox(availableOptions);
-        availability.setFont(new Font("Serif", Font.BOLD, 20));
-        btns.add(availability);
+        checkoutOpt = new JComboBox(availableOptions);
+        checkoutOpt.setFont(new Font("Serif", Font.BOLD, 20));
+        btns.add(checkoutOpt);
 
         JButton search = new JButton("Search");
         search.setFont(new Font("Serif", Font.BOLD, 20));
@@ -360,6 +360,13 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         generate.setFont(new Font("Serif", Font.BOLD, 30));
         btnhold.add(generate);
 
+        JButton checkout = new JButton("Check Out");
+        checkout.setFocusable(false);
+        checkout.addActionListener(this);
+        checkout.setEnabled(false);
+        checkout.setFont(new Font("Serif", Font.BOLD, 30));
+        btnhold.add(checkout);
+
         DefaultTableModel model = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -372,6 +379,18 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         bills.setFont(new Font("Serif", Font.PLAIN, 20));
         JScrollPane scroll = new JScrollPane(bills);
         bookingPage.add(scroll);
+
+        //add action listener for  checkoutOpt combobox to enable or disable the generate bill and checkout buttons
+        checkoutOpt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(checkoutOpt.getSelectedItem().toString().equals("Individual")){
+                    checkout.setEnabled(false);
+                    return;
+                }
+                checkout.setEnabled(true);
+            }
+        });
 
         return bookingPage;
     }
@@ -767,6 +786,25 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         dialog.setSize(new Dimension(Values.widthPct(this.container, 60), Values.heightPct(this.container, 60)));
         dialog.setVisible(true);
     }
+
+    //method to generate bill for an individual customer, it, first checks out the customer
+    //and generates a bill, setting the invoice status to be paid
+    private void generateIndividualBill(){
+
+    }
+
+    //method to check out corporate customer, it just checks out the currently selected active booking in the table
+    //the generated invoice is sent to the customer
+    private void corporateCheckout(){
+
+    }
+
+    //method to generate bill for the corporate customer, this calculates the total of all the
+    //previously unpaid invoices and generates a bill to be paid, and set all those invoice status to be paid
+    private void generateCorporateBill(){
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         String cmd = actionEvent.getActionCommand();
@@ -803,6 +841,17 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         }
         else if(cmd.equals("Set As Active")){
             this.setAsActive();
+        }
+        else if(cmd.equals("Check Out")){
+            this.corporateCheckout();
+        }
+        else if(cmd.equals("Generate Bill")){
+            if(this.checkoutOpt.getSelectedItem().toString().equals("Individual")){
+                this.generateIndividualBill();
+            }
+            else{
+                this.generateCorporateBill();
+            }
         }
     }
 }

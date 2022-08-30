@@ -140,13 +140,13 @@ public class DLBookingReceptionist {
             //now check if the room is available for the particular date
             String query = "SELECT * FROM booking b INNER JOIN room r " +
                     " ON r.room_no = b.room_no WHERE b.room_no = " + room + " AND (b.check_in_date > DATE(" + checkout + ") OR " +
-                    "b.check_out_date < DATE(" + checkin + ")) AND b.booking_status != 'guaranteed' AND b.booking_status != 'active'";
+                    "b.check_out_date < DATE(" + checkin + ")) AND (b.booking_status = 'guaranteed' OR b.booking_status = 'active')";
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
-            if(!rs.next()){
-                return true;
-            }else {
+            if(rs.next()){
                 return false;
+            }else {
+                return true;
             }
         }catch (Exception e){
             throw e;
