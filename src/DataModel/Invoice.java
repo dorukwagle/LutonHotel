@@ -4,9 +4,9 @@ public class Invoice {
     private String actualCheckinDate;
     private String actualCheckOutDate;
     private float serviceCharge;
-    private float total_price;
-    private float discount_amount;
-    private String payment_status;
+    private float totalPrice;
+    private float discountAmount;
+    private String paymentStatus;
     private int bookingId;
     private int invoiceId;
 
@@ -15,9 +15,9 @@ public class Invoice {
         this.actualCheckinDate = "";
         this.actualCheckOutDate = "";
         this.serviceCharge = 0;
-        this.total_price = 0;
-        this.discount_amount = 0;
-        this.payment_status = "";
+        this.totalPrice = 0;
+        this.discountAmount = 0;
+        this.paymentStatus = "";
         this.bookingId = 0;
     }
 
@@ -61,27 +61,27 @@ public class Invoice {
         this.invoiceId = invoiceId;
     }
 
-    public float getTotal_price() {
-        return total_price;
+    public float getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotal_price(float total_price) {
-        this.total_price = total_price;
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public float getDiscount_amount() {
-        return discount_amount;
+    public float getDiscountAmount() {
+        return discountAmount;
     }
 
-    public void setDiscount_amount(float discount_amount) {
-        this.discount_amount = discount_amount;
+    public void setDiscountAmount(float discountAmount) {
+        this.discountAmount = discountAmount;
     }
 
-    public String getPayment_status() {
-        return payment_status;
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setPayment_status(String payment_status) {
-        this.payment_status = payment_status;
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

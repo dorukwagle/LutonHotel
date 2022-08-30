@@ -2,11 +2,9 @@ package UserInterface;
 
 import BusinessLayer.BLBooking;
 import BusinessLayer.BLBookingReceptionist;
+import BusinessLayer.BLInvoice;
 import BusinessLayer.BLRooms;
-import DataModel.Booking;
-import DataModel.BookingReceptionist;
-import DataModel.Room;
-import DataModel.Staff;
+import DataModel.*;
 import DatabaseLayer.DLBooking;
 import DatabaseLayer.DLBookingReceptionist;
 import Utility.Values;
@@ -665,8 +663,12 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             booking = blBooking.updateBooking();
             this.loadBookings();
 
-            //TODO now generate invoice as well other required information in the invoice table
+            //now generate invoice as well other required information in the invoice table
+            Invoice invoice = new Invoice();
+            invoice.setBookingId(booking.getBookingId());
 
+            BLInvoice blInvoice = new BLInvoice(invoice);
+            blInvoice.initInvoice();
 
         }catch (Exception e){
             e.printStackTrace();
