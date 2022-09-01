@@ -2,6 +2,7 @@ package BusinessLayer;
 
 import DataModel.Booking;
 import DataModel.BookingReceptionist;
+import DataModel.Customer;
 import DatabaseLayer.DLBooking;
 import DatabaseLayer.DLBookingReceptionist;
 import DatabaseLayer.DLRooms;
@@ -34,6 +35,15 @@ public class BLBookingReceptionist {
             DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
             return dlBookingReceptionist.isAvailable(room, checkin, checkout);
         } catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Customer serchCustomer(String custEmail, String custType) throws Exception{
+        try {
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            return dlBookingReceptionist.searchCustomer(custEmail, custType);
+        }catch (Exception e){
             throw e;
         }
     }

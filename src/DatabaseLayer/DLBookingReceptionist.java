@@ -2,6 +2,7 @@ package DatabaseLayer;
 
 import DataModel.Booking;
 import DataModel.BookingReceptionist;
+import DataModel.Customer;
 import Utility.AuthenticationException;
 import Utility.DatabaseConnector;
 
@@ -147,6 +148,25 @@ public class DLBookingReceptionist {
                 return false;
             }else {
                 return true;
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Customer searchCustomer(String custEmail, String custType) throws Exception{
+        String query = "SELECT c.cust_id FROM login_details ld INNER JOIN customer c ON c.user_name = ld.user_name " +
+                "WHERE ld.email_address = '" + custEmail + "' AND c.customer_type = '" + custType + "'";
+        try{
+            Statement statement = this.connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            if(rs.next()){
+                Customer customer = new Customer();
+                customer.setCustId(rs.getInt("cust_id"));
+                return customer;
+            }
+            else {
+                return null;
             }
         }catch (Exception e){
             throw e;

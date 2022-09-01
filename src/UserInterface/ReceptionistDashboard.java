@@ -25,7 +25,10 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     private JTable pendingBookings, allRooms, bookingsList, bills;
     private JComboBox roomType, checkoutOpt, bRoomType, bookFilter;
     private String currentPage = "";
+    private JTextField email;
 
+    //to store customer information while billing
+    private Customer customer;
     private Staff staff;
     public ReceptionistDashboard(Staff staff){
         this.staff = staff;
@@ -328,11 +331,11 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         btns.setLayout(new GridLayout(1, 0, 10, 0));
         subControl.add(btns, BorderLayout.EAST);
 
-        JLabel emailLable = new JLabel("Email or Username:");
+        JLabel emailLable = new JLabel("User Email:");
         emailLable.setFont(new Font("Serif", Font.BOLD, 20));
         btns.add(emailLable);
 
-        JTextField email = new JTextField();
+        email = new JTextField();
         email.setFont(new Font("Serif", Font.BOLD, 20));
         btns.add(email);
 
@@ -520,7 +523,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         }
     }
 
-    //method
+    //method to remove the selected room
     private void removeRoom(){
         DefaultTableModel model = (DefaultTableModel) this.allRooms.getModel();
         //already there is one column
@@ -538,6 +541,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
+
     private void loadRoomTable(ArrayList<Room> rooms, JTable table){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
@@ -790,6 +794,14 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //method to generate bill for an individual customer, it, first checks out the customer
     //and generates a bill, setting the invoice status to be paid
     private void generateIndividualBill(){
+        if(this.customer == null || this.bills.getSelectionModel().isSelectionEmpty()){
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) this.bills.getModel();
+        if(model.getColumnCount() < 2){
+            return;
+        }
+        //now first update the invoice
 
     }
 
@@ -803,6 +815,60 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //previously unpaid invoices and generates a bill to be paid, and set all those invoice status to be paid
     private void generateCorporateBill(){
 
+    }
+
+    //method to search the customer with the username and list all the active bookings the table
+    private void searchCustomer(){
+        if(this.email.getText().trim().equals("")){
+            return;
+        }
+        String customerType = this.checkoutOpt.getSelectedItem().toString();
+        try{
+            //first fetch the customer id using serchCustomer method
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            this.customer = dlBookingReceptionist.searchCustomer(this.email.getText().trim(), customerType);
+
+            //now fetch all the active bookings of the customer and display on the table
+            DefaultTableModel model = (DefaultTableModel) this.bills.getModel();
+            if(this.customer != null){
+                BLBooking blBooking = new BLBooking();
+                ArrayList<Booking> bookings = blBooking.getUserActiveBookings(this.customer.getCustId());
+
+                model.setRowCount(0);
+                model.setColumnCount(0);
+
+                model.addColumn("ID");
+                model.addColumn("Booking Date");
+                model.addColumn("CheckIn");
+                model.addColumn("CheckOut");
+                model.addColumn("RoomType");
+                model.addColumn("Status");
+                model.addColumn("Room No.");
+                model.addColumn("InvoiceId");
+                //now add all the booking data to the table
+                Booking booking;
+                for(int i = 0; i < bookings.size(); ++i){
+                    booking = bookings.get(i);
+                    model.insertRow(i, new String[]{
+                            String.valueOf(booking.getBookingId()),
+                            booking.getBookingDate(),
+                            booking.getCheckInDate(),
+                            booking.getCheckOutDate(),
+                            booking.getPreferredRoomType(),
+                            booking.getBookingStatus(),
+                            String.valueOf(booking.getRoomNo()),
+                            String.valueOf(booking.getInvoiceId())
+                    });
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(this.window, "User does not exists!");
+                model.setRowCount(0);
+                return;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -852,6 +918,9 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             else{
                 this.generateCorporateBill();
             }
+        }
+        else if(cmd.equals("Search")){
+            this.searchCustomer();
         }
     }
 }
