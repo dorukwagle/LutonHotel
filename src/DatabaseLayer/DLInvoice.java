@@ -55,13 +55,22 @@ public class DLInvoice {
                 invoice.setActualCheckinDate(String.valueOf(rs.getDate("actual_check_in_date")));
                 invoice.setActualCheckOutDate(String.valueOf(rs.getDate("actual_check_out_date")));
                 invoice.setPaymentStatus(rs.getString("payment_status"));
-                invoice.setDiscountAmount(rs.getFloat("dicount_amount"));
+                invoice.setDiscountAmount(rs.getFloat("discount_amount"));
                 invoice.setTotalPrice(rs.getFloat("total_price"));
                 return invoice;
             }
             else{
                 return null;
             }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Invoice updateInvoice() throws Exception{
+        try{
+            String query = "UPDATE invoice SET payment_status = ?, actual_check_out_date = ?, discount_amount = ?, total_price = ?," +
+                    " "
         }catch (Exception e){
             throw e;
         }
