@@ -48,4 +48,20 @@ public class BLBookingReceptionist {
         }
     }
 
+    public void calculateTotalPrice(int invoiceId) throws Exception{
+        try {
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            dlBookingReceptionist.calculateTotalPrice(invoiceId);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+    public void calculateDiscount(int invoiceId) throws Exception{
+        try {
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            dlBookingReceptionist.calculateDiscount(invoiceId);
+        }catch (Exception e){
+            throw e;
+        }
+    }
 }

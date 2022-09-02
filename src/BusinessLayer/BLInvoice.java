@@ -25,4 +25,22 @@ public class BLInvoice {
         float serviceCharge = 200f;
         this.invoice.setServiceCharge(serviceCharge);
     }
+
+    public void updateInvoice() throws Exception{
+        try {
+            DLInvoice dlInvoice = new DLInvoice(this.invoice);
+            dlInvoice.updateInvoice();
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public Invoice getInvoice() throws Exception{
+        try {
+            DLInvoice dlInvoice = new DLInvoice(this.invoice);
+            return dlInvoice.getInvoice();
+        }catch (Exception e){
+            throw e;
+        }
+    }
 }

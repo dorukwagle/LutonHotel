@@ -7,6 +7,7 @@ import BusinessLayer.BLRooms;
 import DataModel.*;
 import DatabaseLayer.DLBooking;
 import DatabaseLayer.DLBookingReceptionist;
+import DatabaseLayer.DLInvoice;
 import Utility.Values;
 
 import javax.swing.*;
@@ -801,8 +802,41 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         if(model.getColumnCount() < 2){
             return;
         }
-        //now first update the invoice
 
+        try {
+            int row = this.bills.getSelectedRow();
+            int invoiceId = Integer.parseInt(model.getValueAt(row, 7).toString());
+            //now first update the invoice
+            Invoice invoice = new Invoice();
+            invoice.setInvoiceId(invoiceId);
+            BLInvoice blInvoice = new BLInvoice(invoice);
+            invoice = blInvoice.getInvoice();
+
+            //now add more data to invoice to update it
+            invoice.setPaymentStatus("paid");
+            invoice.setInvoiceId(invoiceId);
+
+            //calculate the total price
+            DLInvoice dlInvoice = new DLInvoice(invoice);
+            dlInvoice.updateInvoice();
+
+            //now update the booking status to 'completed'
+            Booking booking = new Booking();
+            booking.setBookingId(Integer.parseInt(model.getValueAt(row, 0).toString()));
+            DLBooking dlBooking = new DLBooking(booking);
+            booking = dlBooking.getBooking();
+            booking.setBookingStatus("completed");
+
+            dlBooking = new DLBooking(booking);
+            dlBooking.updateBooking();
+
+            //now calculate total price
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            blBookingReceptionist.calculateTotalPrice(invoiceId);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //method to check out corporate customer, it just checks out the currently selected active booking in the table

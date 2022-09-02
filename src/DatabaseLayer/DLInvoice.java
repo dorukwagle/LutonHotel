@@ -67,10 +67,21 @@ public class DLInvoice {
         }
     }
 
-    public Invoice updateInvoice() throws Exception{
+    public void updateInvoice() throws Exception{
         try{
-            String query = "UPDATE invoice SET payment_status = ?, actual_check_out_date = ?, discount_amount = ?, total_price = ?," +
-                    " "
+            String query = "UPDATE invoice SET service_charge = ?, booking_id = ?," +
+                    " payment_status = ?, discount_amount = ?, total_price = ?" +
+                    " actual_check_in_date = ?, actual_check_out_date = CURRENT_DATE()" +
+                    " WHERE invoice_id = ?";
+            PreparedStatement statement = this.connection.prepareStatement(query);
+            statement.setFloat(1, this.invoice.getServiceCharge());
+            statement.setInt(2, this.invoice.getBookingId());
+            statement.setString(3, this.invoice.getPaymentStatus());
+            statement.setFloat(4, this.invoice.getDiscountAmount());
+            statement.setFloat(5, this.invoice.getTotalPrice());
+            statement.setString(6, this.invoice.getActualCheckinDate());
+            statement.setInt(7, this.invoice.getInvoiceId());
+            statement.executeUpdate();
         }catch (Exception e){
             throw e;
         }
