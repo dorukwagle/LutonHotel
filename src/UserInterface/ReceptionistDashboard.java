@@ -830,7 +830,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
             blBookingReceptionist.calculateTotalPrice(invoiceId);
 
-            //TODO now generate the bill from the newly generated invoice
+            //todo now generate the bill from the newly generated invoice
             IndividualBill individualBill = blBookingReceptionist.getRaisedBill(invoiceId);
 
         }catch (Exception e){
@@ -894,6 +894,12 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //previously unpaid invoices and generates a bill to be paid, and set all those invoice status to be paid
     private void generateCorporateBill(){
         //todo also change the next billing date to the first of next month
+
+        if(this.customer == null || this.bills.getSelectionModel().isSelectionEmpty()){
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) this.bills.getModel();
+
     }
 
     //method to search the customer with the username and list all the active bookings the table

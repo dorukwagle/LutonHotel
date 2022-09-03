@@ -139,8 +139,8 @@ public class DLBookingReceptionist {
             }
             //now check if the room is available for the particular date
             String query = "SELECT * FROM booking b INNER JOIN room r " +
-                    " ON r.room_no = b.room_no WHERE b.room_no = " + room + " AND (b.check_in_date > DATE(" + checkout + ") OR " +
-                    "b.check_out_date < DATE(" + checkin + ")) AND (b.booking_status = 'guaranteed' OR b.booking_status = 'active')";
+                    " ON r.room_no = b.room_no WHERE b.room_no = " + room + " AND (b.check_in_date > DATE('" + checkout + "') OR " +
+                    "b.check_out_date < DATE('" + checkin + "')) AND (b.booking_status = 'guaranteed' OR b.booking_status = 'active')";
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             if(rs.next()){
@@ -211,12 +211,13 @@ public class DLBookingReceptionist {
         }
     }
 
+    //query database for detail information about the invoice
     public CorporateInvoice getRaisedInvoice(int invoiceId) throws Exception{
         try {
             String query = "SELECT c.organization_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
                     "i.service_charge, i.total_price, i.discount_amount, r.room_type, r.room_no, r.room_price " +
-                    "FROM customer invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
-                    "WHERE i.invoice_id = '" + invoiceId + "'";
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "WHERE i.invoice_id = " + invoiceId;
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             if(rs.next()){
@@ -246,8 +247,8 @@ public class DLBookingReceptionist {
         try {
             String query = "SELECT c.cust_full_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
                     "i.service_charge, i.total_price, r.room_type, r.room_no, r.room_price " +
-                    "FROM customer invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
-                    "WHERE i.invoice_id = '" + invoiceId + "'";
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "WHERE i.invoice_id = " + invoiceId;
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             if(rs.next()){
@@ -272,11 +273,46 @@ public class DLBookingReceptionist {
         }
     }
 
-    public ArrayList<CorporateInvoice> getCorporateInvoices(String email) throws Exception{
+    //method to returns all the unpaid invoices of a corporate customer
+    public ArrayList<Invoice> getCorporateInvoices(int customerId) throws Exception {
         try {
+            ArrayList<Invoice> invoices = new ArrayList<>();
+            String query = "SELECT i.* " +
+                    "FROM customer invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "WHERE c.cust_id = " + customerId + " AND i.payment_status = 'unpaid'";
+            Statement statement = this.connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setInvoiceId(rs.getInt("invoice_id"));
+                invoice.setActualCheckinDate(rs.getString("actual_check_in_date"));
+                invoice.setActualCheckOutDate(rs.getString("actual_check_out_date"));
+                invoice.setServiceCharge(rs.getFloat("service_charge"));
+                invoice.setTotalPrice(rs.getFloat("total_price"));
+                invoice.setDiscountAmount(rs.getFloat("discount_amount"));
+                invoice.setPaymentStatus(rs.getString("payment_status"));
+                invoice.setBookingId(rs.getInt("booking_id"));
 
+                invoices.add(invoice);
+            }
+            return invoices;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    //method to update all the invoices for a given corporate customer from unpaid to paid
+    public void setAllAsPaid(int customerId) throws Exception{
+        try {
+            String query = "UPDATE invoice i " +
+                    "INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id  " +
+                    " set i.payment_status = 'paid' " +
+                    "WHERE c.cust_id = " + customerId + " AND i.payment_status = 'unpaid'";
+            Statement statement = this.connection.createStatement();
+            statement.executeUpdate(query);
         }catch (Exception e){
             throw e;
         }
     }
+
 }

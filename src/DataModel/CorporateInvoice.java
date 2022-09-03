@@ -5,11 +5,14 @@ public class CorporateInvoice extends IndividualBill{
     private double subTotal;
     private double discountAmount;
     private int invoiceId;
+
+    private int totalSentInvoices;
     public CorporateInvoice(){
         this.orgName = "";
         this.subTotal = 0;
         this.discountAmount = 0;
         this.invoiceId = 0;
+        this.totalSentInvoices = 0;
     }
 
     public String getOrgName() {
@@ -38,6 +41,14 @@ public class CorporateInvoice extends IndividualBill{
 
     public int getInvoiceId() {
         return invoiceId;
+    }
+
+    public int getTotalSentInvoices() {
+        return totalSentInvoices;
+    }
+
+    public void setTotalSentInvoices(int totalSentInvoices) {
+        this.totalSentInvoices = totalSentInvoices;
     }
 
     public void setInvoiceId(int invoiceId) {
