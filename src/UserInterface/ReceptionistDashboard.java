@@ -833,6 +833,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             //todo now generate the bill from the newly generated invoice
             IndividualBill individualBill = blBookingReceptionist.getRaisedBill(invoiceId);
 
+            //display and print individual bill
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -885,6 +886,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             //todo now generate the invoice and print it
             CorporateInvoice corporateInvoice = blBookingReceptionist.getRaisedInvoice(invoiceId);
 
+            //display and print invoice
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -893,13 +895,21 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //method to generate bill for the corporate customer, this calculates the total of all the
     //previously unpaid invoices and generates a bill to be paid, and set all those invoice status to be paid
     private void generateCorporateBill(){
-        //todo also change the next billing date to the first of next month
-
         if(this.customer == null || this.bills.getSelectionModel().isSelectionEmpty()){
             return;
         }
-        DefaultTableModel model = (DefaultTableModel) this.bills.getModel();
-
+        try {
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            CorporateInvoice bill = blBookingReceptionist.getRaisedCorporateBill(this.customer.getCustId());
+            if(bill == null){
+                JOptionPane.showMessageDialog(this.window, "No unpaid invoices found");
+                return;
+            }
+            //now display and print the corporate bill
+            //todo also change the next billing date to the first of next month
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //method to search the customer with the username and list all the active bookings the table
