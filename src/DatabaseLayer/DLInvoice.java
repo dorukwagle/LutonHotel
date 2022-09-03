@@ -86,11 +86,4 @@ public class DLInvoice {
             throw e;
         }
     }
-
-    //returns all the unpaid invoices of a customer (mainly corporate) excluding paid invoices and active bookings' invoices
-    //in case of individual customer, a single invoice is returned only if any booking is active
-    public ArrayList<Invoice> getCustomerInvoices(int customerId) throws Exception{
-        ArrayList<Invoice> invoices = new ArrayList<Invoice>();
-        return invoices;
-    }
 }

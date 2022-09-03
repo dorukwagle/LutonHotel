@@ -3,9 +3,9 @@ package Utility;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.net.URL;
 
 public class Values {
-    private static String resPath;
     private static int screenHeight;
     private static int screenWidth;
     private static Dimension dimension;
@@ -13,7 +13,6 @@ public class Values {
     private static boolean isInitialised = false;
 
     private Values() {
-        resPath = this.getClass().getResource("/res").toString().replace("file:", "");
         dimension = Toolkit.getDefaultToolkit().getScreenSize();
         screenHeight = (int) dimension.getHeight();
         screenWidth =  (int) dimension.getWidth();
@@ -24,10 +23,6 @@ public class Values {
         if(!isInitialised){
             new Values();
         }
-    }
-
-    public static String resPath() {
-        return resPath;
     }
 
     public static int screenHeight() {
@@ -83,7 +78,7 @@ public class Values {
         return new Dimension((int) dimension.getWidth(), (int) dimension.getHeight());
     }
 
-    public static String getResPath(String name){
-        return resPath() + "/"  + name;
+    public static URL getResPath(String name){
+        return Values.class.getResource("/res/" + name);
     }
 }

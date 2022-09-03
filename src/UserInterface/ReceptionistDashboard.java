@@ -806,6 +806,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         try {
             int row = this.bills.getSelectedRow();
             int invoiceId = Integer.parseInt(model.getValueAt(row, 7).toString());
+
             //now first update the invoice
             Invoice invoice = new Invoice();
             invoice.setInvoiceId(invoiceId);
@@ -816,23 +817,25 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             invoice.setPaymentStatus("paid");
             invoice.setInvoiceId(invoiceId);
 
-            //calculate the total price
-            DLInvoice dlInvoice = new DLInvoice(invoice);
-            dlInvoice.updateInvoice();
+            //update the invoice status to paid
+            blInvoice = new BLInvoice(invoice);
+            blInvoice.updateInvoice();
 
             //now update the booking status to 'completed'
-            Booking booking = new Booking();
-            booking.setBookingId(Integer.parseInt(model.getValueAt(row, 0).toString()));
-            DLBooking dlBooking = new DLBooking(booking);
-            booking = dlBooking.getBooking();
+            int id = (Integer.parseInt(model.getValueAt(row, 0).toString()));
+            BLBooking blBooking = new BLBooking();
+            Booking booking = blBooking.getBooking(id);
             booking.setBookingStatus("completed");
 
-            dlBooking = new DLBooking(booking);
-            dlBooking.updateBooking();
+            blBooking = new BLBooking(booking);
+            blBooking.updateBooking();
 
             //now calculate total price
             BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
             blBookingReceptionist.calculateTotalPrice(invoiceId);
+
+            //TODO now generate the bill from the newly generated invoice
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -842,7 +845,52 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //method to check out corporate customer, it just checks out the currently selected active booking in the table
     //the generated invoice is sent to the customer
     private void corporateCheckout(){
+        if(this.customer == null || this.bills.getSelectionModel().isSelectionEmpty()){
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) this.bills.getModel();
+        if(model.getColumnCount() < 2){
+            return;
+        }
+        try {
+            int row = this.bills.getSelectedRow();
+            int bookingId = Integer.parseInt(model.getValueAt(row, 0).toString());
+            int invoiceId = Integer.parseInt(model.getValueAt(row, 7).toString());
 
+            //now first update the invoice
+            Invoice invoice = new Invoice();
+            invoice.setInvoiceId(invoiceId);
+            BLInvoice blInvoice = new BLInvoice(invoice);
+            invoice = blInvoice.getInvoice();
+
+            //now add more data to invoice to update it
+            invoice.setPaymentStatus("unpaid");
+            invoice.setInvoiceId(invoiceId);
+
+            //update the invoice status to unpaid
+            blInvoice = new BLInvoice(invoice);
+            blInvoice.updateInvoice();
+
+            //now update the booking status to 'completed'
+            BLBooking blBooking = new BLBooking();
+            Booking booking = blBooking.getBooking(bookingId);
+            booking.setBookingStatus("completed");
+
+            blBooking = new BLBooking(booking);
+            blBooking.updateBooking();
+
+            //now calculate total price
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            blBookingReceptionist.calculateTotalPrice(invoiceId);
+
+            //now calculate the discount amount
+            blBookingReceptionist.calculateDiscountAmount(invoiceId);
+
+            //todo now generate the invoice and print it
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //method to generate bill for the corporate customer, this calculates the total of all the
@@ -858,9 +906,9 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         }
         String customerType = this.checkoutOpt.getSelectedItem().toString();
         try{
-            //first fetch the customer id using serchCustomer method
-            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
-            this.customer = dlBookingReceptionist.searchCustomer(this.email.getText().trim(), customerType);
+            //first fetch the customer id using searchCustomer method
+            BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
+            this.customer = blBookingReceptionist.searchCustomer(this.email.getText().trim(), customerType);
 
             //now fetch all the active bookings of the customer and display on the table
             DefaultTableModel model = (DefaultTableModel) this.bills.getModel();
@@ -898,7 +946,6 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             else{
                 JOptionPane.showMessageDialog(this.window, "User does not exists!");
                 model.setRowCount(0);
-                return;
             }
         }catch (Exception e){
             e.printStackTrace();

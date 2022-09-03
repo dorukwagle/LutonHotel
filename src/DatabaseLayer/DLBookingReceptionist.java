@@ -1,12 +1,11 @@
 package DatabaseLayer;
 
-import DataModel.Booking;
-import DataModel.BookingReceptionist;
-import DataModel.Customer;
+import DataModel.*;
 import Utility.AuthenticationException;
 import Utility.DatabaseConnector;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -166,6 +165,106 @@ public class DLBookingReceptionist {
                 return customer;
             }
             else {
+                return null;
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    //calculate the total price and save it to the database, update the invoice
+    public void calculateTotalPrice(int invoiceId) throws Exception{
+        try {
+            String query = "UPDATE invoice SET total_price = " +
+                    "( " +
+                    "SELECT ( DATEDIFF(i.actual_check_out_date, i.actual_check_in_date) * r.room_price + i.service_charge ) " +
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN room r on b.room_no = r.room_no " +
+                    "WHERE i.invoice_id = ? " +
+                    ") " +
+                    "WHERE invoice_id = ?";
+            PreparedStatement statement = this.connection.prepareStatement(query);
+            statement.setInt(1, invoiceId);
+            statement.setInt(2, invoiceId);
+            statement.executeUpdate();
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    //calculate the discount amount and update the invoice, only for corporate customer,
+    //the method calculateTotalPrice must be executed before executing this method
+    public void calculateDiscountAmount(int invoiceId) throws Exception{
+        try {
+            String query = "UPDATE invoice set discount_amount = " +
+                    "( " +
+                    "SELECT (i.total_price * c.discount_percent/100) " +
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking+id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "WHERE i.invoice_id = ? " +
+                    ") " +
+                    "WHERE invoice_id = ?";
+            PreparedStatement statement = this.connection.prepareStatement(query);
+            statement.setInt(1, invoiceId);
+            statement.setInt(2, invoiceId);
+            statement.executeUpdate();
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public CorporateBill getRaisedInvoice(int invoiceId) throws Exception{
+        try {
+            String query = "SELECT c.organization_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
+                    "i.service_charge, i.total_price, i.discount_amount, r.room_type, r.room_no, r.room_price " +
+                    "FROM customer invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "WHERE i.invoice_id = '" + invoiceId + "'";
+            Statement statement = this.connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            if(rs.next()){
+                CorporateBill corporateBill = new CorporateBill();
+                corporateBill.setOrgName(rs.getString("organization_name"));
+                corporateBill.setAddress(rs.getString("address"));
+                corporateBill.setContact(rs.getString("contact"));
+                corporateBill.setInvoiceId(rs.getInt("invoice_id"));
+                corporateBill.setCheckIn(rs.getString("actual_check_in_date"));
+                corporateBill.setCheckOut(rs.getString("actual_check_out_date"));
+                corporateBill.setServiceCharge(rs.getFloat("service_charge"));
+                corporateBill.setTotalPrice(rs.getFloat("total_price"));
+                corporateBill.setDiscountAmount(rs.getFloat("discount_amount"));
+                corporateBill.setRoomType(rs.getString("room_type"));
+                corporateBill.setRoomNo(rs.getInt("room_no"));
+                corporateBill.setRoomPrice(rs.getFloat("room_price"));
+                return corporateBill;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public IndividualBill getRaisedBill(int invoiceId) throws Exception{
+        try {
+            String query = "SELECT c.cust_full_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
+                    "i.service_charge, i.total_price, r.room_type, r.room_no, r.room_price " +
+                    "FROM customer invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "WHERE i.invoice_id = '" + invoiceId + "'";
+            Statement statement = this.connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            if(rs.next()){
+                IndividualBill individualBill = new IndividualBill();
+                individualBill.setCustomerName(rs.getString("cust_full_name"));
+                individualBill.setAddress(rs.getString("address"));
+                individualBill.setContact(rs.getString("contact"));
+                individualBill.setBillId(rs.getInt("invoice_id"));
+                individualBill.setCheckIn(rs.getString("actual_check_in_date"));
+                individualBill.setCheckOut(rs.getString("actual_check_out_date"));
+                individualBill.setServiceCharge(rs.getFloat("service_charge"));
+                individualBill.setTotalPrice(rs.getFloat("total_price"));
+                individualBill.setRoomType(rs.getString("room_type"));
+                individualBill.setRoomNo(rs.getInt("room_no"));
+                individualBill.setRoomPrice(rs.getFloat("room_price"));
+                return individualBill;
+            }else {
                 return null;
             }
         }catch (Exception e){

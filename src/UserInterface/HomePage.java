@@ -2,6 +2,7 @@ package UserInterface;
 
 import Utility.Values;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -80,8 +81,12 @@ public class HomePage extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        ImageIcon img = new ImageIcon(Values.getResPath("lutonhotel.jpg"));
-        g.drawImage(img.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
+        try {
+            ImageIcon img = new ImageIcon(Values.getResPath("lutonhotel.jpg"));
+            g.drawImage(img.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

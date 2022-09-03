@@ -1,8 +1,6 @@
 package BusinessLayer;
 
-import DataModel.Booking;
-import DataModel.BookingReceptionist;
-import DataModel.Customer;
+import DataModel.*;
 import DatabaseLayer.DLBooking;
 import DatabaseLayer.DLBookingReceptionist;
 import DatabaseLayer.DLRooms;
@@ -39,7 +37,7 @@ public class BLBookingReceptionist {
         }
     }
 
-    public Customer serchCustomer(String custEmail, String custType) throws Exception{
+    public Customer searchCustomer(String custEmail, String custType) throws Exception{
         try {
             DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
             return dlBookingReceptionist.searchCustomer(custEmail, custType);
@@ -48,6 +46,7 @@ public class BLBookingReceptionist {
         }
     }
 
+    //method to calculate and store the total price in the database
     public void calculateTotalPrice(int invoiceId) throws Exception{
         try {
             DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
@@ -56,10 +55,28 @@ public class BLBookingReceptionist {
             throw e;
         }
     }
-    public void calculateDiscount(int invoiceId) throws Exception{
+
+    //method to calculate and store the discount amount in the database, only for corporate customer
+    public void calculateDiscountAmount(int invoiceId) throws Exception{
         try {
             DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
-            dlBookingReceptionist.calculateDiscount(invoiceId);
+            dlBookingReceptionist.calculateDiscountAmount(invoiceId);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    //returns all the unpaid invoices of a customer (mainly corporate) excluding paid invoices and active bookings' invoices
+    //in case of individual customer, a single invoice is returned only if any booking is active
+    public ArrayList<Invoice> getCustomerInvoices(int customerId) throws Exception{
+        ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+        return invoices;
+    }
+
+    public CorporateBill getRaisedInvoice(int invoiceId) throws Exception{
+        try {
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            return dlBookingReceptionist.getRaisedInvoice(invoiceId);
         }catch (Exception e){
             throw e;
         }
