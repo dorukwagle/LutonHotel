@@ -834,6 +834,10 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             IndividualBill individualBill = blBookingReceptionist.getRaisedBill(invoiceId);
 
             //display and print individual bill
+            new Bills().individualBill(individualBill);
+
+            //reload the table
+            this.searchCustomer();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -887,6 +891,9 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             CorporateInvoice corporateInvoice = blBookingReceptionist.getRaisedInvoice(invoiceId);
 
             //display and print invoice
+
+            //reload the table
+            this.searchCustomer();
         }catch (Exception e){
             e.printStackTrace();
         }
