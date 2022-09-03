@@ -1,9 +1,7 @@
 package BusinessLayer;
 
 import DataModel.*;
-import DatabaseLayer.DLBooking;
 import DatabaseLayer.DLBookingReceptionist;
-import DatabaseLayer.DLRooms;
 
 import java.util.ArrayList;
 
@@ -73,7 +71,7 @@ public class BLBookingReceptionist {
         return invoices;
     }
 
-    public CorporateBill getRaisedInvoice(int invoiceId) throws Exception{
+    public CorporateInvoice getRaisedInvoice(int invoiceId) throws Exception{
         try {
             DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
             return dlBookingReceptionist.getRaisedInvoice(invoiceId);
@@ -81,4 +79,15 @@ public class BLBookingReceptionist {
             throw e;
         }
     }
+
+    public IndividualBill getRaisedBill(int invoiceId) throws Exception{
+        try {
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            return dlBookingReceptionist.getRaisedInvoice(invoiceId);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+
 }

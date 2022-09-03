@@ -5,9 +5,6 @@ import BusinessLayer.BLBookingReceptionist;
 import BusinessLayer.BLInvoice;
 import BusinessLayer.BLRooms;
 import DataModel.*;
-import DatabaseLayer.DLBooking;
-import DatabaseLayer.DLBookingReceptionist;
-import DatabaseLayer.DLInvoice;
 import Utility.Values;
 
 import javax.swing.*;
@@ -16,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class ReceptionistDashboard extends JPanel implements ActionListener {
     private Window window;
@@ -835,7 +831,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             blBookingReceptionist.calculateTotalPrice(invoiceId);
 
             //TODO now generate the bill from the newly generated invoice
-
+            IndividualBill individualBill = blBookingReceptionist.getRaisedBill(invoiceId);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -887,6 +883,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             blBookingReceptionist.calculateDiscountAmount(invoiceId);
 
             //todo now generate the invoice and print it
+            CorporateInvoice corporateInvoice = blBookingReceptionist.getRaisedInvoice(invoiceId);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -896,7 +893,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //method to generate bill for the corporate customer, this calculates the total of all the
     //previously unpaid invoices and generates a bill to be paid, and set all those invoice status to be paid
     private void generateCorporateBill(){
-
+        //todo also change the next billing date to the first of next month
     }
 
     //method to search the customer with the username and list all the active bookings the table

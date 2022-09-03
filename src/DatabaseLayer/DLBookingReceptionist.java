@@ -211,7 +211,7 @@ public class DLBookingReceptionist {
         }
     }
 
-    public CorporateBill getRaisedInvoice(int invoiceId) throws Exception{
+    public CorporateInvoice getRaisedInvoice(int invoiceId) throws Exception{
         try {
             String query = "SELECT c.organization_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
                     "i.service_charge, i.total_price, i.discount_amount, r.room_type, r.room_no, r.room_price " +
@@ -220,20 +220,20 @@ public class DLBookingReceptionist {
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             if(rs.next()){
-                CorporateBill corporateBill = new CorporateBill();
-                corporateBill.setOrgName(rs.getString("organization_name"));
-                corporateBill.setAddress(rs.getString("address"));
-                corporateBill.setContact(rs.getString("contact"));
-                corporateBill.setInvoiceId(rs.getInt("invoice_id"));
-                corporateBill.setCheckIn(rs.getString("actual_check_in_date"));
-                corporateBill.setCheckOut(rs.getString("actual_check_out_date"));
-                corporateBill.setServiceCharge(rs.getFloat("service_charge"));
-                corporateBill.setTotalPrice(rs.getFloat("total_price"));
-                corporateBill.setDiscountAmount(rs.getFloat("discount_amount"));
-                corporateBill.setRoomType(rs.getString("room_type"));
-                corporateBill.setRoomNo(rs.getInt("room_no"));
-                corporateBill.setRoomPrice(rs.getFloat("room_price"));
-                return corporateBill;
+                CorporateInvoice corporateInvoice = new CorporateInvoice();
+                corporateInvoice.setOrgName(rs.getString("organization_name"));
+                corporateInvoice.setAddress(rs.getString("address"));
+                corporateInvoice.setContact(rs.getString("contact"));
+                corporateInvoice.setInvoiceId(rs.getInt("invoice_id"));
+                corporateInvoice.setCheckIn(rs.getString("actual_check_in_date"));
+                corporateInvoice.setCheckOut(rs.getString("actual_check_out_date"));
+                corporateInvoice.setServiceCharge(rs.getFloat("service_charge"));
+                corporateInvoice.setTotalPrice(rs.getFloat("total_price"));
+                corporateInvoice.setDiscountAmount(rs.getFloat("discount_amount"));
+                corporateInvoice.setRoomType(rs.getString("room_type"));
+                corporateInvoice.setRoomNo(rs.getInt("room_no"));
+                corporateInvoice.setRoomPrice(rs.getFloat("room_price"));
+                return corporateInvoice;
             }else {
                 return null;
             }
@@ -267,6 +267,14 @@ public class DLBookingReceptionist {
             }else {
                 return null;
             }
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public ArrayList<CorporateInvoice> getCorporateInvoices(String email) throws Exception{
+        try {
+
         }catch (Exception e){
             throw e;
         }

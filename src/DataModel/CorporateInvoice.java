@@ -1,11 +1,11 @@
 package DataModel;
 
-public class CorporateBill extends IndividualBill{
+public class CorporateInvoice extends IndividualBill{
     private String orgName;
     private double subTotal;
     private double discountAmount;
     private int invoiceId;
-    public CorporateBill(){
+    public CorporateInvoice(){
         this.orgName = "";
         this.subTotal = 0;
         this.discountAmount = 0;
