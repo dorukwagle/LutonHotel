@@ -70,10 +70,6 @@ public class CorporateDashboard extends CustomerDashboard {
         billingDate.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(billingDate);
 
-        JLabel billingAmount = new JLabel("Total Bill: <amount>");
-        billingAmount.setFont(new Font("Serif", Font.BOLD, 17));
-        profileHolder.add(billingAmount);
-
         JLabel discount = new JLabel("Discount Offered: " + customer.getDiscountPercent() + "%");
         discount.setFont(new Font("Serif", Font.BOLD, 17));
         profileHolder.add(discount);

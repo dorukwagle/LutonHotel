@@ -135,7 +135,7 @@ public class Bills {
         print.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5);
+                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
                 new PanelToPdf(container, filename);
                 dialog.dispose();
             }
@@ -255,7 +255,7 @@ public class Bills {
         print.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5);
+                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
                 new PanelToPdf(container, filename);
                 dialog.dispose();
             }
@@ -391,7 +391,7 @@ public class Bills {
         print.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5);
+                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
                 new PanelToPdf(container, filename);
                 dialog.dispose();
             }

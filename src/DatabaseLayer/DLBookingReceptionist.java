@@ -175,11 +175,12 @@ public class DLBookingReceptionist {
     //calculate the total price and save it to the database, update the invoice
     public void calculateTotalPrice(int invoiceId) throws Exception{
         try {
-            String query1 = "SELECT ( DATEDIFF(i.actual_check_out_date, i.actual_check_in_date) * r.room_price + i.service_charge ) as total" +
-                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN room r on b.room_no = r.room_no " +
+            String query1 = "SELECT ( DATEDIFF(i.actual_check_out_date, i.actual_check_in_date) * r.room_price + i.service_charge ) as total " +
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN room r ON b.room_no = r.room_no " +
                     "WHERE i.invoice_id = " + invoiceId;
             Statement st = this.connection.createStatement();
             ResultSet rst = st.executeQuery(query1);
+            rst.next();
 
             String query = "UPDATE invoice SET total_price = ?" +
                     "WHERE invoice_id = ?";
@@ -196,15 +197,17 @@ public class DLBookingReceptionist {
     //the method calculateTotalPrice must be executed before executing this method
     public void calculateDiscountAmount(int invoiceId) throws Exception{
         try {
-            String query = "UPDATE invoice set discount_amount = " +
-                    "( " +
-                    "SELECT (i.total_price * c.discount_percent/100) " +
+            String subQeury = "SELECT (i.total_price * c.discount_percent/100) AS discount " +
                     "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
-                    "WHERE i.invoice_id = ? " +
-                    ") " +
+                    "WHERE i.invoice_id = " + invoiceId;
+            Statement stat = this.connection.createStatement();
+            ResultSet rs = stat.executeQuery(subQeury);
+            rs.next();
+
+            String query = "UPDATE invoice set discount_amount = ? " +
                     "WHERE invoice_id = ?";
             PreparedStatement statement = this.connection.prepareStatement(query);
-            statement.setInt(1, invoiceId);
+            statement.setFloat(1, rs.getFloat("discount"));
             statement.setInt(2, invoiceId);
             statement.executeUpdate();
         }catch (Exception e){
@@ -218,6 +221,7 @@ public class DLBookingReceptionist {
             String query = "SELECT c.organization_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
                     "i.service_charge, i.total_price, i.discount_amount, r.room_type, r.room_no, r.room_price " +
                     "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "INNER JOIN room r ON b.room_no = r.room_no " +
                     "WHERE i.invoice_id = " + invoiceId;
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
@@ -249,7 +253,8 @@ public class DLBookingReceptionist {
         try {
             String query = "SELECT c.cust_full_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
                     "i.service_charge, i.total_price, r.room_type, r.room_no, r.room_price " +
-                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN room r on r.room_no = b.room_no " +
+                    "INNER JOIN customer c ON c.cust_id = b.cust_id " +
                     "WHERE i.invoice_id = " + invoiceId;
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
@@ -280,7 +285,7 @@ public class DLBookingReceptionist {
         try {
             ArrayList<Invoice> invoices = new ArrayList<>();
             String query = "SELECT i.* " +
-                    "FROM customer invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
                     "WHERE c.cust_id = " + customerId + " AND i.payment_status = 'unpaid'";
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
