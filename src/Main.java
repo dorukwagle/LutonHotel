@@ -16,8 +16,8 @@ public class Main {
 	public static void main(String[] agrs) {
 		Values.initializeValues();
 		//add the home page for the first time
-//		Window.getWindow().add(new HomePage());
+		Window.getWindow().add(new HomePage());
 
-		new Bills().individualBill(new CorporateInvoice());
+//		new Bills().individualBill(new CorporateInvoice());
 	}
 }

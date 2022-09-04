@@ -801,17 +801,16 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
         try {
             int row = this.bills.getSelectedRow();
-            int invoiceId = Integer.parseInt(model.getValueAt(row, 7).toString());
-
+            int bookId = Integer.parseInt(model.getValueAt(row, 0).toString());
             //now first update the invoice
             Invoice invoice = new Invoice();
-            invoice.setInvoiceId(invoiceId);
+            invoice.setBookingId(bookId);
+
             BLInvoice blInvoice = new BLInvoice(invoice);
             invoice = blInvoice.getInvoice();
 
             //now add more data to invoice to update it
             invoice.setPaymentStatus("paid");
-            invoice.setInvoiceId(invoiceId);
 
             //update the invoice status to paid
             blInvoice = new BLInvoice(invoice);
@@ -828,10 +827,10 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
             //now calculate total price
             BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
-            blBookingReceptionist.calculateTotalPrice(invoiceId);
+            blBookingReceptionist.calculateTotalPrice(invoice.getInvoiceId());
 
             //todo now generate the bill from the newly generated invoice
-            IndividualBill individualBill = blBookingReceptionist.getRaisedBill(invoiceId);
+            IndividualBill individualBill = blBookingReceptionist.getRaisedBill(invoice.getInvoiceId());
 
             //display and print individual bill
             new Bills().individualBill(individualBill);
@@ -856,17 +855,15 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
         try {
             int row = this.bills.getSelectedRow();
             int bookingId = Integer.parseInt(model.getValueAt(row, 0).toString());
-            int invoiceId = Integer.parseInt(model.getValueAt(row, 7).toString());
 
             //now first update the invoice
             Invoice invoice = new Invoice();
-            invoice.setInvoiceId(invoiceId);
+            invoice.setBookingId(bookingId);
             BLInvoice blInvoice = new BLInvoice(invoice);
             invoice = blInvoice.getInvoice();
 
             //now add more data to invoice to update it
             invoice.setPaymentStatus("unpaid");
-            invoice.setInvoiceId(invoiceId);
 
             //update the invoice status to unpaid
             blInvoice = new BLInvoice(invoice);
@@ -882,15 +879,15 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
 
             //now calculate total price
             BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
-            blBookingReceptionist.calculateTotalPrice(invoiceId);
+            blBookingReceptionist.calculateTotalPrice(invoice.getInvoiceId());
 
             //now calculate the discount amount
-            blBookingReceptionist.calculateDiscountAmount(invoiceId);
+            blBookingReceptionist.calculateDiscountAmount(invoice.getInvoiceId());
 
-            //todo now generate the invoice and print it
-            CorporateInvoice corporateInvoice = blBookingReceptionist.getRaisedInvoice(invoiceId);
+            CorporateInvoice corporateInvoice = blBookingReceptionist.getRaisedInvoice(invoice.getInvoiceId());
 
             //display and print invoice
+            new Bills().corporateInvoice(corporateInvoice);
 
             //reload the table
             this.searchCustomer();
@@ -913,7 +910,10 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                 return;
             }
             //now display and print the corporate bill
+            new Bills().corporateBill(bill);
+
             //todo also change the next billing date to the first of next month
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -946,7 +946,6 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                 model.addColumn("RoomType");
                 model.addColumn("Status");
                 model.addColumn("Room No.");
-                model.addColumn("InvoiceId");
                 //now add all the booking data to the table
                 Booking booking;
                 for(int i = 0; i < bookings.size(); ++i){
@@ -959,7 +958,6 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                             booking.getPreferredRoomType(),
                             booking.getBookingStatus(),
                             String.valueOf(booking.getRoomNo()),
-                            String.valueOf(booking.getInvoiceId())
                     });
                 }
             }

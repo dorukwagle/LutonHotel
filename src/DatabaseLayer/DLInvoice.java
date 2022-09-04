@@ -44,7 +44,7 @@ public class DLInvoice {
 
     public Invoice getInvoice() throws Exception{
         try{
-            String query = "SELECT * FROM invoice WHERE booking_id = " + this.invoice.getInvoiceId();
+            String query = "SELECT * FROM invoice WHERE booking_id = " + this.invoice.getBookingId();
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             if(rs.next()){
@@ -70,7 +70,7 @@ public class DLInvoice {
     public void updateInvoice() throws Exception{
         try{
             String query = "UPDATE invoice SET service_charge = ?, booking_id = ?," +
-                    " payment_status = ?, discount_amount = ?, total_price = ?" +
+                    " payment_status = ?, discount_amount = ?, total_price = ?," +
                     " actual_check_in_date = ?, actual_check_out_date = CURRENT_DATE()" +
                     " WHERE invoice_id = ?";
             PreparedStatement statement = this.connection.prepareStatement(query);

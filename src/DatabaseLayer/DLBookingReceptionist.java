@@ -86,7 +86,6 @@ public class DLBookingReceptionist {
                 bookingReceptionist.setCustId(rs.getInt("cust_id"));
                 bookingReceptionist.setBookingStatus(rs.getString("booking_status"));
                 bookingReceptionist.setPreferredRoomType(rs.getString("preferred_room_type"));
-                bookingReceptionist.setInvoiceId(rs.getInt("invoice_id"));
                 bookingReceptionist.setRoomNo(rs.getInt("room_no"));
                 bookingReceptionist.setStaffId(rs.getInt("staff_id"));
                 bookingReceptionist.setCustomerType(rs.getString("customerType"));
@@ -129,6 +128,7 @@ public class DLBookingReceptionist {
         }
     }
 
+    //check if the room is available for the given date
     public boolean isAvailable(int room, String checkin, String checkout) throws Exception{
         try{
             //first check if the room exists in the room table
@@ -175,15 +175,16 @@ public class DLBookingReceptionist {
     //calculate the total price and save it to the database, update the invoice
     public void calculateTotalPrice(int invoiceId) throws Exception{
         try {
-            String query = "UPDATE invoice SET total_price = " +
-                    "( " +
-                    "SELECT ( DATEDIFF(i.actual_check_out_date, i.actual_check_in_date) * r.room_price + i.service_charge ) " +
+            String query1 = "SELECT ( DATEDIFF(i.actual_check_out_date, i.actual_check_in_date) * r.room_price + i.service_charge ) as total" +
                     "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN room r on b.room_no = r.room_no " +
-                    "WHERE i.invoice_id = ? " +
-                    ") " +
+                    "WHERE i.invoice_id = " + invoiceId;
+            Statement st = this.connection.createStatement();
+            ResultSet rst = st.executeQuery(query1);
+
+            String query = "UPDATE invoice SET total_price = ?" +
                     "WHERE invoice_id = ?";
             PreparedStatement statement = this.connection.prepareStatement(query);
-            statement.setInt(1, invoiceId);
+            statement.setFloat(1, rst.getFloat("total"));
             statement.setInt(2, invoiceId);
             statement.executeUpdate();
         }catch (Exception e){
@@ -198,7 +199,7 @@ public class DLBookingReceptionist {
             String query = "UPDATE invoice set discount_amount = " +
                     "( " +
                     "SELECT (i.total_price * c.discount_percent/100) " +
-                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking+id INNER JOIN customer c ON c.cust_id = b.cust_id " +
+                    "FROM invoice i INNER JOIN booking b ON i.booking_id = b.booking_id INNER JOIN customer c ON c.cust_id = b.cust_id " +
                     "WHERE i.invoice_id = ? " +
                     ") " +
                     "WHERE invoice_id = ?";
@@ -211,7 +212,7 @@ public class DLBookingReceptionist {
         }
     }
 
-    //query database for detail information about the invoice
+    //query database for detail information about the invoice, for corporate customer
     public CorporateInvoice getRaisedInvoice(int invoiceId) throws Exception{
         try {
             String query = "SELECT c.organization_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +
@@ -243,6 +244,7 @@ public class DLBookingReceptionist {
         }
     }
 
+    //query the bill information for individual customer
     public IndividualBill getRaisedBill(int invoiceId) throws Exception{
         try {
             String query = "SELECT c.cust_full_name, c.address, c.contact, i.invoice_id, i.actual_check_in_date, i.actual_check_out_date, " +

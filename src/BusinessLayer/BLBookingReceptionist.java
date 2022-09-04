@@ -112,18 +112,21 @@ public class BLBookingReceptionist {
 
             float subTotal = 0;
             float totalPrice = 0;
+            float serviceCharge = 0;
             float discount = 0;
 
             for (Invoice invoice : invoices) {
                 subTotal += invoice.getTotalPrice();
                 discount += invoice.getDiscountAmount();
+                serviceCharge += invoice.getServiceCharge();
             }
             totalPrice = subTotal - discount;
             corporateInvoice.setDiscountAmount(discount);
             corporateInvoice.setSubTotal(subTotal);
             corporateInvoice.setTotalPrice(totalPrice);
+            corporateInvoice.setServiceCharge(serviceCharge);
 
-            //finally set all the invoices payment status to paid
+            //finally set all the invoice payment status to paid
             dlBookingReceptionist.setAllAsPaid(customerId);
 
             return corporateInvoice;
@@ -131,4 +134,5 @@ public class BLBookingReceptionist {
             throw e;
         }
     }
+
 }

@@ -111,7 +111,6 @@ public class DLBooking {
                 booking.setCustId(rs.getInt("cust_id"));
                 booking.setBookingStatus(rs.getString("booking_status"));
                 booking.setPreferredRoomType(rs.getString("preferred_room_type"));
-                booking.setInvoiceId(rs.getInt("invoice_id"));
                 booking.setRoomNo(rs.getInt("room_no"));
                 booking.setStaffId(rs.getInt("staff_id"));
 
@@ -127,7 +126,7 @@ public class DLBooking {
         try{
             String query = "UPDATE booking set booking_date = DATE(?), check_in_date = DATE(?), " +
                     "check_out_date = DATE(?), preferred_room_type = ?, booking_status = ?, cust_id = ?, " +
-                    "staff_id = ?, room_no = ?, invoice_id = ?  WHERE booking_id = ?";
+                    "staff_id = ?, room_no = ? WHERE booking_id = ?";
 
             PreparedStatement statement = this.connection.prepareStatement(query);
             statement.setString(1, this.booking.getBookingDate());
@@ -138,8 +137,7 @@ public class DLBooking {
             statement.setInt(6, this.booking.getCustId());
             statement.setInt(7, this.booking.getStaffId());
             statement.setInt(8, this.booking.getRoomNo());
-            statement.setInt(9, this.booking.getInvoiceId());
-            statement.setInt(10, this.booking.getBookingId());
+            statement.setInt(9, this.booking.getBookingId());
 
             int updates = statement.executeUpdate();
             if (updates > 0) {
@@ -167,7 +165,6 @@ public class DLBooking {
                 booking.setCustId(rs.getInt("cust_id"));
                 booking.setBookingStatus(rs.getString("booking_status"));
                 booking.setPreferredRoomType(rs.getString("preferred_room_type"));
-                booking.setInvoiceId(rs.getInt("invoice_id"));
                 booking.setRoomNo(rs.getInt("room_no"));
                 booking.setStaffId(rs.getInt("staff_id"));
                 return booking;

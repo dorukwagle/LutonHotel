@@ -10,7 +10,6 @@ public class Booking {
     protected int custId;
     protected int roomNo;
     protected int staffId;
-    protected int invoiceId;
 
     public Booking() {
         this.bookingId = 0;
@@ -22,7 +21,6 @@ public class Booking {
         this.custId = 0;
         this.roomNo = 0;
         this.staffId = 0;
-        this.invoiceId = 0;
     }
 
     public Booking(String checkInDate, String checkOutDate, String preferredRoomType) {
@@ -104,11 +102,4 @@ public class Booking {
         this.staffId = staffId;
     }
 
-    public int getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(int invoiceId) {
-        this.invoiceId = invoiceId;
-    }
 }
