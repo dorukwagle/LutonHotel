@@ -115,8 +115,14 @@ public class Bills {
         JLabel billId = new JLabel("Bill Id: " + bill.getBillId());
         billId.setFont(new Font("Serif", Font.PLAIN, 17));
         bdetailHolder.add(billId);
-
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int col){
+                return false;
+            }
+        };
+        model.addColumn("Description");
+        model.addColumn("Value");
         model.addRow(new String[]{
                 "Room Price: ",
                 "Rs. " + bill.getRoomPrice()
@@ -134,7 +140,8 @@ public class Bills {
         table.setFont(new Font("Serif", Font.PLAIN, 20));
         table.setRowHeight(30);
 
-        container.add(table, BorderLayout.SOUTH);
+        JScrollPane scrollPane = new JScrollPane(table);
+        container.add(scrollPane, BorderLayout.SOUTH);
 
         JButton print = new JButton("Print Bill");
         print.setFont(new Font("Serif", Font.BOLD, 30));
@@ -146,8 +153,8 @@ public class Bills {
             }
         });
         mainContainer.add(print, BorderLayout.SOUTH);
-
         dialog.add(mainLay);
+        dialog.pack();
         dialog.setVisible(true);
     }
 
