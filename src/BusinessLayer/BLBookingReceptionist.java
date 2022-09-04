@@ -95,6 +95,16 @@ public class BLBookingReceptionist {
         }
     }
 
+    //method to update the next billing date of corporate customer to the first of next month
+    public void updateBillingDate(int customerId) throws Exception{
+        try {
+            DLBookingReceptionist dlBookingReceptionist = new DLBookingReceptionist();
+            dlBookingReceptionist.updateBillingDate(customerId);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
     //calculate the total monthly bill of the corporate customer, and set all invoice as paid
     public CorporateInvoice getRaisedCorporateBill(int customerId) throws Exception{
         try {

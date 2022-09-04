@@ -135,8 +135,8 @@ public class Bills {
         print.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
-                new PanelToPdf(container, filename);
+                String filename = name.getText() + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
+                new PanelToPdf(container, filename).printPdf();
                 dialog.dispose();
             }
         });
@@ -205,7 +205,7 @@ public class Bills {
         bdetailHolder.setLayout(new BoxLayout(bdetailHolder, BoxLayout.Y_AXIS));
         detail.add(bdetailHolder, BorderLayout.EAST);
 
-        JLabel bookDetail = new JLabel("Booking Details");
+        JLabel bookDetail = new JLabel("Bill Details");
         bookDetail.setFont(new Font("Serif", Font.BOLD, 20));
         bdetailHolder.add(bookDetail);
 
@@ -231,7 +231,7 @@ public class Bills {
         });
         model.addRow(new String[]{
                 "Subtotal: ",
-                "Rs. " + bill.getTotalPrice()
+                "Rs. " + bill.getSubTotal()
         });
         model.addRow(new String[]{
                 "Discount: ",
@@ -239,7 +239,7 @@ public class Bills {
         });
         model.addRow(new String[]{
                 "Total Price: ",
-                "Rs. " + (bill.getTotalPrice() - bill.getDiscountAmount())
+                "Rs. " + bill.getTotalPrice()
         });
         JTable table = new JTable(model);
         table.setTableHeader(null);
@@ -255,8 +255,8 @@ public class Bills {
         print.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
-                new PanelToPdf(container, filename);
+                String filename = name.getText() + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
+                new PanelToPdf(container, filename).printPdf();
                 dialog.dispose();
             }
         });
@@ -391,8 +391,8 @@ public class Bills {
         print.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String filename = name + "_LutonHotel_bill_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
-                new PanelToPdf(container, filename);
+                String filename = name.getText() + "_LutonHotel_invoice_" + String.valueOf(System.currentTimeMillis()).substring(5) + ".pdf";
+                new PanelToPdf(container, filename).printPdf();
                 dialog.dispose();
             }
         });

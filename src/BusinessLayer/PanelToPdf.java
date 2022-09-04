@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileOutputStream;
 
+import com.itextpdf.awt.PdfGraphics2D;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
@@ -19,11 +20,11 @@ public class PanelToPdf {
     public void printPdf(){
         Document document = new Document();
         try {
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(this.filename));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(System.getProperty("user.dir") + "/" + this.filename));
             document.open();
             PdfContentByte contentByte = writer.getDirectContent();
             PdfTemplate template = contentByte.createTemplate(500, 500);
-            Graphics2D g2 = template.createGraphics(500, 500);
+            Graphics2D g2 = new PdfGraphics2D(contentByte, 500, 500);
             this.panel.print(g2);
             g2.dispose();
             contentByte.addTemplate(template, 30, 300);

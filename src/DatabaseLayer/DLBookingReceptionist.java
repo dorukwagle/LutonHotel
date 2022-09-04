@@ -322,4 +322,15 @@ public class DLBookingReceptionist {
         }
     }
 
+    //method to udate the billing date of the corporate customer
+    public void updateBillingDate(int customerId) throws Exception{
+        try {
+            String query = "UPDATE customer SET next_billing_date = adddate(last_day(subdate(now(), interval 1 month)), 1 ) " +
+                    "WHERE cust_id = " + customerId;
+            Statement statement = this.connection.createStatement();
+            statement.executeUpdate(query);
+        }catch (Exception e){
+            throw e;
+        }
+    }
 }

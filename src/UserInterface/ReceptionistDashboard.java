@@ -899,9 +899,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
     //method to generate bill for the corporate customer, this calculates the total of all the
     //previously unpaid invoices and generates a bill to be paid, and set all those invoice status to be paid
     private void generateCorporateBill(){
-        if(this.customer == null || this.bills.getSelectionModel().isSelectionEmpty()){
-            return;
-        }
+        if(this.customer == null ) return;
         try {
             BLBookingReceptionist blBookingReceptionist = new BLBookingReceptionist();
             CorporateInvoice bill = blBookingReceptionist.getRaisedCorporateBill(this.customer.getCustId());
@@ -912,8 +910,8 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             //now display and print the corporate bill
             new Bills().corporateBill(bill);
 
-            //todo also change the next billing date to the first of next month
-
+            //change the next billing date to the first of next month
+            blBookingReceptionist.updateBillingDate(this.customer.getCustId());
         }catch (Exception e){
             e.printStackTrace();
         }
