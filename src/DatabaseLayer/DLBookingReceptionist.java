@@ -137,17 +137,26 @@ public class DLBookingReceptionist {
             if(!rs1.next()){
                 throw new AuthenticationException("InvalidRoom");
             }
-            //now check if the room is available for the particular date
-            String query = "SELECT * FROM booking b INNER JOIN room r " +
-                    " ON r.room_no = b.room_no WHERE b.room_no = " + room + " AND (b.check_in_date > DATE('" + checkout + "') OR " +
-                    "b.check_out_date < DATE('" + checkin + "')) AND (b.booking_status = 'guaranteed' OR b.booking_status = 'active')";
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            if(rs.next()){
-                return false;
-            }else {
+            //check if the room is in the booking list, if not then it is available
+            String exists = "SELECT * FROM booking b INNER JOIN room r ON r.room_no = b.room_no WHERE b.room_no = " + room +
+                    " AND (b.booking_status = 'guaranteed' OR b.booking_status = 'active'";
+            ResultSet rse = this.connection.createStatement().executeQuery(exists);
+            if(!rse.next()){
                 return true;
             }
+
+            //now check if the room is available for the particular date
+            String query = "SELECT  ( DATE(?) > DATE(?) OR DATE(?) < DATE(?)) AS available";
+            PreparedStatement statement = this.connection.prepareStatement(query);
+            statement.setDate(1, rse.getDate("check_in_date"));
+            statement.setString(2, checkout);
+            statement.setDate(3, rse.getDate("check_out_date"));
+            statement.setString(4, checkin);
+
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            return rs.getInt("available") == 1;
+
         }catch (Exception e){
             throw e;
         }
