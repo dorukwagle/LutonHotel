@@ -657,6 +657,9 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
                         "Invalid Room Number", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            else {
+                e.printStackTrace();
+            }
         }
     }
 
