@@ -125,7 +125,7 @@ public class IndividualDashboard extends CustomerDashboard {
         GridLayout glay = new GridLayout(0, 2);
         glay.setVgap(10);
         inputHolder.setLayout(glay);
-        inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
+        inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 30), Values.heightPct(container, 30)));
         center.add(inputHolder);
 
         JLabel checkinLabel = new JLabel("Check In Date: ");
@@ -172,7 +172,7 @@ public class IndividualDashboard extends CustomerDashboard {
 
         JPanel btnHold = new JPanel();
         btnHold.setLayout(new FlowLayout());
-        btnHold.setPreferredSize(new Dimension(Values.widthPct(this.container, 40), Values.heightPct(this.container, 10)));
+        btnHold.setPreferredSize(new Dimension(Values.widthPct(this.container, 20), Values.heightPct(this.container, 5)));
         bookNow.add(btnHold);
         JButton requestBooking = new JButton("Request Booking");
         requestBooking.setFont(new Font("Serif", Font.BOLD, 40));
