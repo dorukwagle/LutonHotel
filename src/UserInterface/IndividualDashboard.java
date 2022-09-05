@@ -6,6 +6,7 @@ import DataModel.Booking;
 import DataModel.Customer;
 import DataModel.LoginDetails;
 import Utility.Values;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -20,7 +21,8 @@ public class IndividualDashboard extends CustomerDashboard {
 
     private JTable upcomingBookings, activeBookings, pendingBookings, bookingsHistory;
     private JLabel creditCard, errorMsg;
-    private JTextField checkinDate, checkoutDate, credit;
+    private JDateChooser checkinDate, checkoutDate;
+    private JTextField credit;
     private JComboBox roomType;
 
     private String currentPage = "";
@@ -126,19 +128,19 @@ public class IndividualDashboard extends CustomerDashboard {
         inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
         center.add(inputHolder);
 
-        JLabel checkinLabel = new JLabel("Check In Date(yyyy-MM-dd): ");
+        JLabel checkinLabel = new JLabel("Check In Date: ");
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
-        checkinDate = new JTextField();
+        checkinDate = new JDateChooser();
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
-        JLabel checkoutLabel = new JLabel("Check Out Date(yyyy-MM-dd): ");
+        JLabel checkoutLabel = new JLabel("Check Out Date: ");
         checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutLabel);
 
-        checkoutDate = new JTextField();
+        checkoutDate = new JDateChooser();
         checkoutDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutDate);
 
@@ -390,11 +392,19 @@ public class IndividualDashboard extends CustomerDashboard {
     //override methods for handling button clicks
     @Override
     protected void requestBooking() {
+        String checkin = checkinDate.getJCalendar().getYearChooser().getYear() + "-" +
+                checkinDate.getJCalendar().getMonthChooser().getMonth() + "-" +
+                checkinDate.getJCalendar().getDayChooser().getDay();
+
+        String checkout = checkoutDate.getJCalendar().getYearChooser().getYear() + "-" +
+                checkoutDate.getJCalendar().getMonthChooser().getMonth() + "-" +
+                checkoutDate.getJCalendar().getDayChooser().getDay();
+
         Booking booking = new Booking();
         booking.setCustId(this.customer.getCustId());
         booking.setPreferredRoomType(this.roomType.getSelectedItem().toString());
-        booking.setCheckInDate(this.checkinDate.getText());
-        booking.setCheckOutDate(this.checkoutDate.getText());
+        booking.setCheckInDate(checkin);
+        booking.setCheckOutDate(checkout);
 
         //set credit card info as well
         this.customer.setCreditCardNo(credit.getText().trim());

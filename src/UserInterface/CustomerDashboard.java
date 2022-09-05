@@ -3,6 +3,7 @@ package UserInterface;
 import BusinessLayer.BLBooking;
 import DataModel.Booking;
 import Utility.Values;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -164,19 +165,19 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
         inputHolder.setLayout(glay);
         center.add(inputHolder);
 
-        JLabel checkinLabel = new JLabel("Check In Date(yyyy-MM-dd): ");
+        JLabel checkinLabel = new JLabel("Check In Date: ");
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
-        JTextField checkinDate = new JTextField();
+        JDateChooser checkinDate = new JDateChooser();
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
-        JLabel checkoutLabel = new JLabel("Check Out Date(yyyy-MM-dd): ");
+        JLabel checkoutLabel = new JLabel("Check Out Date: ");
         checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutLabel);
 
-        JTextField checkoutDate = new JTextField();
+        JDateChooser checkoutDate = new JDateChooser();
         checkoutDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutDate);
 
@@ -210,12 +211,20 @@ public abstract class CustomerDashboard extends JPanel implements ActionListener
                 Booking booking1;
                 //get all the booking information and manually over write it
                 try {
+                    String checkin = checkinDate.getJCalendar().getYearChooser().getYear() + "-" +
+                            checkinDate.getJCalendar().getMonthChooser().getMonth() + "-" +
+                            checkinDate.getJCalendar().getDayChooser().getDay();
+
+                    String checkout = checkoutDate.getJCalendar().getYearChooser().getYear() + "-" +
+                            checkoutDate.getJCalendar().getMonthChooser().getMonth() + "-" +
+                            checkoutDate.getJCalendar().getDayChooser().getDay();
+
                     BLBooking blBooking = new BLBooking();
                     booking1 = blBooking.getBooking(booking.getBookingId());
                     booking1.setBookingStatus("pending");
                     booking1.setRoomNo(0);
-                    booking1.setCheckInDate(checkinDate.getText().trim());
-                    booking1.setCheckOutDate(checkoutDate.getText().trim());
+                    booking1.setCheckInDate(checkin);
+                    booking1.setCheckOutDate(checkout);
                     booking1.setPreferredRoomType(roomType.getSelectedItem().toString());
 
                     blBooking = new BLBooking(booking1);

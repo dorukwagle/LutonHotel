@@ -6,6 +6,7 @@ import DataModel.Booking;
 import DataModel.Customer;
 import DataModel.LoginDetails;
 import Utility.Values;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +18,7 @@ public class CorporateDashboard extends CustomerDashboard {
     private Customer customer;
     private LoginDetails loginDetails;
     private JTable upcomingBookings, pendingBookings, activeBookings, bookingsHistory;
-    private JTextField checkoutDate, checkinDate;
+    private JDateChooser checkoutDate, checkinDate;
     private JComboBox roomType;
     private JLabel errorMsg;
 
@@ -129,19 +130,19 @@ public class CorporateDashboard extends CustomerDashboard {
         inputHolder.setPreferredSize(new Dimension(Values.widthPct(container, 40), Values.heightPct(container, 40)));
         center.add(inputHolder);
 
-        JLabel checkinLabel = new JLabel("Check In Date(yyyy-MM-dd: ");
+        JLabel checkinLabel = new JLabel("Check In Date: ");
         checkinLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinLabel);
 
-        checkinDate = new JTextField();
+        checkinDate = new JDateChooser();
         checkinDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkinDate);
 
-        JLabel checkoutLabel = new JLabel("Check Out Date(yyyy-MM-dd): ");
+        JLabel checkoutLabel = new JLabel("Check Out Date: ");
         checkoutLabel.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutLabel);
 
-        checkoutDate = new JTextField();
+        checkoutDate = new JDateChooser();
         checkoutDate.setFont(new Font("Serif", Font.BOLD, 20));
         inputHolder.add(checkoutDate);
 
@@ -287,11 +288,19 @@ public class CorporateDashboard extends CustomerDashboard {
     //implement methods for button clicks
     @Override
     protected void requestBooking() {
+        String checkin = checkinDate.getJCalendar().getYearChooser().getYear() + "-" +
+                checkinDate.getJCalendar().getMonthChooser().getMonth() + "-" +
+                checkinDate.getJCalendar().getDayChooser().getDay();
+
+        String checkout = checkoutDate.getJCalendar().getYearChooser().getYear() + "-" +
+                checkoutDate.getJCalendar().getMonthChooser().getMonth() + "-" +
+                checkoutDate.getJCalendar().getDayChooser().getDay();
+
         Booking booking = new Booking();
         booking.setCustId(this.customer.getCustId());
         booking.setPreferredRoomType(this.roomType.getSelectedItem().toString());
-        booking.setCheckInDate(this.checkinDate.getText());
-        booking.setCheckOutDate(this.checkoutDate.getText());
+        booking.setCheckInDate(checkin);
+        booking.setCheckOutDate(checkout);
 
         try {
             BLBooking blBooking = new BLBooking(booking);
