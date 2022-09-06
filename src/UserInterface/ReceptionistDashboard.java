@@ -912,7 +912,7 @@ public class ReceptionistDashboard extends JPanel implements ActionListener {
             }
             //now display and print the corporate bill
             new Bills().corporateBill(bill);
-
+            blBookingReceptionist.setAllAsPaid(this.customer.getCustId());
             //change the next billing date to the first of next month
             blBookingReceptionist.updateBillingDate(this.customer.getCustId());
         }catch (Exception e){
