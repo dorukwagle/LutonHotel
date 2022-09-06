@@ -339,7 +339,7 @@ public class CorporateDashboard extends CustomerDashboard {
     }
 
     //method to load all the active bookings
-    public void loadActiveBookings(){
+    private void loadActiveBookings(){
         try {
             BLBooking blBooking = new BLBooking();
             ArrayList<Booking> bookings = blBooking.getUserActiveBookings(this.customer.getCustId());
@@ -354,7 +354,7 @@ public class CorporateDashboard extends CustomerDashboard {
     }
 
     //method to load all the  pending bookings in the table
-    public void loadPendingBookings(){
+    private void loadPendingBookings(){
         try {
             BLBooking blBooking = new BLBooking();
             ArrayList<Booking> bookings = blBooking.getUserPendingBookings(this.customer.getCustId());
@@ -369,7 +369,7 @@ public class CorporateDashboard extends CustomerDashboard {
     }
 
     //method to load all the booking history in the table
-    public void loadBookingHistory(){
+    private void loadBookingHistory(){
         try {
             BLBooking blBooking = new BLBooking();
             ArrayList<Booking> bookings = blBooking.getUserBookings(this.customer.getCustId());
@@ -383,6 +383,8 @@ public class CorporateDashboard extends CustomerDashboard {
         }
     }
     //method to load the table data
+
+    @Override
     protected void loadTable(ArrayList<Booking> bookings, JTable table){
         //remove existing data from table
         DefaultTableModel model = (DefaultTableModel) table.getModel();
