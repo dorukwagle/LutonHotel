@@ -29,6 +29,7 @@ public class CorporateDashboard extends CustomerDashboard {
         this.contentHolder.add(aboutPage());
     }
 
+    @Override
     protected JPanel aboutPage(){
         this.currentPage = "about";
         JPanel aboutPage = new JPanel();
@@ -115,6 +116,7 @@ public class CorporateDashboard extends CustomerDashboard {
         return aboutPage;
     }
 
+    @Override
     protected JPanel bookNow(){
         JPanel bookNow = new JPanel();
         bookNow.setLayout(new BoxLayout(bookNow, BoxLayout.Y_AXIS));
@@ -176,6 +178,7 @@ public class CorporateDashboard extends CustomerDashboard {
         return bookNow;
     }
 
+    @Override
     protected JPanel activeBooking(){
         JPanel activeBooking = new JPanel();
         activeBooking.setLayout(new BoxLayout(activeBooking, BoxLayout.Y_AXIS));
@@ -206,6 +209,7 @@ public class CorporateDashboard extends CustomerDashboard {
         return activeBooking;
     }
 
+    @Override
     protected JPanel pendingBooking(){
         this.currentPage = "pending";
         JPanel pendingBooking = new JPanel();
@@ -255,6 +259,7 @@ public class CorporateDashboard extends CustomerDashboard {
         return pendingBooking;
     }
 
+    @Override
     protected JPanel bookingHistory(){
         JPanel bookingHistory = new JPanel();
         bookingHistory.setLayout(new BoxLayout(bookingHistory, BoxLayout.Y_AXIS));

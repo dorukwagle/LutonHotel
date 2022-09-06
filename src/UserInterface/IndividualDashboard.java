@@ -33,6 +33,7 @@ public class IndividualDashboard extends CustomerDashboard {
         this.contentHolder.add(this.aboutPage());
     }
 
+    @Override
     protected JPanel aboutPage(){
         this.currentPage = "about";
         JPanel aboutPage = new JPanel();
@@ -113,6 +114,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return aboutPage;
     }
 
+    @Override
     protected JPanel bookNow(){
         JPanel bookNow = new JPanel();
         bookNow.setLayout(new BoxLayout(bookNow, BoxLayout.Y_AXIS));
@@ -183,6 +185,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return bookNow;
     }
 
+    @Override
     protected JPanel activeBooking(){
         this.currentPage = "active";
         JPanel activeBooking = new JPanel();
@@ -215,6 +218,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return activeBooking;
     }
 
+    @Override
     protected JPanel pendingBooking(){
         this.currentPage = "pending";
         JPanel pendingBooking = new JPanel();
@@ -264,6 +268,7 @@ public class IndividualDashboard extends CustomerDashboard {
         return pendingBooking;
     }
 
+    @Override
     protected JPanel bookingHistory(){
         this.currentPage = "history";
         JPanel bookingHistory = new JPanel();
@@ -357,6 +362,7 @@ public class IndividualDashboard extends CustomerDashboard {
         }
     }
     //method to load the table data
+    @Override
     protected void loadTable(ArrayList<Booking> bookings, JTable table){
         //remove existing data from table
         DefaultTableModel model = (DefaultTableModel) table.getModel();
